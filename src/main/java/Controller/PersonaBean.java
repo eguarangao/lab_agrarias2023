@@ -56,5 +56,16 @@ public class PersonaBean implements Serializable {
         }
     }
 
+    public void update() throws SQLException {
+        PersonaDAO personaDAO;
+        try {
+            personaDAO = new PersonaDAO();
+            personaDAO.update(persona);
+
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
 
 }
