@@ -54,4 +54,40 @@ public class PersonaDAO extends Conexion {
         }
         return listaPersonas;
     }
+
+
+    public Persona findById(Persona personaOb) throws SQLException {
+        Persona persona = new Persona();
+        ResultSet rs;
+        try {
+            this.conectar();
+            PreparedStatement st = this.getConnection().prepareStatement("SELECT pe.id       as id,\n" +
+                    "       pe.nombre   as nombre,\n" +
+                    "       pe.apellido as apellido,\n" +
+                    "       pe.telefono as telefono,\n" +
+                    "       pe.email    as email,\n" +
+                    "       pe.dni      as dni,\n" +
+                    "       pe.genero   as genero\n" +
+                    "FROM laboratorio.PERSONA pe where pe.id= ?");
+            st.setInt(1, personaOb.getId());
+            rs=st.executeQuery();
+            while(rs.next()){
+                persona = new Persona();
+
+                persona.setId(rs.getInt("id"));
+                persona.setNombre(rs.getString("nombre"));
+                persona.setApellido(rs.getString("apellido"));
+                persona.setTelefono(rs.getString("telefono"));
+                persona.setEmail(rs.getString("email"));
+                persona.setDni(rs.getString("dni"));
+                persona.setGenero(rs.getString("genero"));
+        }
+
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this.desconectar();
+        }
+        return persona;
+    }
 }

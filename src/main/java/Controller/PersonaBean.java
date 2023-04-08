@@ -38,5 +38,15 @@ public class PersonaBean {
         }
     }
 
+//    public void findById(Persona persona) throws SQLException {
+//        PersonaDAO personaDAO;
+//        Persona personaTemp = new Persona();
+//        try {
+//            personaDAO = new PersonaDAO();
+//            personaTemp = personaDAO.findById(persona);
+//
+//        }
+//    }
+
 
 }
