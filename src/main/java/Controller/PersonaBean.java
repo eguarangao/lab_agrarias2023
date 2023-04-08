@@ -22,11 +22,11 @@ public class PersonaBean implements Serializable {
     public void save() throws SQLException {
         PersonaDAO personaDAO;
         try {
-
+            System.out.println(persona + "BEAM");
             personaDAO = new PersonaDAO();
             personaDAO.save(persona);
         } catch (Exception e) {
-            throw e;
+            System.out.println(e.toString()+"EBERT ERROR");
         }
     }
 

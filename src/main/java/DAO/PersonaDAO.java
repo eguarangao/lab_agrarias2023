@@ -12,7 +12,7 @@ import java.util.List;
 public class PersonaDAO extends Conexion {
 
     public void save(Persona persona) throws SQLException {
-
+        System.out.println(persona + "DAO");
         try {
             this.conectar();
             PreparedStatement st = this.getConnection().prepareStatement("insert into laboratorio.persona ( nombre, apellido, telefono, email, genero, dni)\n" +
