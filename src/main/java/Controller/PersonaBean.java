@@ -6,6 +6,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
 @Data
 @Named
 @ViewScoped
-public class PersonaBean {
+public class PersonaBean implements Serializable {
 
     private Persona persona = new Persona();
     private List<Persona> listaPersonas ;
@@ -21,6 +22,7 @@ public class PersonaBean {
     public void save() throws SQLException {
         PersonaDAO personaDAO;
         try {
+
             personaDAO = new PersonaDAO();
             personaDAO.save(persona);
         } catch (Exception e) {

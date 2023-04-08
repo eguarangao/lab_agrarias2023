@@ -6,10 +6,12 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
 @Named
 @ViewScoped
-public class UsuarioController {
+public class UsuarioController implements Serializable {
     private Usuario usuario;
 
 

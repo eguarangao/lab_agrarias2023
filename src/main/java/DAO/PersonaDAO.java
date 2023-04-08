@@ -12,6 +12,7 @@ import java.util.List;
 public class PersonaDAO extends Conexion {
 
     public void save(Persona persona) throws SQLException {
+
         try {
             this.conectar();
             PreparedStatement st = this.getConnection().prepareStatement("insert into laboratorio.persona ( nombre, apellido, telefono, email, genero, dni)\n" +
@@ -24,7 +25,8 @@ public class PersonaDAO extends Conexion {
             st.setString(6, persona.getDni());
 
         } catch (Exception e) {
-            throw e;
+             System.out.println("Error...Ebert");
+             e.getMessage();
         } finally {
             this.desconectar();
         }
