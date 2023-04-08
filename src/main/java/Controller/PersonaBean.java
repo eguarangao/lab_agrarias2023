@@ -7,19 +7,32 @@ import jakarta.inject.Named;
 import lombok.Data;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Named
 @ViewScoped
 public class PersonaBean {
 
-    private Persona persona=new Persona();
+    private Persona persona = new Persona();
+    private List<Persona> listaPersonas ;
 
     public void save() throws SQLException {
         PersonaDAO personaDAO;
         try {
             personaDAO = new PersonaDAO();
             personaDAO.save(persona);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public void findAll() throws SQLException {
+        PersonaDAO personaDAO;
+        try {
+            personaDAO = new PersonaDAO();
+            listaPersonas=personaDAO.findAll();
         } catch (Exception e) {
             throw e;
         }
