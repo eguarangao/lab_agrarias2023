@@ -17,7 +17,7 @@ import java.util.List;
 public class PersonaBean implements Serializable {
 
     private Persona persona = new Persona();
-    private List<Persona> listaPersonas ;
+    private List<Persona> listaPersonas;
 
     public void save() throws SQLException {
         PersonaDAO personaDAO;
@@ -34,21 +34,27 @@ public class PersonaBean implements Serializable {
         PersonaDAO personaDAO;
         try {
             personaDAO = new PersonaDAO();
-            listaPersonas=personaDAO.findAll();
+            listaPersonas = personaDAO.findAll();
         } catch (Exception e) {
             throw e;
         }
     }
 
-//    public void findById(Persona persona) throws SQLException {
-//        PersonaDAO personaDAO;
-//        Persona personaTemp = new Persona();
-//        try {
-//            personaDAO = new PersonaDAO();
-//            personaTemp = personaDAO.findById(persona);
-//
-//        }
-//    }
+    public void findById(Persona persona) throws SQLException {
+        PersonaDAO personaDAO;
+        Persona personaTemp = new Persona();
+        try {
+            personaDAO = new PersonaDAO();
+            personaTemp = personaDAO.findById(persona);
+
+            if (personaTemp != null) {
+                this.persona = personaTemp;
+            }
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 
 
 }

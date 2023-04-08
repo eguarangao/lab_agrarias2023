@@ -25,8 +25,40 @@ public class PersonaDAO extends Conexion {
             st.setString(6, persona.getDni());
 
         } catch (Exception e) {
-             System.out.println("Error...Ebert");
-             e.getMessage();
+            System.out.println("Error...Ebert");
+            e.getMessage();
+        } finally {
+            this.desconectar();
+        }
+    }
+
+    public void update(Persona persona) throws SQLException {
+
+        try {
+            this.conectar();
+            PreparedStatement st = this.getConnection().prepareStatement("update laboratorio.persona\n" +
+                    "set id       = ?,\n" +
+                    "    nombre= ?,\n" +
+                    "    apellido =?,\n" +
+                    "    telefono = ?,\n" +
+                    "    email    = ?,\n" +
+                    "    dni      = ?,\n" +
+                    "    genero   = ?\n" +
+                    "where id=?;");
+
+            st.setInt(1, persona.getId());
+            st.setString(2, persona.getNombre());
+            st.setString(3, persona.getApellido());
+            st.setString(4, persona.getTelefono());
+            st.setString(5, persona.getEmail());
+            st.setString(6, persona.getDni());
+            st.setString(7, persona.getGenero());
+            st.setInt(8, persona.getId());
+
+
+        } catch (Exception e) {
+            System.out.println("Error...Ebert");
+            e.getMessage();
         } finally {
             this.desconectar();
         }
@@ -72,8 +104,8 @@ public class PersonaDAO extends Conexion {
                     "       pe.genero   as genero\n" +
                     "FROM laboratorio.PERSONA pe where pe.id= ?");
             st.setInt(1, personaOb.getId());
-            rs=st.executeQuery();
-            while(rs.next()){
+            rs = st.executeQuery();
+            while (rs.next()) {
                 persona = new Persona();
 
                 persona.setId(rs.getInt("id"));
@@ -83,7 +115,7 @@ public class PersonaDAO extends Conexion {
                 persona.setEmail(rs.getString("email"));
                 persona.setDni(rs.getString("dni"));
                 persona.setGenero(rs.getString("genero"));
-        }
+            }
 
         } catch (Exception e) {
             throw e;
