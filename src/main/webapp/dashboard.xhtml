@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view>
+    <h:outputLabel value="Hello, world"/>
+</f:view>
+<body>
+<h:form>
+    <p:panel id="panelLaboratorio" rendered="#{usuarioBean.rolSesion=='TECNICO DE LABORATORIO'}">
+        <p:outputLabel value="Laboratorio"/>
+    </p:panel>
+
+    <p:panel id="panelAdministracion" rendered="#{usuarioBean.rolSesion=='ADMINISTRADOR'}">
+        <p:outputLabel value="Administracion"/>
+    </p:panel>
+
+    <p:panel id="panelEquipos" rendered="#{usuarioBean.rolSesion=='TECNICO DE LABORATORIO'||(usuarioBean.rolSesion=='ADMINISTRADOR')}">
+        <p:outputLabel value="equipos"/>
+    </p:panel>
+
+    <p:panel id="panelSolicitud" rendered="#{usuarioBean.rolSesion=='DOCENTE'}">
+        <p:outputLabel value="solicitud"/>
+    </p:panel>
+</h:form>
+</body>
+</html>
