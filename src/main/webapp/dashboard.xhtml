@@ -6,26 +6,56 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-<f:view>
-    <h:outputLabel value="Hello, world"/>
-</f:view>
+<h:head> <f:facet name="first">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+</f:facet>
+
+    <h:outputStylesheet library="css" name="cssLayout.css"/>
+    <h:outputStylesheet name="css/primeicons.css"
+                        library="manhattan-layout"/>
+    <h:outputStylesheet name="css/primeflex.min.css"
+                        library="manhattan-layout"/>
+    <h:outputStylesheet name="css/registro.css"/>
+    <h:outputStylesheet name="css/login_.css"/>
+    <title>Inicio de sessión</title>
+
+</h:head>
 <body>
 <h:form>
-    <p:panel id="panelLaboratorio" rendered="#{usuarioBean.rolSesion=='TECNICO DE LABORATORIO'}">
-        <p:outputLabel value="Laboratorio"/>
-    </p:panel>
+    <div class="container">
+        <div class="p-grid">
+            <ui:fragment>
 
-    <p:panel id="panelAdministracion" rendered="#{usuarioBean.rolSesion=='ADMINISTRADOR'}">
-        <p:outputLabel value="Administracion"/>
-    </p:panel>
+            </ui:fragment>
+            <div class="p-col-12 p-lg-6 p-xl-3">
+                <p:panel id="panelLaboratorio" rendered="#{usuarioBean.rolSesion=='TECNICO DE LABORATORIO'}">
+                    <p:outputLabel value="Laboratorio"/>
+                </p:panel>
+            </div>
+            <ui:fragment>
 
-    <p:panel id="panelEquipos" rendered="#{usuarioBean.rolSesion=='TECNICO DE LABORATORIO'||(usuarioBean.rolSesion=='ADMINISTRADOR')}">
-        <p:outputLabel value="equipos"/>
-    </p:panel>
+            </ui:fragment>
+            <div class="p-col-12 p-lg-6 p-xl-3">
+                <p:panel id="panelAdministracion" rendered="#{usuarioBean.rolSesion=='ADMINISTRADOR'}">
+                    <p:outputLabel value="Administracion"/>
+                </p:panel>
+            </div>
+            <div class="p-col-12 p-lg-6 p-xl-3">
+                <p:panel id="panelEquipos" rendered="#{usuarioBean.rolSesion=='TECNICO DE LABORATORIO'||(usuarioBean.rolSesion=='ADMINISTRADOR')}">
+                    <p:outputLabel value="equipos"/>
+                </p:panel>
+            </div>
+            <div class="p-col-12 p-lg-6 p-xl-3">
+                <p:panel id="panelSolicitud" rendered="#{usuarioBean.rolSesion=='DOCENTE'}">
+                    <p:outputLabel value="solicitud"/>
+                </p:panel>
+            </div>
+        </div>
+    </div>
 
-    <p:panel id="panelSolicitud" rendered="#{usuarioBean.rolSesion=='DOCENTE'}">
-        <p:outputLabel value="solicitud"/>
-    </p:panel>
 </h:form>
 </body>
 </html>

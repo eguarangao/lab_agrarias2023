@@ -26,49 +26,8 @@
 </h:head>
 <body>
 <h:form>
-    <div class="p-col-12">
-        <div class="input-wrapper ui-input-icon-left">
-            <i class="pi pi-user"/>
-            <p:inputText type="text"
-                         value="#{personaBean.persona.nombre}"
-                         placeholder="nombre"/>
-        </div>
-        <div class="input-wrapper ui-input-icon-left">
-            <i class="pi pi-user"/>
-            <p:inputText type="text"
-                         value="#{personaBean.persona.apellido}"
-
-                         placeholder="apellido"/>
-        </div>
-        <div class="input-wrapper ui-input-icon-left">
-            <i class="pi pi-user"/>
-            <p:inputText type="text"
-                         value="#{personaBean.persona.telefono}"
-                         placeholder="telefono"/>
-        </div>
-        <div class="input-wrapper ui-input-icon-left">
-            <i class="pi pi-user"/>
-            <p:inputText type="text"
-                         value="#{personaBean.persona.email}"
-                         placeholder="email"/>
-        </div>
-        <div class="input-wrapper ui-input-icon-left">
-            <i class="pi pi-user"/>
-            <p:inputText type="text"
-                         value="#{personaBean.persona.dni}"
-
-                         placeholder="dni"/>
-        </div>
-        <div class="input-wrapper ui-input-icon-left">
-            <i class="pi pi-user"/>
-            <p:inputText type="text"
-                         value="#{personaBean.persona.genero}"
-                         placeholder="generno"/>
-        </div>
-        <p:commandButton
-                actionListener="#{personaBean.save()}"
-                value="Guardar" />
-    </div>
+    <ui:include src="component/cardAdministracion.xhtml"/>
+   <ui:insert name="content"></ui:insert>
 </h:form>
 </body>
 </html>

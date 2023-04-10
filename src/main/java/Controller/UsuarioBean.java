@@ -55,7 +55,7 @@ public class UsuarioBean implements Serializable {
 
         while(btnLogin==true){
             FacesContext context = FacesContext.getCurrentInstance();
-            context.getExternalContext().redirect("/jsfdemolab/dashboard.xhtml");
+            context.getExternalContext().redirect("/jsfdemolab/newPersona.xhtml");
             // return "/newPersona.xhtml?faces-redirect=true";
             System.out.println(rolSesion);
         }
