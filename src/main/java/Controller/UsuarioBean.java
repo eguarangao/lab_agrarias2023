@@ -10,6 +10,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.Data;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,17 +41,21 @@ public class UsuarioBean implements Serializable {
 
 
 
-    public String login() {
+    public void login() throws IOException {
         Usuario usuario = new Usuario();
         UsuarioDAO usuarioDAO=new UsuarioDAO();
-        usuario= usuarioDAO.getUsuario(username);
-        if (usuario!= null && usuario.getClave().equals(password)) {
+        usuario= usuarioDAO.getUsuario(username,password);
+        if (usuario!= null) {
             // Las credenciales son válidas, redirigir al usuario a la página principal
-            return "pagina_principal.xhtml?faces-redirect=true";
+            System.out.println(usuario);
+           FacesContext context = FacesContext.getCurrentInstance();
+            context.getExternalContext().redirect("/jsfdemolab/newPersona.xhtml");
+           // return "/newPersona.xhtml?faces-redirect=true";
+
         } else {
             // Las credenciales son inválidas, mostrar un mensaje de error
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Credenciales inválidas", null));
-            return null;
+            //return null;
         }
     }
 }

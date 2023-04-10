@@ -10,20 +10,20 @@ import java.sql.ResultSet;
 public class UsuarioDAO extends Conexion {
 
 
-    public Usuario getUsuario(String username) {
+    public Usuario getUsuario(String username, String clave) {
         Usuario usuario = null;
-        String clave;
         try {
             this.conectar();
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM laboratorio.usuario us WHERE us.nombre = ? AND us.enabled='true' ");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM laboratorio.usuario us WHERE nombre = ? AND clave=? AND enabled=true");
             ps.setString(1, username);
+            ps.setString(2, clave);
             ResultSet rs = ps.executeQuery();
-            System.out.println(username);
-           System.out.println(rs.getString(1));
             if (rs.next()) {
-                usuario = new Usuario(rs.getString("nombre"), rs.getString("clave") ,rs.getBoolean("enabled"));
-                System.out.println(username);
-
+                usuario = new Usuario();
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setClave(rs.getString("clave"));
+                usuario.setEnabled(rs.getBoolean("enabled"));
+                System.out.println(usuario);
             }
             rs.close();
             ps.close();
