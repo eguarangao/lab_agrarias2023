@@ -41,9 +41,10 @@ public class UsuarioBean implements Serializable {
 
 
     public String login() {
+        Usuario usuario = new Usuario();
         UsuarioDAO usuarioDAO=new UsuarioDAO();
-        String clave = usuarioDAO.getUsuario(username);
-        if (clave != null && clave.equals(password)) {
+        usuario= usuarioDAO.getUsuario(username);
+        if (usuario!= null && usuario.getClave().equals(password)) {
             // Las credenciales son válidas, redirigir al usuario a la página principal
             return "pagina_principal.xhtml?faces-redirect=true";
         } else {

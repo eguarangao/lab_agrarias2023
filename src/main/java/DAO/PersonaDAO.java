@@ -24,7 +24,6 @@ public class PersonaDAO extends Conexion {
             st.setString(5, persona.getGenero());
             st.setString(6, persona.getDni());
             st.executeUpdate();
-
         } catch (Exception e) {
             System.out.println("Error...Ebert");
             e.getMessage();
