@@ -76,7 +76,7 @@
                             <div class="p-col-12">
                                 <div class="input-wrapper ui-input-icon-left">
                                     <i class="pi pi-user"/>
-                                    <p:inputText type="text"
+                                    <p:inputText type="text" disabled="#{usuarioBean.btnLogin==true}"
                                                  placeholder="Username"
                                     value="#{usuarioBean.username}"/>
                                 </div>
@@ -84,7 +84,7 @@
                             <div class="p-col-12">
                                 <div class="input-wrapper ui-input-icon-left">
                                     <i class="pi pi-lock"/>
-                                    <p:inputText type="password"
+                                    <p:inputText type="password" disabled="#{usuarioBean.btnLogin==true}"
                                                  placeholder="Password"
                                                  value="#{usuarioBean.password}"/>
                                 </div>
@@ -108,7 +108,7 @@
                                 <p:commandButton
                                         styleClass="ui-button-raised ui-button-success"
                                         actionListener="#{usuarioBean.login()}"
-                                        value="Entrar" update=":growl , form:panelRoles"
+                                        value="Entrar" update=":growl , form:panelRoles, form"
                                 />
                             </div>
                         </div>
