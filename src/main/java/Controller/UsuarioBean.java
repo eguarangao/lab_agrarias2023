@@ -1,6 +1,8 @@
 package Controller;
 
+import DAO.RolDAO;
 import DAO.UsuarioDAO;
+import Model.Rol;
 import Model.Usuario;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
@@ -14,13 +16,18 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Named
 @SessionScoped
 public class UsuarioBean implements Serializable {
+    private List<Rol> listaRoles = new ArrayList<>();
+    private String rolSesion;
 
-
+    private Boolean btnLogin =false;
     private String username;
     private String password;
 
@@ -38,19 +45,34 @@ public class UsuarioBean implements Serializable {
 //    }
 
 
+//    public boolean existeUsuario(boolean ob){
+//        while (ob=true)
+//
+//    }
+
+
+    public void login() throws IOException, SQLException {
+
+        while(btnLogin==true){
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.getExternalContext().redirect("/jsfdemolab/newPersona.xhtml");
+            // return "/newPersona.xhtml?faces-redirect=true";
+        }
 
 
 
-    public void login() throws IOException {
         Usuario usuario = new Usuario();
-        UsuarioDAO usuarioDAO=new UsuarioDAO();
-        usuario= usuarioDAO.getUsuario(username,password);
-        if (usuario!= null) {
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        usuario = usuarioDAO.getUsuario(username, password);
+        if (usuario != null) {
+            btnLogin=true;
+
             // Las credenciales son válidas, redirigir al usuario a la página principal
             System.out.println(usuario);
-           FacesContext context = FacesContext.getCurrentInstance();
-            context.getExternalContext().redirect("/jsfdemolab/newPersona.xhtml");
-           // return "/newPersona.xhtml?faces-redirect=true";
+            RolDAO rolDAO = new RolDAO();
+            listaRoles = rolDAO.findAllRolesUsuarioByUsername(username);
+
+
 
         } else {
             // Las credenciales son inválidas, mostrar un mensaje de error

@@ -1,5 +1,6 @@
 package DAO;
 
+import Model.Persona;
 import Model.Usuario;
 import global.Conexion;
 import jakarta.inject.Inject;
@@ -7,6 +8,10 @@ import lombok.Data;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class UsuarioDAO extends Conexion {
 
 
@@ -52,6 +57,9 @@ public class UsuarioDAO extends Conexion {
 //        }
 //        return clave;
 //    }
+
+
+
 
 
 

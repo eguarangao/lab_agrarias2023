@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -14,6 +16,10 @@ public class Usuario {
     private String nombre;
     private String clave;
     private Persona persona;
+
+    private List<Rol> roles;
+
+
 
     public Usuario(String nombre, String clave, boolean enabled) {
         this.nombre = nombre;

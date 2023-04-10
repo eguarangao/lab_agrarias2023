@@ -64,30 +64,7 @@ public class PersonaDAO extends Conexion {
         }
     }
 
-    public List<Persona> findAll() throws SQLException {
-        List<Persona> listaPersonas = new ArrayList<>();
-        ResultSet rs;
-        try {
-            this.conectar();
-            PreparedStatement st = this.getConnection().prepareStatement("SELECT * FROM laboratorio.PERSONA");
-            rs = st.executeQuery();
-            while (rs.next()) {
-                Persona persona = new Persona();
-                persona.setId(rs.getInt("id"));
-                persona.setNombre(rs.getString("nombre"));
-                persona.setApellido(rs.getString("apellido"));
-                persona.setGenero(rs.getString("genero"));
-                persona.setDni(rs.getString("dni"));
 
-                listaPersonas.add(persona);
-            }
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            this.desconectar();
-        }
-        return listaPersonas;
-    }
 
 
     public Persona findById(Persona personaOb) throws SQLException {
@@ -123,5 +100,30 @@ public class PersonaDAO extends Conexion {
             this.desconectar();
         }
         return persona;
+    }
+
+    public List<Persona> findAll() throws SQLException {
+        List<Persona> listaPersonas = new ArrayList<>();
+        ResultSet rs;
+        try {
+            this.conectar();
+            PreparedStatement st = this.getConnection().prepareStatement("SELECT * FROM laboratorio.PERSONA");
+            rs = st.executeQuery();
+            while (rs.next()) {
+                Persona persona = new Persona();
+                persona.setId(rs.getInt("id"));
+                persona.setNombre(rs.getString("nombre"));
+                persona.setApellido(rs.getString("apellido"));
+                persona.setGenero(rs.getString("genero"));
+                persona.setDni(rs.getString("dni"));
+
+                listaPersonas.add(persona);
+            }
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this.desconectar();
+        }
+        return listaPersonas;
     }
 }

@@ -90,7 +90,16 @@
                                 </div>
                             </div>
                             <div class="p-col-12">
-                                <p:outputPanel id="panelss">
+                                <p:outputPanel id="panelRoles" >
+                                    <div class="field col-12 md:col-4">
+
+
+                                        <p:selectOneMenu id="selectRoles" value="#{usuarioBean.rolSesion}" rendered="#{usuarioBean.btnLogin==true}">
+
+                                            <f:selectItems value="#{usuarioBean.listaRoles}" var="rol" itemLabel="#{rol.nombre}" itemValue="#{rol.nombre}"/>
+                                        </p:selectOneMenu>
+
+                                    </div>
 
                                 </p:outputPanel>
 
@@ -99,7 +108,8 @@
                                 <p:commandButton
                                         styleClass="ui-button-raised ui-button-success"
                                         actionListener="#{usuarioBean.login()}"
-                                        value="Entrar" update=":growl,form:panelss"/>
+                                        value="Entrar" update=":growl , form:panelRoles"
+                                />
                             </div>
                         </div>
                     </div>
