@@ -1,0 +1,7 @@
+.ui-panelgrid {
+    margin: 20px 0;
+}
+
+.ui-panelgrid .ui-panelgrid-cell {
+    width: 33%;
+}
