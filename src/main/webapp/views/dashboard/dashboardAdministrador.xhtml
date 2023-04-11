@@ -7,12 +7,53 @@
 >
     <ui:define name="content">
         <h1>Página de Administracion</h1>
-            <ui:include src="/views/dashboard/components/cardAdministracion.xhtml" />
-            <ui:include src="/views/dashboard/components/cardAjustePerfil.xhtml" />
-            <ui:include src="/views/dashboard/components/cardCalendario.xhtml" />
-            <ui:include src="/views/dashboard/components/cardEquipos.xhtml" />
-            <ui:include src="/views/dashboard/components/cardLaboratorio.xhtml" />
-            <ui:include src="/views/dashboard/components/cardSolicitud.xhtml" />
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <h2>Bienvenido</h2>
+                    <hr />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <ui:include src="/views/dashboard/components/cardAdministracion.xhtml" />
+                        <p:commandButton value="Card 1" />
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <ui:include src="/views/dashboard/components/cardAdministracion.xhtml" />
+                        <p:commandButton value="Card 2" />
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <ui:include src="/views/dashboard/components/cardAdministracion.xhtml" />
+                        <p:commandButton value="Card 3" />
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <ui:include src="/views/dashboard/components/cardAdministracion.xhtml" />
+                        <p:commandButton value="Card 4" />
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <ui:include src="/views/dashboard/components/cardAdministracion.xhtml" />
+                        <p:commandButton value="Card 5" />
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <ui:include src="/views/dashboard/components/cardAdministracion.xhtml" />
+                        <p:commandButton value="Card 6" />
+                    </div>
+                </div>
+            </div>
+        </div>
     </ui:define>
 </ui:composition>
 
