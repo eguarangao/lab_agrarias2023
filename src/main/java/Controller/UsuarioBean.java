@@ -56,7 +56,7 @@ public class UsuarioBean implements Serializable {
         while(btnLogin==true){
             FacesContext context = FacesContext.getCurrentInstance();
             String contextPath = context.getExternalContext().getRequestContextPath();
-            context.getExternalContext().redirect(contextPath+"/views/dashboard/dashboardAdministrador.xhtml");
+            context.getExternalContext().redirect(contextPath+ "/views/dashboard/dashboardAdministrador.xhtml");
             // return "/newPersona.xhtml?faces-redirect=true";
             System.out.println(rolSesion);
         }
