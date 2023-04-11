@@ -53,28 +53,27 @@ public class UsuarioBean implements Serializable {
 
     public void login() throws IOException, SQLException {
 
-        while(btnLogin==true){
+        while(btnLogin){
             FacesContext context = FacesContext.getCurrentInstance();
             String contextPath = context.getExternalContext().getRequestContextPath();
 
-            switch(rolSesion){
-                case "ADMINISTRADOR":
-
+            switch (rolSesion) {
+                case "ADMINISTRADOR" -> {
                     contextPath = context.getExternalContext().getRequestContextPath();
                     context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardAdministrador.xhtml");
-                    break;
-                case "TECNICO DE LABORATORIO":
-
+                }
+                case "TECNICO DE LABORATORIO" -> {
                     contextPath = context.getExternalContext().getRequestContextPath();
                     context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardTecnico.xhtml");
-                    break;
-                case "DOCENTE":
+                }
+                case "DOCENTE" -> {
                     contextPath = context.getExternalContext().getRequestContextPath();
                     context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardDocente.xhtml");
-                    break;
-                default:
+                }
+                default -> {
                     System.out.println("Solo números entre 1 y 4");
                     System.out.println(rolSesion);
+                }
             }
 
         }
