@@ -6,7 +6,18 @@
                 xmlns:p="http://primefaces.org/ui"
 >
     <ui:define name="content">
-        <h1>Página de Tecnico de laboratorio</h1>
-        <ui:include src="/views/dashboard/components/cardAdministracion.xhtml" />
+        <div class="container">
+            <div class="p-grid">
+                <div class="p-col-12 p-lg-6 p-xl-3">
+                    <ui:include src="/views/dashboard/components/cardAjustePerfil.xhtml" />
+                </div>
+                <div class="p-col-12 p-lg-6 p-xl-3">
+                    <ui:include src="/views/dashboard/components/cardEquipos.xhtml" />
+                </div>
+                <div class="p-col-12 p-lg-6 p-xl-3">
+                    <ui:include src="/views/dashboard/components/cardLaboratorio.xhtml" />
+                </div>
+            </div>
+        </div>
     </ui:define>
 </ui:composition>
