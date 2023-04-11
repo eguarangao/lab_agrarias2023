@@ -27,7 +27,7 @@ public class UsuarioBean implements Serializable {
     private List<Rol> listaRoles = new ArrayList<>();
     private String rolSesion;
 
-    private Boolean btnLogin =false;
+    private Boolean btnLogin = false;
     private String username;
     private String password;
 
@@ -56,10 +56,33 @@ public class UsuarioBean implements Serializable {
         while(btnLogin==true){
             FacesContext context = FacesContext.getCurrentInstance();
             String contextPath = context.getExternalContext().getRequestContextPath();
-            context.getExternalContext().redirect(contextPath+ "/views/dashboard/dashboardAdministrador.xhtml");
-            // return "/newPersona.xhtml?faces-redirect=true";
-            System.out.println(rolSesion);
+
+            switch(rolSesion){
+                case "ADMINISTRADOR":
+
+                    contextPath = context.getExternalContext().getRequestContextPath();
+                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardAdministrador.xhtml");
+                    break;
+                case "TECNICO DE LABORATORIO":
+
+                    contextPath = context.getExternalContext().getRequestContextPath();
+                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardTecnico.xhtml");
+                    break;
+                case "DOCENTE":
+                    contextPath = context.getExternalContext().getRequestContextPath();
+                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardDocenter.xhtml");
+                    break;
+                default:
+                    System.out.println("Solo números entre 1 y 4");
+                    System.out.println(rolSesion);
+            }
+
         }
+//            FacesContext context = FacesContext.getCurrentInstance();
+//            String contextPath = context.getExternalContext().getRequestContextPath();
+//            context.getExternalContext().redirect(contextPath+ "/views/dashboard/dashboardAdministrador.xhtml");
+        // return "/newPersona.xhtml?faces-redirect=true";
+
 
 
 
@@ -67,13 +90,12 @@ public class UsuarioBean implements Serializable {
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         usuario = usuarioDAO.getUsuario(username, password);
         if (usuario != null) {
-            btnLogin=true;
+            btnLogin = true;
 
             // Las credenciales son válidas, redirigir al usuario a la página principal
             System.out.println(usuario);
             RolDAO rolDAO = new RolDAO();
             listaRoles = rolDAO.findAllRolesUsuarioByUsername(username);
-
 
 
         } else {
