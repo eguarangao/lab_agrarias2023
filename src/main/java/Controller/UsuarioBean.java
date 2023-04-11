@@ -70,7 +70,7 @@ public class UsuarioBean implements Serializable {
                     break;
                 case "DOCENTE":
                     contextPath = context.getExternalContext().getRequestContextPath();
-                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardDocenter.xhtml");
+                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardDocente.xhtml");
                     break;
                 default:
                     System.out.println("Solo números entre 1 y 4");
