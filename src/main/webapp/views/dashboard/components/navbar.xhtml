@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+      <div class="layout-topbar" style="background-color: #028A0F">
+         <a href="" >
+            <p:graphicImage name="logoUTEQ.png" library="Images"
+                            style="width: 55px; height: 55px;
+                            vertical-align: middle; margin-top: -12px"/>
+         </a>
+         <div class="layout-topbar-menu-wrapper">
+            <ul class="topbar-menu navbar">
+               <li class="menu">
+                    <span class="user">
+                        <h:outputText  class="p-mr-md-3" style="font-size: 14px;"/></span>
+                  <p:graphicImage width="50" height="50" name="UsuarioSesion.png" library="Images"/>
+                  <div class="submenu">
+                     <ul style="width: 100%">
+                        <li>
+                           <a href="#">
+                              <i class="pi pi-cog"/>
+                              <span>Ajuste de perfil</span>
+                           </a>
+                        </li>
+                        <li>
+                           <h:form>
+                              <a>
+                                 <i class="pi pi-sign-out" />
+                                 <p:commandLink  style="margin-right:20px; text-decoration: none">
+                                    <h:outputText value="Salir"  style="font-size: 18px;"/>
+                                 </p:commandLink>
+                              </a>
+                           </h:form>
+
+                        </li>
+                     </ul>
+                  </div>
+               </li>
+            </ul>
+         </div>
+      </div>
+      <script>
+         var dd_main = document.querySelector(".menu");
+
+         dd_main.addEventListener("click", function () {
+            this.classList.toggle("active");
+         });
+      </script>
+
+
+
+</ui:composition>

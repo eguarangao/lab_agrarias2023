@@ -5,44 +5,51 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
 <h:head>
-   <f:facet name="Base template">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
-   <meta name="apple-mobile-web-app-capable" content="yes"/>
-</f:facet>
+    <f:facet name="Base template">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+    </f:facet>
 
-<!--   <h:outputStylesheet name="css/cssCard.css"/>-->
+    <!--   <h:outputStylesheet name="css/cssCard.css"/>-->
 
 
-   <!-- Referencias de los archivos CSS y JS de Bootstrap -->
-   <link rel="stylesheet" href="/webjars/bootstrap/5.1.0/css/bootstrap.min.css" />
-   <script src="/webjars/bootstrap/5.1.0/js/bootstrap.min.js"></script>
-   
-   <h:outputStylesheet library="css" name="cssLayout.css"/>
-   <h:outputStylesheet name="css/primeicons.css"
-                       library="manhattan-layout"/>
-   <h:outputStylesheet name="css/primeflex.min.css"
-                       library="manhattan-layout"/>
-   <h:outputStylesheet name="css/registro.css"/>
-   <h:outputStylesheet name="css/login_.css"/>
-   <h:outputStylesheet name="css/home.css"/>
-   <title>Inicio de sessión</title>
+    <!-- Referencias de los archivos CSS y JS de Bootstrap -->
+    <link rel="stylesheet" href="/webjars/bootstrap/5.1.0/css/bootstrap.min.css"/>
+    <script src="/webjars/bootstrap/5.1.0/js/bootstrap.min.js"></script>
+
+    <h:outputStylesheet library="css" name="cssLayout.css"/>
+    <h:outputStylesheet name="css/primeicons.css"
+                        library="manhattan-layout"/>
+    <h:outputStylesheet name="css/primeflex.min.css"
+                        library="manhattan-layout"/>
+    <h:outputStylesheet name="css/registro.css"/>
+    <h:outputStylesheet name="css/login_.css"/>
+    <h:outputStylesheet name="header.css" library="css"/>
+    <h:outputStylesheet name="css/home.css"/>
+    <h:outputStylesheet name="main.css" library="css"/>
+    <title>Inicio de sessión</title>
 
 </h:head>
 <h:body>
-   <div id="wrapper">
-      <div id="header">
-         <!-- Contenido del header -->
-      </div>
-      <div id="content">
-         <ui:insert name="content">
-            <!-- Contenido por defecto de la sección content -->
-         </ui:insert>
-      </div>
-      <div id="footer">
-         <!-- Contenido del footer -->
-      </div>
-   </div>
+    <div id="wrapper" class="layout-wrapper">
+        <div class="layout-main">
+            <div id="header">
+                <!-- Contenido del header -->
+                <ui:include src="/views/dashboard/components/navbar.xhtml">
+                </ui:include>
+            </div>
+            <div id="content" class="layout-content">
+                <ui:insert name="content">
+                    <!-- Contenido por defecto de la sección content -->
+                </ui:insert>
+            </div>
+            <div id="footer">
+                <!-- Contenido del footer -->
+            </div>
+        </div>
+
+    </div>
 </h:body>
 </html>
