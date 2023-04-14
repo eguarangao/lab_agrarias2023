@@ -110,6 +110,9 @@
                                         actionListener="#{usuarioBean.login()}"
                                         value="Entrar" update=":growl , form:panelRoles, form"
                                 />
+                                <p:commandButton
+                                        styleClass="ui-button-raised ui-button-raised" onclick="location.reload();"
+                                        value="Cancelar" rendered="#{usuarioBean.btnLogin==true}"                             />
                             </div>
                         </div>
                     </div>

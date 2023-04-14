@@ -5,8 +5,10 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
+
     <ui:define name="content">
         <div class="container">
+            <f:event type="preRenderView" listener="#{usuarioBean.verificarSession()}"/>
             <div class="p-grid">
                 <div class="p-col-12 p-lg-6 p-xl-3">
                     <ui:include src="/views/dashboard/components/cardAdministracion.xhtml" />
@@ -29,6 +31,9 @@
 
             </div>
         </div>
+        <p:commandButton value="Verifica" action="#{usuarioBean.verificarSession()}">
+
+        </p:commandButton>
     </ui:define>
 
 

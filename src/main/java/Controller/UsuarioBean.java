@@ -6,11 +6,14 @@ import Model.Rol;
 import Model.Usuario;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.servlet.http.HttpSession;
 import lombok.Data;
+import org.primefaces.PrimeFaces;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -49,6 +52,30 @@ public class UsuarioBean implements Serializable {
 //        while (ob=true)
 //
 //    }
+public void verificarSession() throws IOException {
+    FacesContext facesContext = FacesContext.getCurrentInstance();
+    Usuario usuario = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
+    if(usuario==null){
+        facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath());
+    }else if(rolSesion =="ADMINISTRADOR"){
+        facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath()+ "/views/dashboard/dashboardAdministrador.xhtml");
+
+    }else{
+        FacesContext.getCurrentInstance().getPartialViewContext().getEvalScripts().add("location.reload();");
+
+    }
+
+}
+    public void verificarSessionAdministrador() throws IOException {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        Usuario usuario = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
+        if(usuario==null &&(rolSesion.equals("Administrador"))){
+            facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath()+ "/views/dashboard/dashboardAdministrador.xhtml");
+
+        }
+
+    }
+
 
 
     public void login() throws IOException, SQLException {
@@ -85,12 +112,13 @@ public class UsuarioBean implements Serializable {
 
 
 
-        Usuario usuario = new Usuario();
+        Usuario usuario = null;
         UsuarioDAO usuarioDAO = new UsuarioDAO();
+
         usuario = usuarioDAO.getUsuario(username, password);
         if (usuario != null) {
             btnLogin = true;
-
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", usuario);
             // Las credenciales son válidas, redirigir al usuario a la página principal
             System.out.println(usuario);
             RolDAO rolDAO = new RolDAO();
@@ -99,6 +127,7 @@ public class UsuarioBean implements Serializable {
 
         } else {
             // Las credenciales son inválidas, mostrar un mensaje de error
+            System.out.println(usuario+"Ebert");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Credenciales inválidas", null));
             //return null;
         }
