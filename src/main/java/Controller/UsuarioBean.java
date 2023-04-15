@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @Named
@@ -33,6 +34,11 @@ public class UsuarioBean implements Serializable {
     private Boolean btnLogin = false;
     private String username;
     private String password;
+
+    private boolean isAdministrador = false;
+    private boolean isTecnico = false;
+    private boolean isADocente = false;
+
 
 //    public String login() {
 //        UsuarioDAO usuarioDAO=new UsuarioDAO();
@@ -48,42 +54,38 @@ public class UsuarioBean implements Serializable {
 //    }
 
 
-//    public boolean existeUsuario(boolean ob){
+    //    public boolean existeUsuario(boolean ob){
 //        while (ob=true)
 //
 //    }
-public void verificarSession() throws IOException {
-    FacesContext facesContext = FacesContext.getCurrentInstance();
-    Usuario usuario = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
-    if(usuario==null){
-        facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath());
-    }else if(rolSesion =="ADMINISTRADOR"){
-        facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath()+ "/views/dashboard/dashboardAdministrador.xhtml");
+    public void verificarSession() throws IOException {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        Usuario usuario = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
+        if (usuario == null) {
+            facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath());
+//        } else {
+//            if (Objects.equals(rolSesion, "DOCENTE")) {
+//
+//                FacesContext context = FacesContext.getCurrentInstance();
+//                String contextPath = context.getExternalContext().getRequestContextPath();
+//                contextPath = context.getExternalContext().getRequestContextPath();
+//                context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardDocente.xhtml");
+//            } else {
+//                facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath());
+//            }
+        }
 
-    }else{
-        FacesContext.getCurrentInstance().getPartialViewContext().getEvalScripts().add("location.reload();");
 
     }
 
-}
     public void verificarSessionAdministrador() throws IOException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         Usuario usuario = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
-        if(usuario==null &&(rolSesion.equals("Administrador"))){
-            facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath()+ "/views/dashboard/dashboardAdministrador.xhtml");
-
-        }
-
-    }
-
-
-
-    public void login() throws IOException, SQLException {
-
-        while(btnLogin){
+        if (usuario == null) {
+            facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath());
+        } else {
             FacesContext context = FacesContext.getCurrentInstance();
             String contextPath = context.getExternalContext().getRequestContextPath();
-
             switch (rolSesion) {
                 case "ADMINISTRADOR" -> {
                     contextPath = context.getExternalContext().getRequestContextPath();
@@ -102,14 +104,44 @@ public void verificarSession() throws IOException {
                     System.out.println(rolSesion);
                 }
             }
+        }
+
+    }
+
+
+    public void login() throws IOException, SQLException {
+
+        while (btnLogin) {
+            FacesContext context = FacesContext.getCurrentInstance();
+            String contextPath = context.getExternalContext().getRequestContextPath();
+
+            switch (rolSesion) {
+                case "ADMINISTRADOR" -> {
+                    contextPath = context.getExternalContext().getRequestContextPath();
+                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardAdministrador.xhtml");
+                    isAdministrador = true;
+                }
+                case "TECNICO DE LABORATORIO" -> {
+                    contextPath = context.getExternalContext().getRequestContextPath();
+                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardTecnico.xhtml");
+                    isTecnico = true;
+                }
+                case "DOCENTE" -> {
+                    contextPath = context.getExternalContext().getRequestContextPath();
+                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardDocente.xhtml");
+                    isADocente = true;
+                }
+                default -> {
+                    System.out.println("Solo números entre 1 y 4");
+                    System.out.println(rolSesion);
+                }
+            }
 
         }
 //            FacesContext context = FacesContext.getCurrentInstance();
 //            String contextPath = context.getExternalContext().getRequestContextPath();
 //            context.getExternalContext().redirect(contextPath+ "/views/dashboard/dashboardAdministrador.xhtml");
         // return "/newPersona.xhtml?faces-redirect=true";
-
-
 
 
         Usuario usuario = null;
@@ -127,9 +159,23 @@ public void verificarSession() throws IOException {
 
         } else {
             // Las credenciales son inválidas, mostrar un mensaje de error
-            System.out.println(usuario+"Ebert");
+            System.out.println(usuario + "Ebert");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Credenciales inválidas", null));
             //return null;
         }
+    }
+
+    public void cerrarSesion() {
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+            FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
+
+        } catch (Exception ignored) {
+        }
+    }
+
+    public String logout() {
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        return "/login.xhtml?faces-redirect=true";
     }
 }

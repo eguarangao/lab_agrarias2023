@@ -66,6 +66,14 @@
             <version>5.1.0</version>
         </dependency>
 
+        <!-- Agregar las dependencias de BCrypt-->
+        <!-- https://mvnrepository.com/artifact/org.mindrot/jbcrypt -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+
 
         <!-- FIN DEPENDENCIAS SECUNDARIAS DEL PROYECTO-->
         <!-- JASPER REPORTS -->
