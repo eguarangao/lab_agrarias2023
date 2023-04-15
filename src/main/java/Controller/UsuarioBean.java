@@ -174,8 +174,13 @@ public class UsuarioBean implements Serializable {
         }
     }
 
-    public String logout() {
-        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        return "/login.xhtml?faces-redirect=true";
+    public String logout() throws IOException {
+        username = null;
+        password = null;
+        rolSesion = null;
+        //  FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+         return "/login.xhtml?faces-redirect=true";
+       // FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
+        
     }
 }
