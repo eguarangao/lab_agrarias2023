@@ -2,9 +2,13 @@ package Model;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class Rol {
+public class Laboratorio {
     private int id;
     private String nombre;
     private String descripcion;
+    private String facultad;
+    private List<Aula> aulas;
 }
