@@ -6,6 +6,6 @@ import lombok.Data;
 public class PDF {
     private int id;
     private String titulo;
-    private String contenido;
+    private byte[] contenido;
     private String tipo;
 }

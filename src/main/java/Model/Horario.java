@@ -10,4 +10,5 @@ public class Horario {
     private Long id;
     private Date fechaInicio;
     private Date fechaFin;
+    private boolean enabled;
 }

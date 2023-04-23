@@ -1,7 +1,9 @@
 package Controller;
 
+import DAO.PersonaDAO;
 import DAO.RolDAO;
 import DAO.UsuarioDAO;
+import Model.AjustePerfil;
 import Model.Rol;
 import Model.Usuario;
 import jakarta.enterprise.context.SessionScoped;
@@ -136,6 +138,7 @@ public class UsuarioBean implements Serializable {
                     System.out.println(rolSesion);
                 }
             }
+            ajustePerfil();
 
         }
 //            FacesContext context = FacesContext.getCurrentInstance();
@@ -179,11 +182,27 @@ public class UsuarioBean implements Serializable {
         password = null;
         rolSesion = null;
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-         //return "/login.xhtml?faces-redirect=true";
+        //return "/login.xhtml?faces-redirect=true";
         FacesContext context = FacesContext.getCurrentInstance();
         String contextPath = context.getExternalContext().getRequestContextPath();
-        context.getExternalContext().redirect(contextPath );
+        context.getExternalContext().redirect(contextPath);
 
 
     }
+
+    AjustePerfil ajustePerfil;
+
+    public void ajustePerfil() {
+
+        UsuarioDAO usuarioDAO;
+        try {
+            usuarioDAO = new UsuarioDAO();
+            ajustePerfil = new AjustePerfil();
+            ajustePerfil = usuarioDAO.SelectAjustePerfil(username, rolSesion);
+        } catch (Exception e) {
+            throw e;
+
+        }
+    }
+
 }
