@@ -98,5 +98,31 @@ public class UsuarioDAO extends Conexion {
         return ajustePerfil;
     }
 
+    public AjustePerfil UpdateAjustePerfil(AjustePerfil ajustePerfil) {
+
+        try {
+            this.conectar();
+            PreparedStatement ps = connection.prepareStatement("");
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                ajustePerfil = new AjustePerfil();
+                ajustePerfil.setUsuario(rs.getString("usuario"));
+                ajustePerfil.setClave(rs.getString("clave"));
+                ajustePerfil.setNombre(rs.getString("nombre"));
+                ajustePerfil.setApellido(rs.getString("apellido"));
+                ajustePerfil.setTelefono(rs.getString("telefono"));
+                ajustePerfil.setEmail(rs.getString("email"));
+                ajustePerfil.setDni(rs.getString("dni"));
+                ajustePerfil.setGenero(rs.getString("genero"));
+                System.out.println(ajustePerfil);
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ajustePerfil;
+    }
 
 }
