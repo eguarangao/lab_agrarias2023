@@ -100,7 +100,7 @@ public class DownloadBean implements Serializable {
         ResultSet rs = st.executeQuery();
         if (rs.next()) {
             InputStream inputStream = rs.getBinaryStream("datos");
-            String fileName = "archivo_" + codigo + ".pdf"; // o cualquier nombre base de archivo que prefiera
+            String fileName = "archivo_" + codigo + ".jpg"; // o cualquier nombre base de archivo que prefiera
             FacesContext fc = FacesContext.getCurrentInstance();
             ExternalContext ec = fc.getExternalContext();
             ec.responseReset();

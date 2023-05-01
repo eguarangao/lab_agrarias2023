@@ -69,12 +69,11 @@
                     </div>
                     <div class="p-field p-col-12 p-md-4">
                         <p:fieldset legend="Cargar resoluciòn">
-                            <p:fileUpload id="archivo"  value="#{solicitudBean.upAarchivos}"
+                            <p:fileUpload id="archivo"
                             />
                         </p:fieldset>
 
                     </div>
-                    <p:inputText id="aux" value="#{solicitudBean.aux}" title="aux" type="hidden" />
                 </div>
             </div>
 
@@ -83,7 +82,6 @@
                     <p:commandButton value="Guardar"
                                      icon="pi pi-check"
                                      ajax="false"
-                                     action="#{solicitudBean.nuevoDocumento()}"
                                      update=":form:msgs,form:archivo"
                                      />
                 </div>
