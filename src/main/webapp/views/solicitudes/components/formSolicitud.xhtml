@@ -5,10 +5,10 @@
                 xmlns:p="http://primefaces.org/ui">
    <div class="p-grid ui-fluid">
    </div>
-   <h:form id ="form" enctype="multipart/form-data">
+   <h:form id ="formb" enctype="multipart/form-data">
       <div class="card" align="center">
-         <p:toolbarGroup>
-            <p:outputLabel value="#{solicitudBean.tipoSolicitud}" > </p:outputLabel>
+         <p:toolbarGroup id="tol">
+            <p:outputLabel value="#{solicitudBean.tipoSolicitud.toString()}" > </p:outputLabel>
          </p:toolbarGroup>
       </div>
       <div class="card ui-fluid">
@@ -63,10 +63,8 @@
                <div class="p-field p-col-12 p-md-4">
                   <p:fieldset legend="EQUIPOS REQUERIDOS">
 
+                     <p:commandButton  update=":formb"/>
                   </p:fieldset>
-
-
-
                </div>
                <div class="p-field p-col-12 p-md-4">
                   <p:fieldset legend="Cargar resoluciòn">
@@ -82,7 +80,8 @@
                <p:commandButton value="Guardar"
                                 icon="pi pi-check"
                                 ajax="false"
-                                update=":form:msgs,form:archivo"
+                                update=":formm:tol,formm:archivo"
+                                actionListener="#{solicitudBean.getTipoSolicitudes()}"
                />
             </div>
             <div class="p-col-2">

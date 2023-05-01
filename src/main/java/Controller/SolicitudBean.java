@@ -1,7 +1,9 @@
 package Controller;
 
+import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import lombok.Data;
@@ -13,24 +15,35 @@ import java.io.File;
 
 @Data
 @Named
-@ViewScoped
+@SessionScoped
 public class SolicitudBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private String tipoSolicitud;
+    private String tipoSolicitud="lalalalala";
     private String directorio = "/resources/pdf/";
     private String nombreArchivo;
 
-    public void getTipoSolicitudes(int iter) {
-        if (iter == 1) {
+//    public void getTipoSolicitudes(int iter) {
+//        if (iter == 1) {
+//            tipoSolicitud = "SOLICITUD PRACTICA DE ESTUDIANTE";
+//        } else if (iter == 2) {
+//            tipoSolicitud = "SOLICITUD PRACTICAS DE TESIS";
+//        } else {
+//            tipoSolicitud = "SOLICITUD DE INVESTIGACIÓN";
+//        }
+//
+//    }
+
+
+    public void getTipoSolicitudes() {
             tipoSolicitud = "SOLICITUD PRACTICA DE ESTUDIANTE";
-        } else if (iter == 2) {
-            tipoSolicitud = "SOLICITUD PRACTICAS DE TESIS";
-        } else {
-            tipoSolicitud = "SOLICITUD DE INVESTIGACIÓN";
+            System.out.println(tipoSolicitud);
         }
 
-    }
+
+
+
+
 //    public void handleFileUpload(FileUploadEvent event) {
 //        try {
 //            nombreArchivo = event.getFile().getFileName();

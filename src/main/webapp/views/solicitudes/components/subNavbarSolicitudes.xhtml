@@ -11,17 +11,20 @@
                         icon="pi pi-list"/>
 
             <p:submenu label="Nueva Solicitud">
-               <p:menuitem outcome="/views/solicitudes/newSolicitud"  id="practicas" update="@this"
-                           actionListener="#{solicitudBean.getTipoSolicitudes(1)}"
-                           value="Practicas estudiaes" title="Practicas estudiantiles"
+               <p:menuitem
+                           outcome="/views/solicitudes/newSolicitud"  id="practicas"
+                           value="Practicas estudiantes"
+                           ajax="false"
+                           update=":formm:tol,formm:archivo"
+                           actionListener="#{solicitudBean.getTipoSolicitudes()}"
                         />
-               <p:menuitem outcome="/views/solicitudes/components/formSolicitud" actionListener="#{solicitudBean.getTipoSolicitudes(3)}"
+               <p:menuitem outcome="/views/solicitudes/newSolicitud" actionListener="#{solicitudBean.getTipoSolicitudes()}"
                            value="Proyecto de investigacion"
                        />
-               <p:menuitem outcome="/views/solicitudes/components/formSolicitud" value="Practicas de tesis"
+               <p:menuitem outcome="/views/solicitudes/newSolicitud" value="Practicas de tesis"
                         />
             </p:submenu>
-            <p:menuitem actionListener="#{solicitudBean.getTipoSolicitudes(2)}" value="Aprobacion de solicitudes" rendered="#{usuarioBean.rolSesion=='ADMINISTRADOR' || usuarioBean.rolSesion=='TECNICO'}"
+            <p:menuitem actionListener="#{solicitudBean.getTipoSolicitudes()}" value="Aprobacion de solicitudes" rendered="#{usuarioBean.rolSesion=='ADMINISTRADOR' || usuarioBean.rolSesion=='TECNICO'}"
 
                         icon="pi pi-list"/>
 
