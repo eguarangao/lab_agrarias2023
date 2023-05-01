@@ -76,6 +76,7 @@ public class ArchivoBean implements Serializable {
                 PreparedStatement st = cn.prepareStatement("insert into laboratorio.archivos (datos) values (?);");
                 st.setBinaryStream(1,file.getInputStream());
                 st.executeUpdate();
+                st.close();
                 cn.close();
                 FacesMessage message = new FacesMessage("Exito",file.getFileName()+ " fue subido.");
                 FacesContext.getCurrentInstance().addMessage(null, message);

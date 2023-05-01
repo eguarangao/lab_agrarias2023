@@ -14,6 +14,13 @@
                      sizeLimit="100000" allowTypes="/(\.|\/)(pdf)$/"/>
       <p:commandButton value="Guardar archivo" action="#{archivoBean.save()}" ajax="false"/>
       <p:messages id="messages" />
+
+      <br/>
+
+      <p:inputText value="#{downloadBean.codigo}"/>
+
+      <p:commandButton value="Descargar" action="#{downloadBean.download()}" ajax="false"/>
+
    </h:form>
 
 
