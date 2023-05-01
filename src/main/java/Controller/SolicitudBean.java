@@ -1,7 +1,9 @@
 package Controller;
 
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.ActionEvent;
 import jakarta.faces.view.ViewScoped;
@@ -19,7 +21,7 @@ import java.io.File;
 public class SolicitudBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private String tipoSolicitud="lalalalala";
+    private String tipoSolicitud;
     private String directorio = "/resources/pdf/";
     private String nombreArchivo;
 
@@ -38,9 +40,6 @@ public class SolicitudBean implements Serializable {
 //            tipoSolicitud = "SOLICITUD PRACTICA DE ESTUDIANTE";
 //            System.out.println(tipoSolicitud);
 //        }
-
-
-
 
 
 //    public void handleFileUpload(FileUploadEvent event) {
@@ -69,5 +68,44 @@ public class SolicitudBean implements Serializable {
 //        FacesMessage message = new FacesMessage("Exito", nombreArchivo + " se guardó correctamente en " + directorio);
 //        FacesContext.getCurrentInstance().addMessage(null, message);
 //    }
+
+//    public void redireccionar() throws IOException {
+//        System.out.println("holaaaaaaaaaaaaa"+tipoSolicitud);
+//        FacesContext context = FacesContext.getCurrentInstance();
+//        ExternalContext externalContext = context.getExternalContext();
+//        String contextPath = externalContext.getRequestContextPath();
+//
+//        if ("practicas".equals(tipoSolicitud)) {
+//            externalContext.redirect(contextPath + "/views/solicitudes/newSolicitud.xhtml");
+//            System.out.println("holaaaaaaaaaaaaa"+tipoSolicitud);
+//        } else if ("investigacion".equals(tipoSolicitud)) {
+//            externalContext.redirect(contextPath + "/views/solicitudes/newSolicitud.xhtml");
+//            System.out.println("holaaaaaaaaaaaaa"+tipoSolicitud);
+//        } else if ("tesis".equals(tipoSolicitud)) {
+//            externalContext.redirect(contextPath + "/views/solicitudes/newSolicitud.xhtml");
+//            System.out.println("holaaaaaaaaaaaaa"+tipoSolicitud);
+//        }
+//    }
+
+
+
+    public void redireccionar() throws IOException {
+        System.out.println("holaaaaaaaaaaaaa"+tipoSolicitud);
+        FacesContext context = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = context.getExternalContext();
+        String contextPath = externalContext.getRequestContextPath();
+
+        if ("SOLICITUD PRÁCTICAS ESTUDIANTES".equals(tipoSolicitud)) {
+            externalContext.redirect(contextPath + "/views/solicitudes/newSolicitud.xhtml");
+            System.out.println("holaaaaaaaaaaaaa"+tipoSolicitud);
+        } else if ("SOLICITUD PRÁCTICAS DE PROYECTO DE INVESTIGACÓN".equals(tipoSolicitud)) {
+            externalContext.redirect(contextPath + "/views/solicitudes/newSolicitud.xhtml");
+            System.out.println("holaaaaaaaaaaaaa"+tipoSolicitud);
+        } else if ("SOLICITUD PRÁCTICAS DE TESIS".equals(tipoSolicitud)) {
+            externalContext.redirect(contextPath + "/views/solicitudes/newSolicitud.xhtml");
+            System.out.println("holaaaaaaaaaaaaa"+tipoSolicitud);
+        }
+
+        }
 
 }
