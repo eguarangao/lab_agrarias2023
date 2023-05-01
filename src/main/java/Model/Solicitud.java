@@ -15,8 +15,9 @@ public class Solicitud {
     private Date fechaSolicita;
     private String tipo;
     private String analisis;
-    private EXCEL excel;
-    private PDF pdf;
+    private String excelEstudiantes;
+    private String pdfResolucion;
+    private String pdfAprobacion;
     private Horario horario;
     private Laboratorio laboratorio;
     private Docente docente;
