@@ -8,7 +8,11 @@ import java.util.Date;
 @Data
 public class Horario {
     private Long id;
-    private Date fechaInicio;
-    private Date fechaFin;
-    private boolean enabled;
+    private Date fecha;
+    private boolean jornada1;
+    private boolean jornada2;
+    private boolean jornada3;
+    private boolean jornada4;
+    private boolean jornada5;
+
 }

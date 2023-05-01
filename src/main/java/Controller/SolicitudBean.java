@@ -1,5 +1,9 @@
 package Controller;
 
+import DAO.LaboratorioDAO;
+import DAO.RolDAO;
+import Model.Laboratorio;
+import Model.Rol;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
@@ -14,6 +18,8 @@ import java.io.*;
 
 
 import java.io.File;
+import java.sql.SQLException;
+import java.util.List;
 
 @Data
 @Named
@@ -24,7 +30,7 @@ public class SolicitudBean implements Serializable {
     private String tipoSolicitud;
     private String directorio = "/resources/pdf/";
     private String nombreArchivo;
-
+    private List<Laboratorio> listaLaboratorio;
     public void getTipoSolicitudes(int opcion) {
         if (opcion == 1) {
             tipoSolicitud = "SOLICITUD PRACTICA DE ESTUDIANTE";
@@ -88,24 +94,32 @@ public class SolicitudBean implements Serializable {
 //    }
 
 
-
     public void redireccionar() throws IOException {
-        System.out.println("holaaaaaaaaaaaaa"+tipoSolicitud);
+        System.out.println("holaaaaaaaaaaaaa" + tipoSolicitud);
         FacesContext context = FacesContext.getCurrentInstance();
         ExternalContext externalContext = context.getExternalContext();
         String contextPath = externalContext.getRequestContextPath();
 
         if ("SOLICITUD PRÁCTICAS ESTUDIANTES".equals(tipoSolicitud)) {
             externalContext.redirect(contextPath + "/views/solicitudes/newSolicitud.xhtml");
-            System.out.println("holaaaaaaaaaaaaa"+tipoSolicitud);
+            System.out.println("holaaaaaaaaaaaaa" + tipoSolicitud);
         } else if ("SOLICITUD PRÁCTICAS DE PROYECTO DE INVESTIGACÓN".equals(tipoSolicitud)) {
             externalContext.redirect(contextPath + "/views/solicitudes/newSolicitud.xhtml");
-            System.out.println("holaaaaaaaaaaaaa"+tipoSolicitud);
+            System.out.println("holaaaaaaaaaaaaa" + tipoSolicitud);
         } else if ("SOLICITUD PRÁCTICAS DE TESIS".equals(tipoSolicitud)) {
             externalContext.redirect(contextPath + "/views/solicitudes/newSolicitud.xhtml");
-            System.out.println("holaaaaaaaaaaaaa"+tipoSolicitud);
+            System.out.println("holaaaaaaaaaaaaa" + tipoSolicitud);
         }
 
+    }
+    public void listarLaboratorio() throws SQLException {
+        LaboratorioDAO laboratorioDAO;
+        try {
+            laboratorioDAO = new LaboratorioDAO();
+            listaLaboratorio = laboratorioDAO.findAllLaboratorio();
+        } catch (Exception e) {
+            throw e;
         }
+    }
 
 }

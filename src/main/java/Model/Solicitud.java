@@ -11,8 +11,7 @@ public class Solicitud {
     private String objetivo;
     private String tema;
     private boolean enabled;
-    private Date fechaReserva;
-    private Date fechaSolicita;
+    private Date fechaRegistro;
     private String tipo;
     private String analisis;
     private String excelEstudiantes;
