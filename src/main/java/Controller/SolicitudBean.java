@@ -9,8 +9,6 @@ import lombok.Data;
 import java.io.*;
 
 
-
-
 import java.io.File;
 
 @Data
@@ -19,10 +17,20 @@ import java.io.File;
 public class SolicitudBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    private String tipoSolicitud;
     private String directorio = "/resources/pdf/";
     private String nombreArchivo;
 
+    public void getTipoSolicitudes(int iter) {
+        if (iter == 1) {
+            tipoSolicitud = "SOLICITUD PRACTICA DE ESTUDIANTE";
+        } else if (iter == 2) {
+            tipoSolicitud = "SOLICITUD PRACTICAS DE TESIS";
+        } else {
+            tipoSolicitud = "SOLICITUD DE INVESTIGACIÓN";
+        }
+
+    }
 //    public void handleFileUpload(FileUploadEvent event) {
 //        try {
 //            nombreArchivo = event.getFile().getFileName();
@@ -49,4 +57,5 @@ public class SolicitudBean implements Serializable {
 //        FacesMessage message = new FacesMessage("Exito", nombreArchivo + " se guardó correctamente en " + directorio);
 //        FacesContext.getCurrentInstance().addMessage(null, message);
 //    }
+
 }

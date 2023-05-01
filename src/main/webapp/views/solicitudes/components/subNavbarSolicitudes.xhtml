@@ -7,21 +7,24 @@
       <div class="p-col-12">
          <p:menubar>
             <p:menuitem value="Solicitudes realizadas"
+                        outcome="/views/solicitudes/components/dataTableSolicitudes"
                         icon="pi pi-list"/>
+
             <p:submenu label="Nueva Solicitud">
-               <p:menuitem value="Practicas estudiantiles"
+               <p:menuitem outcome="/views/solicitudes/newSolicitud"  id="practicas" update="@this"
+                           actionListener="#{solicitudBean.getTipoSolicitudes(1)}"
+                           value="Practicas estudiaes" title="Practicas estudiantiles"
                         />
-               <p:menuitem value="Proyecto de investigacion"
+               <p:menuitem outcome="/views/solicitudes/components/formSolicitud" actionListener="#{solicitudBean.getTipoSolicitudes(3)}"
+                           value="Proyecto de investigacion"
                        />
-               <p:menuitem value="Practicas de tesis"
+               <p:menuitem outcome="/views/solicitudes/components/formSolicitud" value="Practicas de tesis"
                         />
             </p:submenu>
-            <p:menuitem value="Aprobacion de solicitudes"
+            <p:menuitem actionListener="#{solicitudBean.getTipoSolicitudes(2)}" value="Aprobacion de solicitudes" rendered="#{usuarioBean.rolSesion=='ADMINISTRADOR' || usuarioBean.rolSesion=='TECNICO'}"
 
                         icon="pi pi-list"/>
-            <p:menuitem value="Horarios"
 
-                        icon="pi pi-list"/>
          </p:menubar>
 
       </div>
