@@ -23,22 +23,21 @@ public class SolicitudBean implements Serializable {
     private String directorio = "/resources/pdf/";
     private String nombreArchivo;
 
-//    public void getTipoSolicitudes(int iter) {
-//        if (iter == 1) {
-//            tipoSolicitud = "SOLICITUD PRACTICA DE ESTUDIANTE";
-//        } else if (iter == 2) {
-//            tipoSolicitud = "SOLICITUD PRACTICAS DE TESIS";
-//        } else {
-//            tipoSolicitud = "SOLICITUD DE INVESTIGACIÓN";
-//        }
-//
-//    }
-
-
-    public void getTipoSolicitudes() {
+    public void getTipoSolicitudes(int opcion) {
+        if (opcion == 1) {
             tipoSolicitud = "SOLICITUD PRACTICA DE ESTUDIANTE";
-            System.out.println(tipoSolicitud);
+        } else if (opcion == 2) {
+            tipoSolicitud = "SOLICITUD PRACTICAS DE TESIS";
+        } else {
+            tipoSolicitud = "SOLICITUD DE INVESTIGACIÓN";
         }
+    }
+
+
+//    public void getTipoSolicitudes() {
+//            tipoSolicitud = "SOLICITUD PRACTICA DE ESTUDIANTE";
+//            System.out.println(tipoSolicitud);
+//        }
 
 
 
