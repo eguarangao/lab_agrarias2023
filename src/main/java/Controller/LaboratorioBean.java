@@ -15,29 +15,27 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 @Data
 @Named
 @ViewScoped
 public class LaboratorioBean implements Serializable{
     int idLaboratorio;
-    LaboratorioDAO laboratorioDAO;
-    List<Laboratorio> laboratorioList ;
+    List <Laboratorio> laboratorioList ;
     HorarioDAO horarioDAO ;
     Date fecha;
     List<Horario> horarioListforLaboratorio ;
+    LaboratorioDAO laboratorioDAO;
     Horario horario;
-    @SneakyThrows
-    @PostConstruct
-    public void init() {
-      System.out.println("PostConstruct");
 
-      laboratorioDAO = new LaboratorioDAO();
-      laboratorioList = new ArrayList<>();
-      laboratorioList = laboratorioDAO.findAllLaboratorio();
-      System.out.println(fecha);
+
+
+    public void finAllLaboratorio() throws SQLException {
+        laboratorioList = new ArrayList<>();
+        LaboratorioDAO laboratorioDAO = new LaboratorioDAO();
+        laboratorioList = laboratorioDAO.findAllLaboratorio();
     }
-
     public void listHoras() {
         horarioDAO = new HorarioDAO();
         horarioListforLaboratorio = new ArrayList<>();

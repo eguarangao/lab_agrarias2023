@@ -50,6 +50,7 @@ public class LaboratorioDAO extends Conexion {
 
                 listaLaboratorio.add(laboratorio);
             }
+            rs.close();
         }catch (Exception e){
             throw e;
         }finally {

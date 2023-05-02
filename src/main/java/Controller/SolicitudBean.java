@@ -112,14 +112,14 @@ public class SolicitudBean implements Serializable {
         }
 
     }
-    public void listarLaboratorio() throws SQLException {
-        LaboratorioDAO laboratorioDAO;
-        try {
-            laboratorioDAO = new LaboratorioDAO();
-            listaLaboratorio = laboratorioDAO.findAllLaboratorio();
-        } catch (Exception e) {
-            throw e;
-        }
-    }
+//    public void listarLaboratorio() throws SQLException {
+//        LaboratorioDAO laboratorioDAO;
+//        try {
+//            laboratorioDAO = new LaboratorioDAO();
+//            listaLaboratorio = laboratorioDAO.findAllLaboratorio();
+//        } catch (Exception e) {
+//            throw e;
+//        }
+//    }
 
 }

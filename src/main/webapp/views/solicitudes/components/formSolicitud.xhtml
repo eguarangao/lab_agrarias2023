@@ -28,10 +28,13 @@
                                        itemValue="#{lab.id}">
 
                         </f:selectItems>
-                        <p:ajax event="change"
-                                listener="#{laboratorioBean.listHoras()}"
-                                update="jornada"
-                        />
+
+
+
+                        <!--                        <p:ajax event="change"-->
+<!--                                listener="#{laboratorioBean.listHoras()}"-->
+<!--                                update="jornada"-->
+<!--                        />-->
 
                     </p:selectOneMenu>
 
@@ -44,22 +47,22 @@
                 <!--JORNADA  -->
                 <div class="field p-col-12 p-md-3">
                     <p:outputLabel value="Jornada"/>
-                    <p:selectOneMenu id="jornada" value="#"
-                                    >
+<!--                    <p:selectOneMenu id="jornada" value="#"-->
+<!--                                    >-->
 
-                        <f:selectItem itemLabel="Seleccione su jornada"
-                                      itemValue="0"/>
-                        <f:selectItem itemLabel="8:30 AM A 10:30 AM"
-                                      value="#{laboratorioBean.laboratorioList}"
-                                       >
-                        </f:selectItem>
-                        <f:selectItem itemLabel="10:30 AM A 12:30 AM"
-                        >
-                        </f:selectItem>
-                        <f:selectItem itemLabel="2:00 PM A 4:00 PM"
-                        >
-                        </f:selectItem>
-                    </p:selectOneMenu>
+<!--                        <f:selectItem itemLabel="Seleccione su jornada"-->
+<!--                                      itemValue="0"/>-->
+<!--                        <f:selectItem itemLabel="8:30 AM A 10:30 AM"-->
+<!--                                      value="#{laboratorioBean.laboratorioList}"-->
+<!--                                       >-->
+<!--                        </f:selectItem>-->
+<!--                        <f:selectItem itemLabel="10:30 AM A 12:30 AM"-->
+<!--                        >-->
+<!--                        </f:selectItem>-->
+<!--                        <f:selectItem itemLabel="2:00 PM A 4:00 PM"-->
+<!--                        >-->
+<!--                        </f:selectItem>-->
+<!--                    </p:selectOneMenu>-->
                 </div>
 
             </div>
