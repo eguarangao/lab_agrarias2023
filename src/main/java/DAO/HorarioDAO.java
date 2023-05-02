@@ -1,13 +1,10 @@
 package DAO;
 
-import Model.AjustePerfil;
 import Model.Horario;
-import Model.Solicitud;
 import global.Conexion;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -153,30 +150,34 @@ public class HorarioDAO extends Conexion {
 //        return listaHorarios;
 //    }
     Horario horario;
-    public void horarioForLaboratorio(int id) {
 
+    public List<Horario> horarioForLaboratorio(int id, Date fecha) {
+        List<Horario> listaHorario = new ArrayList<>();
         try {
             this.conectar();
-            PreparedStatement ps = connection.prepareStatement("");
-
+            PreparedStatement ps = connection.prepareStatement("select * from laboratorio.horario where id_laboratorio = ? and fecha = ?");
+            ps.setInt(1, id);
+            ps.setDate(2, (java.sql.Date) fecha);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                horario = new Horario();
-                horario.setId(rs.getLong("id"));
-                horario.setFecha(rs.getDate("fecha"));
-                horario.setJornada1(rs.getBoolean("jornada1"));
-                horario.setJornada2(rs.getBoolean("jornada2"));
-                horario.setJornada3(rs.getBoolean("jornada3"));
-                horario.setJornada4(rs.getBoolean("jornada4"));
-                horario.setJornada5(rs.getBoolean("jornada5"));
+                Horario horas    = new Horario();
 
-                System.out.println(horario);
+                horas.setId(rs.getLong("id"));
+                horas.setJornada1(rs.getBoolean("jornada1"));
+                horas.setJornada2(rs.getBoolean("jornada2"));
+                horas.setJornada3(rs.getBoolean("jornada3"));
+                horas.setJornada4(rs.getBoolean("jornada4"));
+                horas.setJornada5(rs.getBoolean("jornada5"));
+                listaHorario.add(horas);
             }
             rs.close();
             ps.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        finally {
+            this.desconectar();
+        }
+        return listaHorario;
     }
 }

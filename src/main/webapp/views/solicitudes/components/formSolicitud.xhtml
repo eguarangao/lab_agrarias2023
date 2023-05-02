@@ -29,6 +29,8 @@
 
                         </f:selectItems>
                         <p:ajax event="change"
+                                listener="#{laboratorioBean.listHoras()}"
+                                update="jornada"
                         />
 
                     </p:selectOneMenu>
@@ -37,17 +39,18 @@
                 <!--FECHA DE RESERVA  -->
                 <div class="field p-col-12 p-md-2">
                     <p:outputLabel for="calendarReserva" value="Fecha de Reserva"/>
-                    <p:calendar id="calendarReserva" locale="es"/>
+                    <p:calendar id="calendarReserva" locale="es" value="#{laboratorioBean.fecha}"/>
                 </div>
                 <!--JORNADA  -->
                 <div class="field p-col-12 p-md-3">
                     <p:outputLabel value="Jornada"/>
-                    <p:selectOneMenu id="jornada"
-                                     value="">
+                    <p:selectOneMenu id="jornada" value="#"
+                                    >
 
                         <f:selectItem itemLabel="Seleccione su jornada"
                                       itemValue="0"/>
                         <f:selectItem itemLabel="8:30 AM A 10:30 AM"
+                                      value="#{laboratorioBean.laboratorioList}"
                                        >
                         </f:selectItem>
                         <f:selectItem itemLabel="10:30 AM A 12:30 AM"
