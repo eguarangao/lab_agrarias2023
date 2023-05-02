@@ -1,5 +1,6 @@
 package DAO;
 
+import Model.AjustePerfil;
 import Model.Horario;
 import Model.Solicitud;
 import global.Conexion;
@@ -128,7 +129,7 @@ public class HorarioDAO extends Conexion {
 //        return listaHorarios;
 //    }
 
-//    public List<Horario> findAllByDate(Date fecha, Solicitud solicitud) throws SQLException {
+    //    public List<Horario> findAllByDate(Date fecha, Solicitud solicitud) throws SQLException {
 //        List<Horario> listaHorarios = new ArrayList<>();
 //        ResultSet rs;
 //        try {
@@ -151,4 +152,31 @@ public class HorarioDAO extends Conexion {
 //        }
 //        return listaHorarios;
 //    }
+    Horario horario;
+    public void horarioForLaboratorio(int id) {
+
+        try {
+            this.conectar();
+            PreparedStatement ps = connection.prepareStatement("");
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                horario = new Horario();
+                horario.setId(rs.getLong("id"));
+                horario.setFecha(rs.getDate("fecha"));
+                horario.setJornada1(rs.getBoolean("jornada1"));
+                horario.setJornada2(rs.getBoolean("jornada2"));
+                horario.setJornada3(rs.getBoolean("jornada3"));
+                horario.setJornada4(rs.getBoolean("jornada4"));
+                horario.setJornada5(rs.getBoolean("jornada5"));
+
+                System.out.println(horario);
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }

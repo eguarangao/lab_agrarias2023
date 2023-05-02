@@ -14,5 +14,6 @@ public class Horario {
     private boolean jornada3;
     private boolean jornada4;
     private boolean jornada5;
+    private Laboratorio idLaboratorio;
 
 }
