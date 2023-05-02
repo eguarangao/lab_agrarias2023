@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public class Periodo {
     private int id;
-    private String fechaInicio;
-    private String fechaFin;
+    private String periodo;
     private boolean enabled;
 }
