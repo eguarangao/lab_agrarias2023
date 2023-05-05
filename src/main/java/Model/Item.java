@@ -6,4 +6,5 @@ import lombok.Data;
 public class Item {
     private int id;
     private boolean dato;
+    private String fecha;
 }

@@ -155,13 +155,17 @@ public class HorarioDAO extends Conexion {
         List<Horario> listaHorario = new ArrayList<>();
         try {
             this.conectar();
-            PreparedStatement ps = connection.prepareStatement("select * from laboratorio.horario where id = ? and fecha = ?");
+            PreparedStatement ps = connection.prepareStatement("select * from laboratorio.horario where id = ? and fecha =   '"+fecha+"'");
+            System.out.println("******************************SQL***********************************");
+            System.out.println(id + "-----------"+ fecha);
+            System.out.println(ps);
             ps.setInt(1, id);
-            ps.setString(2, fecha);
+        //    ps.setString(2, fecha);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Horario horas = new Horario();
                 horas.setId(rs.getInt("id"));
+                horas.setFecha(rs.getDate("fecha"));
                 horas.setJornada1(rs.getBoolean("jornada1"));
                 horas.setJornada2(rs.getBoolean("jornada2"));
                 horas.setJornada3(rs.getBoolean("jornada3"));

@@ -37,15 +37,19 @@
                 <div class="field p-col-12 p-md-3">
                     <p:outputLabel value="Jornada"/>
                     <!--SELECT JORNADA-->
-                    <p:selectOneMenu id="selectHoras" value="#">
+                    <p:selectOneMenu id="selectHoras" value="#{laboratorioBean.idHorario}">
                         <f:selectItem itemLabel="Seleccione su jornada"
                                       itemValue="0"/>
                         <f:selectItems value="#{laboratorioBean.listaPrueba}"
                                        var="hor"
-                                       itemLabel="#{hor.dato}"
-                                       itemValue="#{hor.id}">
+                                       itemLabel="#{hor.fecha}"
+                                       itemValue="#{hor.id}"
+                            itemDisabled="#{not hor.dato}">
                         </f:selectItems>
+                        <p:ajax update="@this" process="@this"/>
                     </p:selectOneMenu>
+
+
                 </div>
             </div>
 

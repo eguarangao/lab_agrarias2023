@@ -32,6 +32,8 @@ public class LaboratorioBean implements Serializable {
     Horario horario;
     List<Item> listaPrueba;
 
+    int idHorario;
+
     ///
     String fechaString = "2023-05-01";
     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
@@ -53,7 +55,8 @@ public class LaboratorioBean implements Serializable {
     }
 
     public void listHoras() {
-        horarioListforLaboratorio= new ArrayList<>();
+        horarioListforLaboratorio = new ArrayList<>();
+        listaPrueba = new ArrayList<>();
         System.out.println("#########################");
         System.out.println(idLaboratorio);
 
@@ -66,40 +69,46 @@ public class LaboratorioBean implements Serializable {
         System.out.println("#########################TAMAÑO LISTA");
         System.out.println(horarioListforLaboratorio.size());
         System.out.println(horarioListforLaboratorio);
-        for (int i = 0; horarioListforLaboratorio.size() <1; i++) {
-            // Boolean iten = String.valueOf(horarioListforLaboratorio.get(i).isJornada1() + " " + horarioListforLaboratorio.get(i).is);
+        System.out.println("#########################ID LA ORATORIO");
+        System.out.println(idLaboratorio);
+        // Boolean iten = String.valueOf(horarioListforLaboratorio.get(i).isJornada1() + " " + horarioListforLaboratorio.get(i).is);
 
-            Item item1 = new Item();
-            item1.setId(1);
-            item1.setDato(horarioListforLaboratorio.get(i).isJornada1());
+        Item item1 = new Item();
+        item1.setId(1);
+        item1.setDato(horarioListforLaboratorio.get(0).isJornada1());
+        item1.setFecha("08:00 am / 10:00 am");
 
-            Item item2 = new Item();
-            item1.setId(2);
-            item1.setDato(horarioListforLaboratorio.get(i).isJornada2());
+        Item item2 = new Item();
+        item2.setId(2);
+        item2.setDato(horarioListforLaboratorio.get(0).isJornada2());
+        item2.setFecha("10:00 am / 12:00 pm");
 
-            Item item3 = new Item();
-            item1.setId(3);
-            item1.setDato(horarioListforLaboratorio.get(i).isJornada3());
+        Item item3 = new Item();
+        item3.setId(3);
+        item3.setDato(horarioListforLaboratorio.get(0).isJornada3());
+        item3.setFecha("12:00 pm / 14:00 pm");
 
-            Item item4 = new Item();
-            item1.setId(4);
-            item1.setDato(horarioListforLaboratorio.get(i).isJornada4());
+        Item item4 = new Item();
+        item4.setId(4);
+        item4.setDato(horarioListforLaboratorio.get(0).isJornada4());
+        item4.setFecha("14:00 pm / 16:00 pm");
 
-            Item item5 = new Item();
-            item1.setId(5);
-            item1.setDato(horarioListforLaboratorio.get(i).isJornada5());
+        Item item5 = new Item();
+        item5.setId(5);
+        item5.setDato(horarioListforLaboratorio.get(0).isJornada5());
+        item5.setFecha("16:00 pm / 18:00 pm");
 
-            listaPrueba.add(item1);
-            listaPrueba.add(item2);
-            listaPrueba.add(item3);
-            listaPrueba.add(item4);
-            listaPrueba.add(item5);
+        listaPrueba.add(item1);
+        listaPrueba.add(item2);
+        listaPrueba.add(item3);
+        listaPrueba.add(item4);
+        listaPrueba.add(item5);
 
-            // Hacer algo con el objeto "equipo" en cada iteración
+        // Hacer algo con el objeto "equipo" en cada iteración
 
 
-        }
         System.out.println("LISTAAAAAAAAAAAAAAAAAAAAAAAA");
+        System.out.println(listaPrueba.size());
         System.out.println(listaPrueba);
 
 
