@@ -23,7 +23,7 @@ public class SolicitudDAO extends Conexion {
 
             int idExcel;
             int idPDF;
-            Long idHorario= 0L;
+            int idHorario= 0;
             int idSolicitud= 0;
             boolean existeHorario;
 
@@ -79,7 +79,7 @@ public class SolicitudDAO extends Conexion {
                 PreparedStatement stMAX = this.getConnection().prepareStatement("SELECT MAX(id) FROM laboratorio.horario;");
                 ResultSet rsM = stMAX.executeQuery();
                 if (rsM.next()) {
-                    idHorario = rs.getLong(1);
+                    idHorario = rs.getInt(1);
                     horario.setId(idHorario);
                     // hacer algo con el valor de idHorario
                 }

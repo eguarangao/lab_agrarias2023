@@ -151,18 +151,18 @@ public class HorarioDAO extends Conexion {
 //    }
     Horario horario;
 
-    public List<Horario> horarioForLaboratorio(int id, Date fecha) {
+    public List<Horario> horarioForLaboratorio(int id, String fecha) {
         List<Horario> listaHorario = new ArrayList<>();
         try {
             this.conectar();
-            PreparedStatement ps = connection.prepareStatement("select * from laboratorio.horario where id_laboratorio = ? and fecha = ?");
+            PreparedStatement ps = connection.prepareStatement("select * from laboratorio.horario where id = ? and fecha = ?");
             ps.setInt(1, id);
-            ps.setDate(2, (java.sql.Date) fecha);
+            ps.setString(2, fecha);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 Horario horas    = new Horario();
 
-                horas.setId(rs.getLong("id"));
+                horas.setId(rs.getInt("id"));
                 horas.setJornada1(rs.getBoolean("jornada1"));
                 horas.setJornada2(rs.getBoolean("jornada2"));
                 horas.setJornada3(rs.getBoolean("jornada3"));

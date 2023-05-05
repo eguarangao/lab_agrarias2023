@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Data
 public class Horario {
-    private Long id;
+    private int id;
     private Date fecha;
     private boolean jornada1;
     private boolean jornada2;

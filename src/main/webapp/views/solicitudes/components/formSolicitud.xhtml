@@ -2,7 +2,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui" >
+                xmlns:p="http://primefaces.org/ui">
     <div class="p-grid ui-fluid">
     </div>
     <h:form id="formb" enctype="multipart/form-data">
@@ -17,28 +17,17 @@
                 <!--LABORATORIO  -->
                 <div class="field p-col-12 p-md-3">
                     <p:outputLabel value="Laboratorio"/>
-                    <p:selectOneMenu id="laboratorio"
-                                      value="#{laboratorioBean.idLaboratorio}">
-                        <f:selectItem noSelectionOption="true"  itemLabel="Seleccione laboratorio"
-                                      itemValue="0"/>
-
-                        <f:selectItems value="#{laboratorioBean.laboratorioList}"
-                                       var="lab"
-                                       itemLabel="#{lab.nombre}"
-                                       itemValue="#{lab.id}">
-
-                        </f:selectItems>
-
-
-
-                        <!--                        <p:ajax event="change"-->
-<!--                                listener="#{laboratorioBean.listHoras()}"-->
-<!--                                update="jornada"-->
-<!--                        />-->
-
-                    </p:selectOneMenu>
-
+                        <!--SELECT LABORATORIOS-->
+                        <p:selectOneMenu id="selectLaboratorios" value="#{laboratorioBean.idLaboratorio}" onchange="submit()">
+                            <f:selectItem itemLabel="Selccione laboratorio" noSelectionOption="true" />
+                            <f:selectItems value="#{laboratorioBean.laboratorioList}"
+                                           var="lab"
+                                           itemLabel="#{lab.nombre}"
+                                           itemValue="#{lab.id}"/>
+                            <p:ajax listener="#{laboratorioBean.listHoras}" update="selectHoras" />
+                        </p:selectOneMenu>
                 </div>
+
                 <!--FECHA DE RESERVA  -->
                 <div class="field p-col-12 p-md-2">
                     <p:outputLabel for="calendarReserva" value="Fecha de Reserva"/>
@@ -47,25 +36,19 @@
                 <!--JORNADA  -->
                 <div class="field p-col-12 p-md-3">
                     <p:outputLabel value="Jornada"/>
-<!--                    <p:selectOneMenu id="jornada" value="#"-->
-<!--                                    >-->
-
-<!--                        <f:selectItem itemLabel="Seleccione su jornada"-->
-<!--                                      itemValue="0"/>-->
-<!--                        <f:selectItem itemLabel="8:30 AM A 10:30 AM"-->
-<!--                                      value="#{laboratorioBean.laboratorioList}"-->
-<!--                                       >-->
-<!--                        </f:selectItem>-->
-<!--                        <f:selectItem itemLabel="10:30 AM A 12:30 AM"-->
-<!--                        >-->
-<!--                        </f:selectItem>-->
-<!--                        <f:selectItem itemLabel="2:00 PM A 4:00 PM"-->
-<!--                        >-->
-<!--                        </f:selectItem>-->
-<!--                    </p:selectOneMenu>-->
+                    <!--SELECT JORNADA-->
+                    <p:selectOneMenu id="selectHoras" value="#">
+                        <f:selectItem itemLabel="Seleccione su jornada"
+                                      itemValue="0"/>
+                        <f:selectItems value="#{laboratorioBean.listaPrueba}"
+                                       var="hor"
+                                       itemLabel="#{hor.dato}"
+                                       itemValue="#{hor.id}">
+                        </f:selectItems>
+                    </p:selectOneMenu>
                 </div>
-
             </div>
+
             <div class="p-formgrid p-grid">
                 <!--TEMA  -->
                 <div class="field p-col-12 p-md-6">
@@ -89,8 +72,7 @@
                 <div class="field p-col-12 p-md-2">
                     <p:outputLabel for="periodo" value="Periodo"/>
                     <p:selectOneMenu id="periodo"
-                                     value="">
-
+                                     value="#">
                         <f:selectItem itemLabel="Seleccione su periodo"
                                       itemValue="0"/>
                         <f:selectItem itemLabel="2023-2024"
@@ -99,14 +81,12 @@
                         <f:selectItem itemLabel="2025-2026"
                         >
                         </f:selectItem>
-
                     </p:selectOneMenu>
                 </div>
                 <div class="field p-col-12 p-md-3">
                     <p:outputLabel for="docente" value="Docente"/>
                     <p:inputText id="docente" maxlength="35"/>
                 </div>
-
             </div>
 
             <!-- EQUIPOS -->
@@ -124,8 +104,8 @@
                             </p:selectCheckboxMenu>
                         </p:fieldset>
                     </div>
-
                 </div>
+
                 <div class="p-grid p-justify-around">
                     <div class="p-field p-col-12 p-md-4">
                         <p:fieldset legend="Documento de resolución">
@@ -144,16 +124,16 @@
                                           allowTypes="/(\.|\/)(xlsx)$/"/>
                         </p:fieldset>
                     </div>
-
                 </div>
             </div>
+
             <div class="p-grid p-justify-end">
                 <div class="p-col-2">
                     <p:commandButton value="Guardar"
                                      icon="pi pi-check"
                                      ajax="false"
                                      update=":formm:tol,formm:archivo"
-                                     actionListener="#{solicitudBean.getTipoSolicitudes()}"
+                                     actionListener="#"
                     />
                 </div>
                 <div class="p-col-2">
