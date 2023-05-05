@@ -159,9 +159,8 @@ public class HorarioDAO extends Conexion {
             ps.setInt(1, id);
             ps.setString(2, fecha);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                Horario horas    = new Horario();
-
+            while (rs.next()) {
+                Horario horas = new Horario();
                 horas.setId(rs.getInt("id"));
                 horas.setJornada1(rs.getBoolean("jornada1"));
                 horas.setJornada2(rs.getBoolean("jornada2"));
@@ -170,12 +169,9 @@ public class HorarioDAO extends Conexion {
                 horas.setJornada5(rs.getBoolean("jornada5"));
                 listaHorario.add(horas);
             }
-            rs.close();
-            ps.close();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             this.desconectar();
         }
         return listaHorario;
