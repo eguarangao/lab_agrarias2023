@@ -31,10 +31,12 @@ public class LaboratorioBean implements Serializable {
     LaboratorioDAO laboratorioDAO;
     Horario horario;
     List<Item> listaPrueba;
-
+    boolean seleccionadoLaboratorio = false;
     int idHorario;
+    int idItems;
 
     ///
+    Date fechaDate= new Date();
     String fechaString = "2023-05-01";
     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
     Date fechaEspecifica;
@@ -45,6 +47,10 @@ public class LaboratorioBean implements Serializable {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+    public boolean isLaboratorio()
+    {
+        return seleccionadoLaboratorio = true;
     }
 
 
@@ -65,7 +71,7 @@ public class LaboratorioBean implements Serializable {
 
         horarioDAO = new HorarioDAO();
         // horarioListforLaboratorio = new ArrayList<>();
-        horarioListforLaboratorio = horarioDAO.horarioForLaboratorio(idLaboratorio, fechaString);
+        horarioListforLaboratorio = horarioDAO.horarioForLaboratorio(idLaboratorio, formato.format(fechaDate));
         System.out.println("#########################TAMAÑO LISTA");
         System.out.println(horarioListforLaboratorio.size());
         System.out.println(horarioListforLaboratorio);

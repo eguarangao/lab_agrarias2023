@@ -14,36 +14,52 @@
         <div class="card ui-fluid">
             <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true"/>
             <div class="p-formgrid p-grid">
+
+
                 <!--LABORATORIO  -->
                 <div class="field p-col-12 p-md-3">
                     <p:outputLabel value="Laboratorio"/>
-                        <!--SELECT LABORATORIOS-->
-                        <p:selectOneMenu id="selectLaboratorios" value="#{laboratorioBean.idLaboratorio}" onchange="submit()">
-                            <f:selectItem itemLabel="Selccione laboratorio" noSelectionOption="true" />
-                            <f:selectItems value="#{laboratorioBean.laboratorioList}"
-                                           var="lab"
-                                           itemLabel="#{lab.nombre}"
-                                           itemValue="#{lab.id}"/>
-                            <p:ajax listener="#{laboratorioBean.listHoras}" update="selectHoras" />
-                        </p:selectOneMenu>
+                    <!--SELECT LABORATORIOS-->
+                    <p:selectOneMenu id="selectLaboratorios"
+                                     value="#{solicitudBean.idLaboratorio}"
+                                     onchange="submit()">
+                        <f:selectItem
+                                itemLabel="Selccione laboratorio"
+                                noSelectionOption="true" />
+                        <f:selectItems
+                                value="#{solicitudBean.laboratorioList}"
+                                       var="lab"
+                                       itemLabel="#{lab.nombre}"
+                                       itemValue="#{lab.id}"/>
+                        <p:ajax listener="#{solicitudBean.isLaboratorio}" update=":formb"/>
+                    </p:selectOneMenu>
                 </div>
-
                 <!--FECHA DE RESERVA  -->
                 <div class="field p-col-12 p-md-2">
                     <p:outputLabel for="calendarReserva" value="Fecha de Reserva"/>
-                    <p:calendar id="calendarReserva" locale="es" value="#{laboratorioBean.fecha}"/>
+                    <p:calendar
+                            id="calendarReserva"
+                            locale="es"
+                            value="#{solicitudBean.fechaDate}"
+
+                            disabled="#{not solicitudBean.seleccionadoLaboratorio}">
+
+                        <p:ajax event="dateSelect" listener="#{solicitudBean.listHoras}" update=":formb" />
+                    </p:calendar>
+
                 </div>
+
                 <!--JORNADA  -->
                 <div class="field p-col-12 p-md-3">
                     <p:outputLabel value="Jornada"/>
                     <!--SELECT JORNADA-->
-                    <p:selectOneMenu id="selectHoras" value="#{laboratorioBean.idHorario}">
+                    <p:selectOneMenu id="selectHoras" value="#{solicitudBean.itemSeleccionado}">
                         <f:selectItem itemLabel="Seleccione su jornada"
                                       itemValue="0"/>
-                        <f:selectItems value="#{laboratorioBean.listaPrueba}"
+                        <f:selectItems value="#{solicitudBean.listaPrueba}"
                                        var="hor"
                                        itemLabel="#{hor.fecha}"
-                                       itemValue="#{hor.id}"
+                                       itemValue="#{hor.dato}"
                             itemDisabled="#{not hor.dato}">
                         </f:selectItems>
                         <p:ajax update="@this" process="@this"/>
@@ -57,21 +73,21 @@
                 <!--TEMA  -->
                 <div class="field p-col-12 p-md-6">
                     <p:outputLabel for="tema" value="Tema"/>
-                    <p:inputText id="tema" maxlength="35"/>
+                    <p:inputText id="tema" value="#{solicitudBean.solicitud.tema}" maxlength="35"/>
                 </div>
                 <!--OBJETIVO  -->
                 <div class="field p-col-12 p-md-6">
                     <p:outputLabel for="objetivo" value="Objetivo"/>
-                    <p:inputText id="objetivo" maxlength="35"/>
+                    <p:inputText id="objetivo" value="#{solicitudBean.solicitud.objetivo}" maxlength="35"/>
                 </div>
                 <!--ANALISIS  -->
                 <div class="field p-col-12 p-md-5">
                     <p:outputLabel for="analisis" value="Análisis"/>
-                    <p:inputText id="analisis" maxlength="35"/>
+                    <p:inputText id="analisis" value="#{solicitudBean.solicitud.analisis}" maxlength="35"/>
                 </div>
                 <div class="field p-col-12 p-md-2">
                     <p:outputLabel for="codigo" value="Código"/>
-                    <p:inputText id="codigo" maxlength="35"/>
+                    <p:inputText id="codigo" value="#{solicitudBean.solicitud.codigo}" maxlength="35"/>
                 </div>
                 <div class="field p-col-12 p-md-2">
                     <p:outputLabel for="periodo" value="Periodo"/>
@@ -114,7 +130,8 @@
                     <div class="p-field p-col-12 p-md-4">
                         <p:fieldset legend="Documento de resolución">
                             <p:fileUpload mode="simple" skinSimple="true"
-                                          label="Subir resolución"
+                                          value="#{solicitudBean.solicitud.pdfResolucion}"
+                                           label="Subir resolución"
                                           sizeLimit="10485760"
                                           allowTypes="/(\.|\/)(pdf)$/"/>
                         </p:fieldset>
@@ -122,6 +139,7 @@
                     <div class="p-field p-col-12 p-md-4">
                         <p:fieldset legend="Lista de estudiantes">
                             <p:fileUpload mode="simple" widgetVar="ff"
+                                          value="#{solicitudBean.solicitud.excelEstudiantes}"
                                           label="Subir lista de estudiantes"
                                           skinSimple="true"
                                           sizeLimit="10485760"

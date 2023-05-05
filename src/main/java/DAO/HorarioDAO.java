@@ -155,7 +155,7 @@ public class HorarioDAO extends Conexion {
         List<Horario> listaHorario = new ArrayList<>();
         try {
             this.conectar();
-            PreparedStatement ps = connection.prepareStatement("select * from laboratorio.horario where id = ? and fecha =   '"+fecha+"'");
+            PreparedStatement ps = connection.prepareStatement("select * from laboratorio.horario where id_laboratorio = ? and fecha =   '"+fecha+"'");
             System.out.println("******************************SQL***********************************");
             System.out.println(id + "-----------"+ fecha);
             System.out.println(ps);
