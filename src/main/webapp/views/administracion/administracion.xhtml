@@ -1,3 +1,4 @@
+
 <ui:composition template="/template/baseTemplate.xhtml"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -5,13 +6,9 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-   <ui:composition template="../../template/baseTemplate.xhtml">
-      <ui:define name="content">
-         <ui:include src="/views/laboratorios/components/dataTableLaboratorios.xhtml">
+        <ui:define name="content">
+            <ui:include src="/views/Administracion/components/subNavBarAdministracion.xhtml"/>
+            <ui:include src="components/formUsuarios.xhtml"></ui:include>
 
-         </ui:include>
-
-      </ui:define>
-   </ui:composition>
-
+        </ui:define>
 </ui:composition>
