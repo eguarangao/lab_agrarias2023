@@ -167,7 +167,35 @@ public class UsuarioBean implements Serializable {
             //return null;
         }
     }
+    public void home() throws IOException, SQLException {
 
+            FacesContext context = FacesContext.getCurrentInstance();
+            String contextPath = context.getExternalContext().getRequestContextPath();
+
+            switch (rolSesion) {
+                case "ADMINISTRADOR" -> {
+                    contextPath = context.getExternalContext().getRequestContextPath();
+                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardAdministrador.xhtml");
+                    isAdministrador = true;
+                }
+                case "TECNICO DE LABORATORIO" -> {
+                    contextPath = context.getExternalContext().getRequestContextPath();
+                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardTecnico.xhtml");
+                    isTecnico = true;
+                }
+                case "DOCENTE" -> {
+                    contextPath = context.getExternalContext().getRequestContextPath();
+                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardDocente.xhtml");
+                    isADocente = true;
+                }
+                default -> {
+                    System.out.println("Solo números entre 1 y 4");
+                    System.out.println(rolSesion);
+                }
+            }
+
+
+    }
     public void cerrarSesion() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().invalidateSession();

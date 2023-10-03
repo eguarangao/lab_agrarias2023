@@ -5,11 +5,15 @@
                 xmlns:p="http://primefaces.org/ui">
 
       <div class="layout-topbar" style="background-color: #028A0F">
-         <a href="#" >
+         <p:commandButton
+                 styleClass="ui-button-raised ui-button-success"
+                 actionListener="#{usuarioBean.home()}"
+                 value="UTEQ"
+         />
             <p:graphicImage name="logoUTEQ.png" library="Images"
                             style="width: 55px; height: 55px;
                             vertical-align: middle; margin-top: -12px"/>
-         </a>
+
          <div class="layout-topbar-menu-wrapper">
             <ul class="topbar-menu navbar">
                <li class="menu">
