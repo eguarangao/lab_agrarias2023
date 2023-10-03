@@ -3,16 +3,20 @@ package Controller;
 import DAO.*;
 import Model.*;
 import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import lombok.Data;
 
 import java.io.*;
 
 
+import java.io.File;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,8 +34,6 @@ public class SolicitudBean implements Serializable {
     private String directorio = "/resources/pdf/";
     private String nombreArchivo;
     private List<Laboratorio> listaLaboratorio;
-
-    private List<Equipo> equipos;
 
      Solicitud solicitud =  new Solicitud();
 
@@ -79,7 +81,6 @@ public class SolicitudBean implements Serializable {
     List<Horario> horarioListforLaboratorio;
     LaboratorioDAO laboratorioDAO;
     HorarioDAO horarioDAO;
-    EquipoDAO equipoDAO;
     List<Item> listaPrueba;
     boolean seleccionadoLaboratorio = false;
     int idHorario;
@@ -107,9 +108,6 @@ public class SolicitudBean implements Serializable {
         laboratorioList = laboratorioDAO.findAllLaboratorio();
     }
 
-    public void findEquiposByLaboratorioID() throws SQLException {
-        equipos = equipoDAO.findByLaboratorioID(idLaboratorio);
-    }
 
     public void listHoras() {
         horarioListforLaboratorio = new ArrayList<>();

@@ -118,13 +118,28 @@
                                                   multiple="true" filter="true" filterMatchMode="startsWith"
                                                   panelStyle="width: 30rem" scrollHeight="250">
                                 <p:ajax event="itemUnselect"/>
-                                <f:selectItems value="t"
+                                <f:selectItems value="#{solicitudBean.equipos}"
                                                var="equipo"
-                                               itemLabel=""/>
+                                               itemLabel="#{equipo.descripcion}"
+                                itemValue="#{equipo.id}"/>
                             </p:selectCheckboxMenu>
                         </p:fieldset>
                     </div>
                 </div>
+
+<!--                <p:selectOneMenu id="selectLaboratorios"-->
+<!--                                 value="#{solicitudBean.idLaboratorio}"-->
+<!--                                 onchange="submit()">-->
+<!--                    <f:selectItem-->
+<!--                            itemLabel="Selccione laboratorio"-->
+<!--                            noSelectionOption="true" />-->
+<!--                    <f:selectItems-->
+<!--                            value="#{solicitudBean.laboratorioList}"-->
+<!--                            var="lab"-->
+<!--                            itemLabel="#{lab.nombre}"-->
+<!--                            itemValue="#{lab.id}"/>-->
+<!--                    <p:ajax listener="#{solicitudBean.isLaboratorio}" update=":formb"/>-->
+<!--                </p:selectOneMenu>-->
 
                 <div class="p-grid p-justify-around">
                     <div class="p-field p-col-12 p-md-4">
