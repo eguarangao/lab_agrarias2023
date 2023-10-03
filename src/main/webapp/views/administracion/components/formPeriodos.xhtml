@@ -4,47 +4,108 @@
                 template="../../../template/baseTemplate.xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
+
     <ui:define name="content">
         <ui:include src="subNavBarAdministracion.xhtml"/>
         <div class="p-grid ui-fluid">
             <div class="p-col-12">
-                <h:form>
+                <h:form id="form">
+                    <p:growl id="messages" showDetail="true"/>
                     <div class="card crud-demo">
                         <p:toolbar>
                             <p:toolbarGroup>
                                 <p:commandButton value="New" icon="pi pi-plus"
+                                                 actionListener="#{periodoBean.openNew()}"
+                                                 update=":dialogs:manage-facd-content"
+                                                 oncomplete="PF('manageFacdDialog').show()"
                                                  styleClass="ui-button-success" style="margin-right: .5rem">
-
+                                    <p:resetInput target=":dialogs:manage-facd-content"/>
                                 </p:commandButton>
                             </p:toolbarGroup>
                         </p:toolbar>
-                        <p:dataTable>
-                            <p:column headerText="Codigo">
-
+                        <p:dataTable id="dt-facd" widgetVar="dtFacd" var="facd" value="#{periodoBean.periodos}"
+                                     reflow="true" styleClass="products-table" lazy="true"
+                                     rowKey="#{facd.id}" paginator="true" rows="10" rowSelectMode="add"
+                                     paginatorPosition="bottom">
+                            <p:column headerText="Code" >
+                                <h:outputText value="#{facd.id}"/>
                             </p:column>
-                            <p:column headerText="Periodo">
-
+                            <p:column headerText="Periodo" >
+                                <h:outputText value="#{facd.namePeriodo}"/>
                             </p:column>
-                            <p:column headerText="Inicio">
-
+                            <p:column headerText="Fecha Inicio" >
+                                <h:outputText value="#{facd.inicioPeriodo}"/>
                             </p:column>
-                            <p:column headerText="Fin">
-
+                            <p:column headerText="Fecha Fin " >
+                                <h:outputText value="#{facd.finPeriodo}"/>
+                            </p:column>
+                            <p:column headerText="Estado" >
+                                <h:outputText value="#{facd.enabled}"/>
                             </p:column>
                             <p:column headerText="Acciones" exportable="false">
                                 <p:commandButton icon="pi pi-pencil"
+                                                 update=":dialogs:manage-facd-content"
+                                                 oncomplete="PF('manageFacdDialog').show()"
                                                  styleClass="edit-button rounded-button ui-button-success"
                                                  process="@this">
-
+                                    <f:setPropertyActionListener value="#{facd}"
+                                                                 target="#{periodoBean.nuevoPeriodo}"/>
+                                    <p:resetInput target=":dialogs:manage-facd-content"/>
                                 </p:commandButton>
                                 <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
                                                  process="@this"
+                                                 oncomplete="PF('deleteFacdDialog').show()"
                                 >
+                                    <f:setPropertyActionListener value="#{facd}"
+                                                                 target="#{periodoBean.nuevoPeriodo}"/>
                                 </p:commandButton>
                             </p:column>
                         </p:dataTable>
-
                     </div>
+                </h:form>
+                <h:form id="dialogs">
+                    <p:dialog header="Periodos" showEffect="fade" modal="true" widgetVar="manageFacdDialog"
+                              responsive="true">
+                        <p:outputPanel id="manage-facd-content" class="ui-fluid">
+                            <p:outputPanel rendered="#{not empty periodoBean.nuevoPeriodo}">
+                                <div class="field">
+                                    <p:outputLabel for="name">Nombre periodo</p:outputLabel>
+                                    <p:inputText id="name" value="#{periodoBean.nuevoPeriodo.namePeriodo}"
+                                                 required="true"/>
+                                </div>
+                                <div class="field">
+                                    <p:outputLabel for="inicio">Inicio</p:outputLabel>
+                                    <p:inputTextarea id="inicio"
+                                                     value="#{periodoBean.nuevoPeriodo.inicioPeriodo}"/>
+                                </div>
+                                <div class="field">
+                                    <p:outputLabel for="fin">Fin</p:outputLabel>
+                                    <p:inputTextarea id="fin" value="#{periodoBean.nuevoPeriodo.finPeriodo}"/>
+                                </div>
+                                <div class="field">
+                                    <p:selectBooleanButton onLabel="Yes" offLabel="No" style="width:6rem" value="#{periodoBean.nuevoPeriodo.enabled}"/>
+                                </div>
+
+                            </p:outputPanel>
+                        </p:outputPanel>
+                        <f:facet name="footer">
+                            <p:commandButton value="Save" icon="pi pi-check"
+                                             actionListener="#{periodoBean.addPeriodo()}"
+                                             update="manage-facd-content, form:dt-facd"
+                                             process="manage-facd-content @this"/>
+                            <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageFacdDialog').hide()"
+                                             class="ui-button-secondary" type="button"/>
+                        </f:facet>
+                    </p:dialog>
+                    <p:confirmDialog widgetVar="deleteFacdDialog" showEffect="fade" width="300"
+                                     message="Delete the periodo?" header="Confirm" severity="warn">
+                        <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{periodoBean.delete()}"
+                                         process="@this"
+                                         oncomplete="PF('deleteFacdDialog').hide()"/>
+                        <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                         onclick="PF('deleteFacdDialog').hide()"/>
+                    </p:confirmDialog>
+
                 </h:form>
             </div>
         </div>

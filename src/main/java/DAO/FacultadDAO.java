@@ -58,9 +58,7 @@ public class FacultadDAO extends Conexion {
             this.conectar();
             String sql = "DELETE FROM laboratorio.facultad WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
-
             statement.setInt(1, id);
-
             statement.executeUpdate();
             statement.close();
         } finally {
