@@ -2,20 +2,17 @@ package Controller;
 
 import DAO.*;
 import Model.*;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.event.ActionEvent;
-import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import lombok.Data;
 
 import java.io.*;
 
 
-import java.io.File;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,6 +30,10 @@ public class SolicitudBean implements Serializable {
     private String directorio = "/resources/pdf/";
     private String nombreArchivo;
     private List<Laboratorio> listaLaboratorio;
+
+    private List<Equipo> equipos;
+
+     Solicitud solicitud =  new Solicitud();
 
     public void getTipoSolicitudes(int opcion) {
 
@@ -68,7 +69,7 @@ public class SolicitudBean implements Serializable {
     }
 
 
-    Solicitud solicitud;
+//    Solicitud solicitud;
     SolicitudDAO solicitudDAO;
     Horario horario;
     List<Equipo> equipos;
@@ -78,6 +79,7 @@ public class SolicitudBean implements Serializable {
     List<Horario> horarioListforLaboratorio;
     LaboratorioDAO laboratorioDAO;
     HorarioDAO horarioDAO;
+    EquipoDAO equipoDAO;
     List<Item> listaPrueba;
     boolean seleccionadoLaboratorio = false;
     int idHorario;
@@ -103,6 +105,10 @@ public class SolicitudBean implements Serializable {
         laboratorioList = new ArrayList<>();
         LaboratorioDAO laboratorioDAO = new LaboratorioDAO();
         laboratorioList = laboratorioDAO.findAllLaboratorio();
+    }
+
+    public void findEquiposByLaboratorioID() throws SQLException {
+        equipos = equipoDAO.findByLaboratorioID(idLaboratorio);
     }
 
     public void listHoras() {
@@ -164,6 +170,7 @@ public class SolicitudBean implements Serializable {
 
 
     }
+
     String itemSeleccionado;
 
     public void saveSolicitud() throws SQLException {
@@ -182,6 +189,22 @@ public class SolicitudBean implements Serializable {
             solicitudDAO.save(solicitud, horario, equipos, idItems, formato.format(fechaDate));
         } catch (Exception e) {
             System.out.println(e.toString() + "EBERT ERROR");
+        }
+    }
+
+
+    @PostConstruct
+    public void init() {
+        try {
+            // Llama al método para cargar los laboratorios al iniciar el bean.
+            finAllLaboratorio();
+//            solicitud = new Solicitud();
+        } catch (SQLException e) {
+            // Maneja cualquier excepción que pueda ocurrir durante la carga de los laboratorios.
+            e.printStackTrace();
+            // También puedes agregar un mensaje de error para mostrar en la vista.
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al cargar los laboratorios", null));
         }
     }
 
