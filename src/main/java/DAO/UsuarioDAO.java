@@ -1,6 +1,7 @@
 package DAO;
 
 import Model.AjustePerfil;
+import Model.ListFullUser;
 import Model.Persona;
 import Model.Usuario;
 import global.Conexion;
@@ -125,4 +126,36 @@ public class UsuarioDAO extends Conexion {
         return ajustePerfil;
     }
 
+    public List<ListFullUser> listarUsuariosPersonas() throws SQLException{
+        List<ListFullUser> usuariosPersonas = new ArrayList<>();
+   this.conectar();
+        String query = "select * from laboratorio.persona p inner join laboratorio.usuario ON usuario.id_persona = p.id ";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                ListFullUser usuarioPersona = new ListFullUser();
+                usuarioPersona.setUsuarioId(resultSet.getInt("id"));
+                usuarioPersona.setNombreUsuario(resultSet.getString("nombre"));
+                usuarioPersona.setClave(resultSet.getString("clave"));
+                usuarioPersona.setEnabled(resultSet.getBoolean("enabled"));
+
+                usuarioPersona.setPersonaId(resultSet.getInt("id"));
+                usuarioPersona.setNombrePersona(resultSet.getString("nombre"));
+                usuarioPersona.setApellido(resultSet.getString("apellido"));
+                usuarioPersona.setTelefono(resultSet.getString("telefono"));
+                usuarioPersona.setEmail(resultSet.getString("email"));
+                usuarioPersona.setDni(resultSet.getString("dni"));
+                usuarioPersona.setGenero(resultSet.getString("genero"));
+
+
+                usuariosPersonas.add(usuarioPersona);
+            }
+        } finally {
+            this.desconectar();
+        }
+
+        return usuariosPersonas;
+    }
 }

@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="postgres@localhost" uuid="b2c60364-f86c-4394-b24d-63fac68f4021">
+    <data-source source="LOCAL" name="laboratorios2023@lab-agrarias2023.postgres.database.azure.com" uuid="11ea4a30-b87c-4062-bb34-612c8d3d68ad">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/postgres</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="oimnmvdt@suleiman.db.elephantsql.com" uuid="7248bb68-30bd-4119-a78e-f010b2292a89">
-      <driver-ref>postgresql</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://suleiman.db.elephantsql.com:5432/oimnmvdt?sslmode=require</jdbc-url>
+      <jdbc-url>jdbc:postgresql://lab-agrarias2023.postgres.database.azure.com:5432/laboratorios2023</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

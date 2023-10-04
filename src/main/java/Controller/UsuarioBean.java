@@ -3,9 +3,8 @@ package Controller;
 import DAO.PersonaDAO;
 import DAO.RolDAO;
 import DAO.UsuarioDAO;
-import Model.AjustePerfil;
-import Model.Rol;
-import Model.Usuario;
+import Model.*;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
@@ -40,6 +39,20 @@ public class UsuarioBean implements Serializable {
     private boolean isAdministrador = false;
     private boolean isTecnico = false;
     private boolean isADocente = false;
+    private List<ListFullUser> listFullUsers;
+    private ListFullUser nuevoUsuario;
+    private UsuarioDAO DAO= new UsuarioDAO();
+    @PostConstruct
+    public void main() {
+        try {
+            this.listFullUsers = new ArrayList<>();
+            listFullUsers = DAO.listarUsuariosPersonas();
+            System.out.println(listFullUsers);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
 //    public String login() {
@@ -232,5 +245,19 @@ public class UsuarioBean implements Serializable {
 
         }
     }
+
+
+
+
+    public void openNew(){
+
+    }
+    public void addUsuario(){
+
+    }
+    public void delete(){
+
+    }
+
 
 }
