@@ -56,6 +56,17 @@ public class SolicitudBeann implements Serializable {
     List<Horario> horarios;
     List<Equipo> equipos;
 
+    List<Item> itemsSelecionados;
+
+
+    //select
+
+
+    private List<Boolean> selectedItems;
+
+    // Inicializar la lista de elementos y la lista de selecciones
+
+
     public void cargarHorarios() {
         if ( idLaboratorio > 0) {  // Asegúrate de tener una fecha y un laboratorio seleccionados
             // Convertir Date a String con el formato deseado
@@ -76,6 +87,21 @@ public class SolicitudBeann implements Serializable {
         } else {
             tipoSolicitud = "SOLICITUD DE INVESTIGACIÓN";
             solicitud.setTipo(tipoSolicitud);
+        }
+    }
+
+    public void validarSeleccion() {
+        int seleccionados = 0;
+        for (Boolean item : selectedItems) {
+            if (item != null && item) {
+                seleccionados++;
+            }
+        }
+
+        if (seleccionados > 3) {
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Solo se permiten un máximo de 3 selecciones.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            // Puedes reiniciar la selección aquí o tomar alguna otra acción
         }
     }
 
@@ -119,6 +145,8 @@ public class SolicitudBeann implements Serializable {
 
 
 
+
+
     String itemSeleccionado;
     public void listHoras() {
         horarios = new ArrayList<>();
@@ -131,28 +159,34 @@ public class SolicitudBeann implements Serializable {
 
         horarioDAO = new HorarioDAO();
         // horarioListforLaboratorio = new ArrayList<>();
-        horarios = horarioDAO.findByLaboratorioIdAndFecha(idLaboratorio, formato.format(fechaReserva));
+        horarios = horarioDAO.horarioForLaboratorio(idLaboratorio, formato.format(fechaReserva));
         System.out.println("#########################TAMAÑO LISTA");
         System.out.println(horarios.size());
         System.out.println(horarios);
         System.out.println("#########################ID LABORATORIO");
         System.out.println(idLaboratorio);
+
+        System.out.println("#########################FECHA RESERVA DATE");
+        System.out.println(fechaReserva);
+
+        System.out.println("#########################FECHA RESERVA STRING");
+        System.out.println(formato.format(fechaReserva));
         // Boolean iten = String.valueOf(horarioListforLaboratorio.get(i).isJornada1() + " " + horarioListforLaboratorio.get(i).is);
 
         Item item1 = new Item();
         item1.setId(1);
         item1.setDato(horarios.get(0).isJornada1());
-        item1.setFecha("08:00 am / 10:00 am");
+        item1.setFecha("07:30 am / 08:29 am");
 
         Item item2 = new Item();
         item2.setId(2);
         item2.setDato(horarios.get(0).isJornada2());
-        item2.setFecha("10:00 am / 12:00 pm");
+        item2.setFecha("08:30 am / 09:29 am");
 
         Item item3 = new Item();
         item3.setId(3);
         item3.setDato(horarios.get(0).isJornada3());
-        item3.setFecha("12:00 pm / 14:00 pm");
+        item3.setFecha("09:30 pm / 10:29 am ");
 
         Item item4 = new Item();
         item4.setId(4);
@@ -162,23 +196,23 @@ public class SolicitudBeann implements Serializable {
         Item item5 = new Item();
         item5.setId(5);
         item5.setDato(horarios.get(0).isJornada5());
-        item5.setFecha("16:00 pm / 18:00 pm");
+        item5.setFecha("10:30 am / 11:29 pm");
 
 
         Item item6 = new Item();
         item6.setId(6);
         item6.setDato(horarios.get(0).isJornada6());
-        item6.setFecha("18:00 pm / 20:00 pm");
+        item6.setFecha("15:00 pm / 15:59 pm");
 
         Item item7 = new Item();
         item7.setId(7);
         item7.setDato(horarios.get(0).isJornada7());
-        item7.setFecha("16:00 pm / 18:00 pm");
+        item7.setFecha("14:00 pm / 16:59 pm");
 
         Item item8 = new Item();
-        item5.setId(8);
-        item5.setDato(horarios.get(0).isJornada8());
-        item5.setFecha("18:00 pm / 20:00 pm");
+        item8.setId(8);
+        item8.setDato(horarios.get(0).isJornada8());
+        item8.setFecha("17:00 pm / 18:00 pm");
 
         items.add(item1);
         items.add(item2);
@@ -197,6 +231,10 @@ public class SolicitudBeann implements Serializable {
         System.out.println(items);
 
 
+
+
+        // Llama al método validarSeleccion para realizar la validación inicial si es necesario
+
     }
 
 
@@ -205,6 +243,7 @@ public class SolicitudBeann implements Serializable {
         try {
             // Llama al método para cargar los laboratorios al iniciar el bean.
             finAllLaboratorio();
+
             //horarios = horarioDAO.findByLaboratorioIdAndFecha(idLaboratorio, fechaReserva.toString());
 //            solicitud = new Solicitud();
         } catch (SQLException e) {

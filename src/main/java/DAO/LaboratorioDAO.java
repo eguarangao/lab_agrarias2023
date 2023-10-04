@@ -41,11 +41,11 @@ public class LaboratorioDAO extends Conexion {
         ResultSet rs;
         try{
             this.conectar();
-            PreparedStatement st = this.getConnection().prepareStatement("select id, nombre from laboratorio.laboratorio");
+            PreparedStatement st = this.getConnection().prepareStatement("select id, nom_laboratorio from laboratorio.laboratorio");
         rs = st.executeQuery();
             while (rs.next()) {
                 Laboratorio laboratorio = new Laboratorio();
-                laboratorio.setNombre(rs.getString("nombre"));
+                laboratorio.setNombre(rs.getString("nom_laboratorio"));
                 laboratorio.setId(rs.getInt("id"));
 
                 listaLaboratorio.add(laboratorio);

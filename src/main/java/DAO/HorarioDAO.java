@@ -171,6 +171,9 @@ public class HorarioDAO extends Conexion {
                 horas.setJornada3(rs.getBoolean("jornada3"));
                 horas.setJornada4(rs.getBoolean("jornada4"));
                 horas.setJornada5(rs.getBoolean("jornada5"));
+                horas.setJornada6(rs.getBoolean("jornada6"));
+                horas.setJornada7(rs.getBoolean("jornada7"));
+                horas.setJornada8(rs.getBoolean("jornada8"));
                 listaHorario.add(horas);
             }
         } catch (Exception e) {

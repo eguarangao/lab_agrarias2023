@@ -42,19 +42,13 @@
 
                 <!--JORNADA  -->
                 <div class="field p-col-12 p-md-3">
-                    <p:outputLabel value="Jornada"/>
+                    <p:outputLabel value="Horas"/>
                     <!--SELECT JORNADA-->
-                    <p:selectOneMenu id="selectHoras" value="#{solicitudBeann.itemSeleccionado}">
-                        <f:selectItem itemLabel="Seleccione su jornada"
-                                      itemValue="0"/>
-                        <f:selectItems value="#{solicitudBeann.items}"
-                                       var="hor"
-                                       itemLabel="#{hor.fecha}"
-                                       itemValue="#{hor.dato}"
-                                       itemDisabled="#{not hor.dato}">
-                        </f:selectItems>
-                        <p:ajax update="@this" process="@this"/>
-                    </p:selectOneMenu>
+                    <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.itemSeleccionado}" >
+                        <f:selectItems value="#{solicitudBeann.items}" var="hor" itemLabel="#{hor.fecha}" itemValue="#{hor.dato}" itemDisabled="#{not hor.dato}" />
+                        <p:ajax update="@this" process="@this" />
+                    </p:selectManyCheckbox>
+
                 </div>
             </div>
 
@@ -154,5 +148,6 @@
             </div>
         </div>
     </h:form>
+
 </ui:composition>
 
