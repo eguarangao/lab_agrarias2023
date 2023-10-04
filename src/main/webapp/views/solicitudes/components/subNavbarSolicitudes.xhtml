@@ -11,14 +11,14 @@
                         <p:commandButton value="Solicitudes realizadas"/>
                     </p:menuitem>
                     <p:menuitem>
-                        <p:selectOneMenu value="#{solicitudBean.tipoSolicitud}">
+                        <p:selectOneMenu value="#{solicitudBeann.tipoSolicitud}">
                             <f:selectItem itemLabel="Nueva solicitud" noSelectionOption="true" />
                             <f:selectItem itemLabel="Solicitud Practicas" itemValue="SOLICITUD PRÁCTICAS ESTUDIANTES"/>
                             <f:selectItem itemLabel="Solicitud de Investigacion"
                                           itemValue="SOLICITUD PRÁCTICAS DE PROYECTO DE INVESTIGACÓN"/>
                             <f:selectItem itemLabel="Solicitud de Tesis" itemValue="SOLICITUD PRÁCTICAS DE TESIS"/>
                             <p:ajax event="change"
-                                    listener="#{solicitudBean.redireccionar()}"
+                                    listener="#{solicitudBeann.redireccionar()}"
 
                             />
                         </p:selectOneMenu>

@@ -31,7 +31,7 @@ public class LaboratorioBean implements Serializable {
     LaboratorioDAO laboratorioDAO;
     Horario horario;
     List<Item> listaPrueba;
-    boolean seleccionadoLaboratorio = false;
+//    boolean seleccionadoLaboratorio = false;
     int idHorario;
     int idItems;
 
@@ -48,16 +48,16 @@ public class LaboratorioBean implements Serializable {
             throw new RuntimeException(e);
         }
     }
-    public boolean isLaboratorio()
-    {
-        return seleccionadoLaboratorio = true;
-    }
+//    public boolean isLaboratorio()
+//    {
+//        return seleccionadoLaboratorio = true;
+//    }
 
 
     public void finAllLaboratorio() throws SQLException {
         laboratorioList = new ArrayList<>();
         LaboratorioDAO laboratorioDAO = new LaboratorioDAO();
-        laboratorioList = laboratorioDAO.findAllLaboratorio();
+        laboratorioList = laboratorioDAO.findAll();
     }
 
     public void listHoras() {

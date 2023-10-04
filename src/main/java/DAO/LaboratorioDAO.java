@@ -36,7 +36,7 @@ public class LaboratorioDAO extends Conexion {
         }
         return listaRoles;
     }
-    public List<Laboratorio> findAllLaboratorio() throws SQLException {
+    public List<Laboratorio> findAll() throws SQLException {
         List<Laboratorio> listaLaboratorio = new ArrayList<>();
         ResultSet rs;
         try{

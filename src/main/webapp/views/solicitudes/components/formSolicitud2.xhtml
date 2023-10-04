@@ -27,10 +27,10 @@
                                 itemLabel="Selccione laboratorio"
                                 noSelectionOption="true" />
                         <f:selectItems
-                                value="#{solicitudBean.laboratorioList}"
-                                       var="lab"
-                                       itemLabel="#{lab.nombre}"
-                                       itemValue="#{lab.id}"/>
+                                value="#{solicitudBeann.laboratorios}"
+                                var="lab"
+                                itemLabel="#{lab.nombre}"
+                                itemValue="#{lab.id}"/>
                     </p:selectOneMenu>
                 </div>
                 <!--FECHA DE RESERVA  -->
@@ -39,11 +39,10 @@
                     <p:calendar
                             id="calendarReserva"
                             locale="es"
-                            value="#{solicitudBean.fechaDate}"
+                            value=""
 
-                            disabled="#{not solicitudBean.seleccionadoLaboratorio}">
+                            disabled="">
 
-                        <p:ajax event="dateSelect" listener="#{solicitudBean.listHoras}" update=":formb" />
                     </p:calendar>
 
                 </div>
@@ -52,16 +51,14 @@
                 <div class="field p-col-12 p-md-3">
                     <p:outputLabel value="Jornada"/>
                     <!--SELECT JORNADA-->
-                    <p:selectOneMenu id="selectHoras" value="#{solicitudBean.itemSeleccionado}">
+                    <p:selectOneMenu id="selectHoras" value="">
                         <f:selectItem itemLabel="Seleccione su jornada"
                                       itemValue="0"/>
-                        <f:selectItems value="#{solicitudBean.listaPrueba}"
+                        <f:selectItems value=""
                                        var="hor"
-                                       itemLabel="#{hor.fecha}"
-                                       itemValue="#{hor.dato}"
-                            itemDisabled="#{not hor.dato}">
+                                       itemLabel=""
+                                       itemValue="">
                         </f:selectItems>
-                        <p:ajax update="@this" process="@this"/>
                     </p:selectOneMenu>
 
 
@@ -116,24 +113,21 @@
                             <p:selectCheckboxMenu id="comboEquipos" label="Cities" style="min-width: 15rem"
                                                   multiple="true" filter="true" filterMatchMode="startsWith"
                                                   panelStyle="width: 30rem" scrollHeight="250">
-                                <p:ajax event="itemUnselect"/>
-                                <f:selectItems value="#{solicitudBean.equipos}"
-                                               var="equipo"
-                                               itemLabel="#{equipo.descripcion}"
-                                itemValue="#{equipo.id}"/>
+                                <f:selectItems value=""
+                                               var=""
+                                               itemLabel=""
+                                               itemValue=""/>
                             </p:selectCheckboxMenu>
                         </p:fieldset>
                     </div>
                 </div>
 
-
-
                 <div class="p-grid p-justify-around">
                     <div class="p-field p-col-12 p-md-4">
                         <p:fieldset legend="Documento de resolución">
                             <p:fileUpload mode="simple" skinSimple="true"
-                                          value="#{solicitudBean.solicitud.pdfResolucion}"
-                                           label="Subir resolución"
+                                          value=""
+                                          label="Subir resolución"
                                           sizeLimit="10485760"
                                           allowTypes="/(\.|\/)(pdf)$/"/>
                         </p:fieldset>
@@ -141,7 +135,7 @@
                     <div class="p-field p-col-12 p-md-4">
                         <p:fieldset legend="Lista de estudiantes">
                             <p:fileUpload mode="simple" widgetVar="ff"
-                                          value="#{solicitudBean.solicitud.excelEstudiantes}"
+                                          value=""
                                           label="Subir lista de estudiantes"
                                           skinSimple="true"
                                           sizeLimit="10485760"
@@ -156,7 +150,6 @@
                     <p:commandButton value="Guardar"
                                      icon="pi pi-check"
                                      ajax="false"
-                                     update=":formm:tol,formm:archivo"
                                      actionListener="#"
                     />
                 </div>

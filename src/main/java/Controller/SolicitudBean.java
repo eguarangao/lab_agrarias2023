@@ -35,6 +35,26 @@ public class SolicitudBean implements Serializable {
     private String nombreArchivo;
     private List<Laboratorio> listaLaboratorio;
 
+    //    Solicitud solicitud;
+    SolicitudDAO solicitudDAO;
+    Horario horario;
+    List<Equipo> equipos;
+    int idLaboratorio;
+    boolean isLaboratorio = false;
+    List<Laboratorio> laboratorioList;
+    Date fecha;
+    List<Horario> horarioListforLaboratorio;
+    LaboratorioDAO laboratorioDAO;
+    HorarioDAO horarioDAO;
+    List<Item> listaPrueba;
+    boolean seleccionadoLaboratorio = false;
+    int idHorario;
+    int idItems;
+    Date fechaDate = new Date();
+    String fechaString = "2023-05-01";
+    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+    Date fechaEspecifica;
+
      Solicitud solicitud =  new Solicitud();
 
     public void getTipoSolicitudes(int opcion) {
@@ -71,24 +91,6 @@ public class SolicitudBean implements Serializable {
     }
 
 
-//    Solicitud solicitud;
-    SolicitudDAO solicitudDAO;
-    Horario horario;
-    List<Equipo> equipos;
-    int idLaboratorio;
-    List<Laboratorio> laboratorioList;
-    Date fecha;
-    List<Horario> horarioListforLaboratorio;
-    LaboratorioDAO laboratorioDAO;
-    HorarioDAO horarioDAO;
-    List<Item> listaPrueba;
-    boolean seleccionadoLaboratorio = false;
-    int idHorario;
-    int idItems;
-    Date fechaDate = new Date();
-    String fechaString = "2023-05-01";
-    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
-    Date fechaEspecifica;
 
     {
         try {
@@ -98,14 +100,14 @@ public class SolicitudBean implements Serializable {
         }
     }
 
-    public boolean isLaboratorio() {
-        return seleccionadoLaboratorio = true;
-    }
+//    public boolean isLaboratorio() {
+//        return seleccionadoLaboratorio = true;
+//    }
 
     public void finAllLaboratorio() throws SQLException {
         laboratorioList = new ArrayList<>();
         LaboratorioDAO laboratorioDAO = new LaboratorioDAO();
-        laboratorioList = laboratorioDAO.findAllLaboratorio();
+        laboratorioList = laboratorioDAO.findAll();
     }
 
 
