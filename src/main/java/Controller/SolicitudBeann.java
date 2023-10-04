@@ -24,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Named
@@ -39,7 +40,7 @@ public class SolicitudBeann implements Serializable {
     Horario horario = new Horario();
     Solicitud solicitud = new Solicitud();
 
-    int idLaboratorio=0;
+    int idLaboratorio = 0;
     int idLaboratorio2;
     int idHorario;
     Date fecha;
@@ -68,7 +69,7 @@ public class SolicitudBeann implements Serializable {
 
 
     public void cargarHorarios() {
-        if ( idLaboratorio > 0) {  // Asegúrate de tener una fecha y un laboratorio seleccionados
+        if (idLaboratorio > 0) {  // Asegúrate de tener una fecha y un laboratorio seleccionados
             // Convertir Date a String con el formato deseado
             String fechaFormateada = formatoFecha.format(fechaReserva.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
             horarios = horarioDAO.findByLaboratorioIdAndFecha(idLaboratorio, fechaFormateada);
@@ -76,6 +77,7 @@ public class SolicitudBeann implements Serializable {
             horarios = new ArrayList<>();  // Si no hay fecha o laboratorio seleccionados, limpia la lista
         }
     }
+
     public void getTipoSolicitudes(int opcion) {
 
         if (opcion == 1) {
@@ -143,11 +145,35 @@ public class SolicitudBeann implements Serializable {
         laboratorios = laboratorioDAO.findAll();
     }
 
+    public void guardarSeleccionHoras() {
+        horario = new Horario();
+        // Crear un nuevo objeto Horario
+        horario.setFecha(fechaReserva);
 
+        // Obtener los valores de dato de los elementos en itemsSeleccionados
+        List<Boolean> valoresDato = itemsSelecionados.stream()
+                .map(Item::isDato)
+                .collect(Collectors.toList());
 
+        // Asignar los valores de dato a las propiedades de jornada de horario1
+        horario.setJornada1(valoresDato.get(0));
+        horario.setJornada2(valoresDato.get(1));
+        horario.setJornada3(valoresDato.get(2));
+        horario.setJornada4(valoresDato.get(3));
+        horario.setJornada5(valoresDato.get(4));
+        horario.setJornada6(valoresDato.get(5));
+        horario.setJornada7(valoresDato.get(6));
+        horario.setJornada8(valoresDato.get(7));
+
+        // Agregar horario a una lista o realizar cualquier otra acción necesaria
+
+        System.out.println("objeto horario sacado de las selecciones");
+        System.out.println(horario);
+    }
 
 
     String itemSeleccionado;
+
     public void listHoras() {
         horarios = new ArrayList<>();
         items = new ArrayList<>();
@@ -231,8 +257,6 @@ public class SolicitudBeann implements Serializable {
         System.out.println(items);
 
 
-
-
         // Llama al método validarSeleccion para realizar la validación inicial si es necesario
 
     }
@@ -243,7 +267,7 @@ public class SolicitudBeann implements Serializable {
         try {
             // Llama al método para cargar los laboratorios al iniciar el bean.
             finAllLaboratorio();
-
+            itemsSelecionados = new ArrayList<>();
             //horarios = horarioDAO.findByLaboratorioIdAndFecha(idLaboratorio, fechaReserva.toString());
 //            solicitud = new Solicitud();
         } catch (SQLException e) {
