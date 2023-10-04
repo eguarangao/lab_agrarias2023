@@ -2,6 +2,8 @@ package Model;
 
 import lombok.Data;
 
+import java.sql.Timestamp;
+
 @Data
 public class ListFullUser {
     private int usuarioId;
@@ -15,4 +17,5 @@ public class ListFullUser {
     private String dni;
     private String genero;
     private boolean enabled;
+    Timestamp fechaCreacion;
 }

@@ -41,7 +41,8 @@ public class UsuarioBean implements Serializable {
     private boolean isADocente = false;
     private List<ListFullUser> listFullUsers;
     private ListFullUser nuevoUsuario;
-    private UsuarioDAO DAO= new UsuarioDAO();
+    private UsuarioDAO DAO = new UsuarioDAO();
+
     @PostConstruct
     public void main() {
         try {
@@ -180,35 +181,37 @@ public class UsuarioBean implements Serializable {
             //return null;
         }
     }
+
     public void home() throws IOException, SQLException {
 
-            FacesContext context = FacesContext.getCurrentInstance();
-            String contextPath = context.getExternalContext().getRequestContextPath();
+        FacesContext context = FacesContext.getCurrentInstance();
+        String contextPath = context.getExternalContext().getRequestContextPath();
 
-            switch (rolSesion) {
-                case "ADMINISTRADOR" -> {
-                    contextPath = context.getExternalContext().getRequestContextPath();
-                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardAdministrador.xhtml");
-                    isAdministrador = true;
-                }
-                case "TECNICO DE LABORATORIO" -> {
-                    contextPath = context.getExternalContext().getRequestContextPath();
-                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardTecnico.xhtml");
-                    isTecnico = true;
-                }
-                case "DOCENTE" -> {
-                    contextPath = context.getExternalContext().getRequestContextPath();
-                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardDocente.xhtml");
-                    isADocente = true;
-                }
-                default -> {
-                    System.out.println("Solo números entre 1 y 4");
-                    System.out.println(rolSesion);
-                }
+        switch (rolSesion) {
+            case "ADMINISTRADOR" -> {
+                contextPath = context.getExternalContext().getRequestContextPath();
+                context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardAdministrador.xhtml");
+                isAdministrador = true;
             }
+            case "TECNICO DE LABORATORIO" -> {
+                contextPath = context.getExternalContext().getRequestContextPath();
+                context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardTecnico.xhtml");
+                isTecnico = true;
+            }
+            case "DOCENTE" -> {
+                contextPath = context.getExternalContext().getRequestContextPath();
+                context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardDocente.xhtml");
+                isADocente = true;
+            }
+            default -> {
+                System.out.println("Solo números entre 1 y 4");
+                System.out.println(rolSesion);
+            }
+        }
 
 
     }
+
     public void cerrarSesion() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
@@ -247,15 +250,40 @@ public class UsuarioBean implements Serializable {
     }
 
 
-
-
-    public void openNew(){
-
+    public void openNew() {
+        this.nuevoUsuario = new ListFullUser();
     }
-    public void addUsuario(){
 
+    public void addUsuario() {
+        try {
+            if (this.nuevoUsuario.getFechaCreacion()==null) {
+                DAO.insert(nuevoUsuario);
+                listFullUsers = DAO.listarUsuariosPersonas();
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario agregado"));
+            } else {
+                DAO.update(nuevoUsuario);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario actualizado"));
+
+            }
+            PrimeFaces.current().executeScript("PF('manageUserDialog').hide()");
+            PrimeFaces.current().ajax().update("form:messages");
+
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar la facultad"));
+            e.printStackTrace();
+        }
     }
-    public void delete(){
+
+    public void delete() {
+        try{
+            int deletedId = nuevoUsuario.getPersonaId();
+            DAO.delete(deletedId);
+            listFullUsers = DAO.listarUsuariosPersonas();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario Eliminado"));
+            PrimeFaces.current().ajax().update("form:messages", "form:dt-user");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 

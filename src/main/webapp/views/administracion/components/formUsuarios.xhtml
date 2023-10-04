@@ -23,6 +23,7 @@
                             </p:toolbarGroup>
                         </p:toolbar>
                         <p:dataTable id="dt-user" widgetVar="dtUser" var="user" value="#{usuarioBean.listFullUsers}"
+
                                      reflow="true" styleClass="products-table" lazy="true"
                                      rowKey="#{user.personaId}" paginator="true" rows="10" rowSelectMode="add"
                                      paginatorPosition="bottom">
@@ -48,10 +49,11 @@
                                 <h:outputText value="#{user.genero}"/>
                             </p:column>
                             <p:column headerText="Cuenta Usuario" >
-                                <h:outputText value="#{user.nombreUsuario}" style="text-transform: lowercase;"/>
+                                <h:outputText value="#{user.nombreUsuario}"/>
                             </p:column>
                             <p:column headerText="Cuenta Contraseña" >
                                 <h:outputText value="#{user.clave}" />
+
                             </p:column>
                             <p:column headerText="Estado" >
                                 <p:tag severity="success" value="Activado" rendered="#{user.enabled}"/>
@@ -111,10 +113,10 @@
                                 </div>
                                 <div class="field">
                                     <h:outputLabel for="option" value="Género:" />
-                                    <p:selectOneMenu id="option" value="#{usuarioBean.nuevoUsuario.enabled}">
+                                    <p:selectOneMenu id="option" value="#{usuarioBean.nuevoUsuario.genero}">
                                         <f:selectItem itemLabel="Selecciona un género" itemValue=""/>
-                                        <f:selectItem itemLabel="Hombre" itemValue="1"/>
-                                        <f:selectItem itemLabel="Mujer" itemValue="0"/>
+                                        <f:selectItem itemLabel="Hombre" itemValue="H"/>
+                                        <f:selectItem itemLabel="Mujer" itemValue="M"/>
                                     </p:selectOneMenu>
                                 </div>
                                 <div class="field">
