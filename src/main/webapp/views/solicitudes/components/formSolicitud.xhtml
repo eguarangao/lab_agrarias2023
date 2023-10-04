@@ -21,32 +21,26 @@
                     <p:outputLabel value="Laboratorio"/>
                     <!--SELECT LABORATORIOS-->
                     <p:selectOneMenu id="selectLaboratorios"
-                                     value="#{solicitudBean.idLaboratorio}"
-                                     onchange="submit()">
-                        <f:selectItem
-                                itemLabel="Selccione laboratorio"
-                                noSelectionOption="true" />
-                        <f:selectItems
-                                value="#{solicitudBean.laboratorioList}"
-                                       var="lab"
-                                       itemLabel="#{lab.nombre}"
-                                       itemValue="#{lab.id}"/>
+                                     value="#{solicitudBeann.idLaboratorio}">
+                        <f:selectItem itemLabel="Seleccione laboratorio" noSelectionOption="true"/>
+                        <f:selectItems value="#{solicitudBeann.laboratorios}" var="lab"
+                                       itemLabel="#{lab.nombre}" itemValue="#{lab.id}"/>
+                        <p:ajax event="change" update="calendarReserva selectHoras"/>
                     </p:selectOneMenu>
+
                 </div>
                 <!--FECHA DE RESERVA  -->
                 <div class="field p-col-12 p-md-2">
                     <p:outputLabel for="calendarReserva" value="Fecha de Reserva"/>
-                    <p:calendar
-                            id="calendarReserva"
-                            locale="es"
-                            value="#{solicitudBean.fechaDate}"
-
-                            disabled="#{not solicitudBean.seleccionadoLaboratorio}">
-
-                        <p:ajax event="dateSelect" listener="#{solicitudBean.listHoras}" update=":formb" />
+                    <p:calendar id="calendarReserva"
+                                disabled="#{solicitudBeann.idLaboratorio == 0}"
+                                locale="es"
+                                value="#{solicitudBeann.fechaReserva}">
+                        <!--                        <p:ajax event="dateSelect" listener="#{solicitudBeann.onDateSelect}" update="selectHoras"/>-->
+                        <p:ajax event="dateSelect" listener="#{solicitudBeann.listHoras}" update=":formb"/>
                     </p:calendar>
-
                 </div>
+            </div>
 
                 <!--JORNADA  -->
                 <div class="field p-col-12 p-md-3">

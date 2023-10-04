@@ -12,12 +12,15 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import lombok.Data;
+import org.primefaces.event.SelectEvent;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,20 +39,32 @@ public class SolicitudBeann implements Serializable {
     Horario horario = new Horario();
     Solicitud solicitud = new Solicitud();
 
-    int idLaboratorio;
+    int idLaboratorio=0;
+    int idLaboratorio2;
     int idHorario;
     Date fecha;
     String tipoSolicitud;
+    String fechaReserva2;
     Date fechaEspecifica;
+    Date fechaReserva;
     String fechaString = "2023-05-01";
     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 
 
+    List<Item> items;
     List<Laboratorio> laboratorios;
     List<Horario> horarios;
     List<Equipo> equipos;
 
-
+    public void cargarHorarios() {
+        if ( idLaboratorio > 0) {  // Asegúrate de tener una fecha y un laboratorio seleccionados
+            // Convertir Date a String con el formato deseado
+            String fechaFormateada = formatoFecha.format(fechaReserva.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
+            horarios = horarioDAO.findByLaboratorioIdAndFecha(idLaboratorio, fechaFormateada);
+        } else {
+            horarios = new ArrayList<>();  // Si no hay fecha o laboratorio seleccionados, limpia la lista
+        }
+    }
     public void getTipoSolicitudes(int opcion) {
 
         if (opcion == 1) {
@@ -64,8 +79,12 @@ public class SolicitudBeann implements Serializable {
         }
     }
 
+
+    // Crear un objeto DateTimeFormatter con el formato deseado
+    DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+
     public void redireccionar() throws IOException {
-        System.out.println("holaaaaaaaaaaaaa" + tipoSolicitud);
         FacesContext context = FacesContext.getCurrentInstance();
         ExternalContext externalContext = context.getExternalContext();
         String contextPath = externalContext.getRequestContextPath();
@@ -78,7 +97,6 @@ public class SolicitudBeann implements Serializable {
             System.out.println("holaaaaaaaaaaaaa" + tipoSolicitud);
         } else if ("SOLICITUD PRÁCTICAS DE TESIS".equals(tipoSolicitud)) {
             externalContext.redirect(contextPath + "/views/solicitudes/newSolicitud.xhtml");
-            System.out.println("holaaaaaaaaaaaaa" + tipoSolicitud);
         }
 
     }
@@ -100,11 +118,94 @@ public class SolicitudBeann implements Serializable {
     }
 
 
+
+    String itemSeleccionado;
+    public void listHoras() {
+        horarios = new ArrayList<>();
+        items = new ArrayList<>();
+        System.out.println("#########################");
+        System.out.println(idLaboratorio);
+
+//        System.out.println(listaPrueba);
+//        System.out.println(fechaEspecifica);
+
+        horarioDAO = new HorarioDAO();
+        // horarioListforLaboratorio = new ArrayList<>();
+        horarios = horarioDAO.findByLaboratorioIdAndFecha(idLaboratorio, formato.format(fechaReserva));
+        System.out.println("#########################TAMAÑO LISTA");
+        System.out.println(horarios.size());
+        System.out.println(horarios);
+        System.out.println("#########################ID LABORATORIO");
+        System.out.println(idLaboratorio);
+        // Boolean iten = String.valueOf(horarioListforLaboratorio.get(i).isJornada1() + " " + horarioListforLaboratorio.get(i).is);
+
+        Item item1 = new Item();
+        item1.setId(1);
+        item1.setDato(horarios.get(0).isJornada1());
+        item1.setFecha("08:00 am / 10:00 am");
+
+        Item item2 = new Item();
+        item2.setId(2);
+        item2.setDato(horarios.get(0).isJornada2());
+        item2.setFecha("10:00 am / 12:00 pm");
+
+        Item item3 = new Item();
+        item3.setId(3);
+        item3.setDato(horarios.get(0).isJornada3());
+        item3.setFecha("12:00 pm / 14:00 pm");
+
+        Item item4 = new Item();
+        item4.setId(4);
+        item4.setDato(horarios.get(0).isJornada4());
+        item4.setFecha("14:00 pm / 16:00 pm");
+
+        Item item5 = new Item();
+        item5.setId(5);
+        item5.setDato(horarios.get(0).isJornada5());
+        item5.setFecha("16:00 pm / 18:00 pm");
+
+
+        Item item6 = new Item();
+        item6.setId(6);
+        item6.setDato(horarios.get(0).isJornada6());
+        item6.setFecha("18:00 pm / 20:00 pm");
+
+        Item item7 = new Item();
+        item7.setId(7);
+        item7.setDato(horarios.get(0).isJornada7());
+        item7.setFecha("16:00 pm / 18:00 pm");
+
+        Item item8 = new Item();
+        item5.setId(8);
+        item5.setDato(horarios.get(0).isJornada8());
+        item5.setFecha("18:00 pm / 20:00 pm");
+
+        items.add(item1);
+        items.add(item2);
+        items.add(item3);
+        items.add(item4);
+        items.add(item5);
+        items.add(item6);
+        items.add(item7);
+        items.add(item8);
+
+        // Hacer algo con el objeto "equipo" en cada iteración
+
+
+        System.out.println("ITEMS LISTAAAAAAAAAAAAAAAAAAAAAAAA");
+        System.out.println(items.size());
+        System.out.println(items);
+
+
+    }
+
+
     @PostConstruct
     public void init() {
         try {
             // Llama al método para cargar los laboratorios al iniciar el bean.
             finAllLaboratorio();
+            //horarios = horarioDAO.findByLaboratorioIdAndFecha(idLaboratorio, fechaReserva.toString());
 //            solicitud = new Solicitud();
         } catch (SQLException e) {
             // Maneja cualquier excepción que pueda ocurrir durante la carga de los laboratorios.

@@ -180,4 +180,58 @@ public class HorarioDAO extends Conexion {
         }
         return listaHorario;
     }
+
+    public List<Horario> findByLaboratorioIdAndFecha(int id, String fecha) {
+        List<Horario> listaHorario = new ArrayList<>();
+        try {
+            this.conectar();
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM laboratorio.horario WHERE id_laboratorio = ? AND fecha = ?");
+            ps.setInt(1, id);
+            ps.setString(2, fecha);
+            ResultSet rs = ps.executeQuery();
+
+
+            boolean registrosEncontrados = false;
+
+            while (rs.next()) {
+                registrosEncontrados = true;
+                Horario horas = new Horario();
+                horas.setId(rs.getInt("id"));
+                horas.setFecha(rs.getDate("fecha"));
+                horas.setJornada1(rs.getBoolean("jornada1"));
+                horas.setJornada2(rs.getBoolean("jornada2"));
+                horas.setJornada3(rs.getBoolean("jornada3"));
+                horas.setJornada4(rs.getBoolean("jornada4"));
+                horas.setJornada5(rs.getBoolean("jornada5"));
+                horas.setJornada6(rs.getBoolean("jornada6"));
+                horas.setJornada7(rs.getBoolean("jornada7"));
+                horas.setJornada8(rs.getBoolean("jornada8"));
+                listaHorario.add(horas);
+
+                System.out.println("HORARIO%%%%%%%%%%55");
+                System.out.println(horas);
+            }
+
+            // Si no se encontraron registros, crear un objeto Horario con todas las jornadas en false
+            if (!registrosEncontrados) {
+                Horario horas = new Horario();
+                horas.setId(0); // Puedes establecer un valor específico para el ID o dejarlo en 0
+                horas.setFecha(java.sql.Date.valueOf(fecha));
+                horas.setJornada1(false);
+                horas.setJornada2(false);
+                horas.setJornada3(false);
+                horas.setJornada4(false);
+                horas.setJornada5(false);
+                horas.setJornada6(false);
+                horas.setJornada7(false);
+                horas.setJornada8(false);
+                listaHorario.add(horas);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            this.desconectar();
+        }
+        return listaHorario;
+    }
 }
