@@ -27,10 +27,9 @@
                                        itemLabel="#{lab.nombre}" itemValue="#{lab.id}"/>
                         <p:ajax event="change" update="calendarReserva selectHoras"/>
                     </p:selectOneMenu>
-
                 </div>
 
-                <div class="field p-col-12 p-md-2">
+                <div class="field p-col-12 p-md-3">
                     <p:outputLabel for="calendarReserva" value="Fecha de Reserva"/>
                     <p:calendar id="calendarReserva"
                                 disabled="#{solicitudBeann.idLaboratorio == 0}"
@@ -41,33 +40,53 @@
                 </div>
 
                 <!--JORNADA  -->
-<!--                <div class="field p-col-12 p-md-3 mb-4">-->
-<!--                    <p:outputLabel value="Horas" for="selectHoras" />-->
-<!--                    <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.itemsSelecionados}" layout="pageDirection">-->
-<!--                        <f:selectItems value="#{solicitudBeann.items}" var="hor" itemLabel="#{hor.fecha}" itemValue="#{hor.dato}" itemDisabled="#{not hor.dato}" />-->
-<!--                        <p:ajax update="@this" process="@this" />-->
-<!--                    </p:selectManyCheckbox>-->
-<!--                </div>-->
+                <!--                <div class="field p-col-12 p-md-3 mb-4">-->
+                <!--                    <p:outputLabel value="Horas" for="selectHoras" />-->
+                <!--                    <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.itemsSelecionados}" layout="pageDirection">-->
+                <!--                        <f:selectItems value="#{solicitudBeann.items}" var="hor" itemLabel="#{hor.fecha}" itemValue="#{hor.dato}" itemDisabled="#{not hor.dato}" />-->
+                <!--                        <p:ajax update="@this" process="@this" />-->
+                <!--                    </p:selectManyCheckbox>-->
+                <!--                </div>-->
 
 
-<!--                JORNADA-->
-                <div class="field p-col-12 p-md-3 mb-4">
-                    <p:outputLabel for="selectHoras" value="Horario"/>
-<!--                    <p:selectManyMenu id="selectHoras" value="#{solicitudBeann.itemsSelecionados}" style="width: 200px;" filterMatchMode="contains" filterNormalize="true"-->
-<!--                                      showCheckbox="true" styleClass="manymenu-advanced">-->
-<!--                        <f:selectItems value="#{solicitudBeann.items}" var="hor" itemLabel="#{hor.fecha}" itemValue="#{hor.dato}" itemDisabled="#{not hor.dato}" />-->
-<!--&lt;!&ndash;                        <p:ajax update="@this" process="@this" />&ndash;&gt;-->
-<!--                    </p:selectManyMenu>-->
+                <!--                JORNADA-->
+                <!--                <div class="field p-col-12 p-md-3 mb-4">-->
+                <!--                    <p:outputLabel for="selectHoras" value="Horario"/>-->
+                <!--&lt;!&ndash;                    <p:selectManyMenu id="selectHoras" value="#{solicitudBeann.itemsSelecionados}" style="width: 200px;" filterMatchMode="contains" filterNormalize="true"&ndash;&gt;-->
+                <!--&lt;!&ndash;                                      showCheckbox="true" styleClass="manymenu-advanced">&ndash;&gt;-->
+                <!--&lt;!&ndash;                        <f:selectItems value="#{solicitudBeann.items}" var="hor" itemLabel="#{hor.fecha}" itemValue="#{hor.dato}" itemDisabled="#{not hor.dato}" />&ndash;&gt;-->
+                <!--&lt;!&ndash;&lt;!&ndash;                        <p:ajax update="@this" process="@this" />&ndash;&gt;&ndash;&gt;-->
+                <!--&lt;!&ndash;                    </p:selectManyMenu>&ndash;&gt;-->
 
-                    <p:selectManyButton  id="selectHoras" value="#{solicitudBeann.itemsSelecionados}" >
-                        <f:selectItems value="#{solicitudBeann.items}" var="hor" itemLabel="#{hor.fecha}" itemValue="#{hor.dato}" itemDisabled="#{not hor.dato}" />
-                    </p:selectManyButton>
+                <!--                    <p:selectManyButton  id="selectHoras" value="#{solicitudBeann.itemsSelecionados}" >-->
+                <!--                        <f:selectItems value="#{solicitudBeann.items}" var="hor" itemLabel="#{hor.fecha}" itemValue="#{hor.dato}" itemDisabled="#{not hor.dato}" />-->
+                <!--                    </p:selectManyButton>-->
+
+                <!--                </div>-->
+
+
+                <div class="p-field p-col-12 p-md-6">
+                                            <p:outputLabel for="selectHoras" value="Horas" />
+                    <!--                        <p:selectCheckboxMenu id="selectHoras"  label="Cities"-->
+                    <!--                                              multiple="true"  scrollHeight="250"-->
+                    <!--                                              value="#{solicitudBeann.itemsSelecionados}" showSelectAll="true">-->
+                    <!--                          <f:selectItems value="#{solicitudBeann.items}" var="hor" itemLabel="#{hor.fecha}" itemValue="#{hor.dato}" itemDisabled="#{not hor.dato}" />-->
+                    <!--                          </p:selectCheckboxMenu>-->
+
+                    <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.itemsSelecionados}"
+                                          layout="responsive"
+                                          columns="3">
+                        <f:selectItems value="#{solicitudBeann.items}" var="item" itemLabel="#{item.fecha}"
+                                       itemDisabled="#{not item.dato}"
+                                       itemStyle="#{item.dato ? '' : 'color: red;'}"
+                                       itemValue="#{item.id}"/>
+                    </p:selectManyCheckbox>
+
 
                 </div>
 
 
             </div>
-
 
 
             <div class="p-formgrid p-grid">
