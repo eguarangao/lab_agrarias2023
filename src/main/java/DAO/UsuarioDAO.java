@@ -128,7 +128,10 @@ public class UsuarioDAO extends Conexion {
     public List<ListFullUser> listarUsuariosPersonas() throws SQLException {
         List<ListFullUser> usuariosPersonas = new ArrayList<>();
         this.conectar();
-        String query = "select * from laboratorio.persona p inner join laboratorio.usuario ON usuario.id_persona = p.id ";
+        String query = "SELECT * FROM laboratorio.persona p\n" +
+                "INNER JOIN laboratorio.usuario u ON p.id = u.id_persona\n" +
+                "INNER JOIN laboratorio.rol_usuario ru ON ru.id_usuario = u.id\n" +
+                "INNER join laboratorio.rol ON rol.id = ru.id_rol";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -148,7 +151,8 @@ public class UsuarioDAO extends Conexion {
                 usuarioPersona.setEmail(resultSet.getString("email"));
                 usuarioPersona.setDni(resultSet.getString("dni"));
                 usuarioPersona.setGenero(resultSet.getString("genero"));
-
+                //tabla rol_usuario
+                usuarioPersona.setIdRol(resultSet.getInt("id_rol"));
 
                 usuariosPersonas.add(usuarioPersona);
             }
@@ -209,15 +213,153 @@ public class UsuarioDAO extends Conexion {
         }
     }
 
+    public void update2(ListFullUser usuarioPersona) throws SQLException {
+        this.conectar();
+
+        String updatePersonaQuery = "UPDATE laboratorio.persona SET nombre=?, apellido=?, telefono=?, email=?, dni=?, genero=? WHERE id=?";
+        String updateUsuarioQuery = "UPDATE laboratorio.usuario SET id_persona=?, nombre=?, clave=?, enabled=? WHERE id=?";
+        String updateRolUsuarioQuery = "UPDATE laboratorio.rol_usuario SET id_rol=? WHERE id_usuario=?";
+        String updateTecnicoQuery = "UPDATE laboratorio.tecnico SET id_usuario=? WHERE id=?";
+        String updateDocenteQuery = "UPDATE laboratorio.docente SET id_persona=? WHERE id=?";
+
+        try {
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement preparedStatementPersona = connection.prepareStatement(updatePersonaQuery)) {
+                preparedStatementPersona.setString(1, usuarioPersona.getNombrePersona());
+                preparedStatementPersona.setString(2, usuarioPersona.getApellido());
+                preparedStatementPersona.setString(3, usuarioPersona.getTelefono());
+                preparedStatementPersona.setString(4, usuarioPersona.getEmail());
+                preparedStatementPersona.setString(5, usuarioPersona.getDni());
+                preparedStatementPersona.setString(6, usuarioPersona.getGenero());
+                preparedStatementPersona.setInt(7, usuarioPersona.getPersonaId());
+
+                int affectedRowsPersona = preparedStatementPersona.executeUpdate();
+                if (affectedRowsPersona == 0) {
+                    throw new SQLException("La actualización en la tabla persona falló, no se modificó ninguna fila.");
+                }
+            }
+
+            try (PreparedStatement preparedStatementUsuario = connection.prepareStatement(updateUsuarioQuery)) {
+                preparedStatementUsuario.setInt(1, usuarioPersona.getPersonaId());
+                preparedStatementUsuario.setString(2, usuarioPersona.getNombreUsuario());
+                preparedStatementUsuario.setString(3, usuarioPersona.getClave());
+                preparedStatementUsuario.setBoolean(4, usuarioPersona.isEnabled());
+                preparedStatementUsuario.setInt(5, usuarioPersona.getUsuarioId());
+
+                int affectedRowsUsuario = preparedStatementUsuario.executeUpdate();
+                if (affectedRowsUsuario == 0) {
+                    throw new SQLException("La actualización en la tabla usuario falló, no se modificó ninguna fila.");
+                }
+            }
+
+            try (PreparedStatement preparedStatementRolUsuario = connection.prepareStatement(updateRolUsuarioQuery)) {
+                preparedStatementRolUsuario.setInt(1, usuarioPersona.getIdRol());
+                preparedStatementRolUsuario.setInt(2, usuarioPersona.getUsuarioId());
+
+                int affectedRowsRolUsuario = preparedStatementRolUsuario.executeUpdate();
+                if (affectedRowsRolUsuario == 0) {
+                    throw new SQLException("La actualización en la tabla rol_usuario falló, no se modificó ninguna fila.");
+                }
+            }
+
+            if (usuarioPersona.getIdRol() == 2) {
+                try (PreparedStatement preparedStatementTecnico = connection.prepareStatement(updateTecnicoQuery)) {
+                    preparedStatementTecnico.setInt(1, usuarioPersona.getUsuarioId());
+                    preparedStatementTecnico.setInt(2, usuarioPersona.getIdTecnico());
+
+                    int affectedRowsTecnico = preparedStatementTecnico.executeUpdate();
+                    if (affectedRowsTecnico == 0) {
+                        throw new SQLException("La actualización en la tabla tecnico falló, no se modificó ninguna fila.");
+                    }
+                }
+            }
+
+            if (usuarioPersona.getIdRol() == 3) {
+                try (PreparedStatement preparedStatementDocente = connection.prepareStatement(updateDocenteQuery)) {
+                    preparedStatementDocente.setInt(1, usuarioPersona.getPersonaId());
+                    preparedStatementDocente.setInt(2, usuarioPersona.getIdDocente());
+
+                    int affectedRowsDocente = preparedStatementDocente.executeUpdate();
+                    if (affectedRowsDocente == 0) {
+                        throw new SQLException("La actualización en la tabla docente falló, no se modificó ninguna fila.");
+                    }
+                }
+            }
+
+            connection.commit();
+        } catch (SQLException e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            this.desconectar();
+        }
+    }
+    public void delete(int personaId) throws SQLException {
+        this.conectar();
+
+        String deletePersonaQuery = "DELETE FROM laboratorio.persona WHERE id=?";
+        String deleteUsuarioQuery = "DELETE FROM laboratorio.usuario WHERE id_persona=?";
+        String deleteRolUsuarioQuery = "DELETE FROM laboratorio.rol_usuario WHERE id_usuario=?";
+        String deleteTecnicoQuery = "DELETE FROM laboratorio.tecnico WHERE id_usuario=?";
+        String deleteDocenteQuery = "DELETE FROM laboratorio.docente WHERE id_persona=?";
+
+        try {
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement preparedStatementTecnico = connection.prepareStatement(deleteTecnicoQuery)) {
+                preparedStatementTecnico.setInt(1, personaId);
+                int affectedRowsTecnico = preparedStatementTecnico.executeUpdate();
+                // No es necesario verificar si no se eliminó ninguna fila, ya que puede no haber un registro en la tabla técnico para todas las personas.
+            }
+
+            try (PreparedStatement preparedStatementDocente = connection.prepareStatement(deleteDocenteQuery)) {
+                preparedStatementDocente.setInt(1, personaId);
+                int affectedRowsDocente = preparedStatementDocente.executeUpdate();
+                // No es necesario verificar si no se eliminó ninguna fila, ya que puede no haber un registro en la tabla docente para todas las personas.
+            }
+
+            try (PreparedStatement preparedStatementRolUsuario = connection.prepareStatement(deleteRolUsuarioQuery)) {
+                preparedStatementRolUsuario.setInt(1, personaId);
+                int affectedRowsRolUsuario = preparedStatementRolUsuario.executeUpdate();
+                // No es necesario verificar si no se eliminó ninguna fila, ya que puede no haber un registro en la tabla rol_usuario para todas las personas.
+            }
+
+            try (PreparedStatement preparedStatementUsuario = connection.prepareStatement(deleteUsuarioQuery)) {
+                preparedStatementUsuario.setInt(1, personaId);
+                int affectedRowsUsuario = preparedStatementUsuario.executeUpdate();
+                if (affectedRowsUsuario == 0) {
+                    throw new SQLException("La eliminación en la tabla usuario falló, no se eliminó ninguna fila.");
+                }
+            }
+
+            try (PreparedStatement preparedStatementPersona = connection.prepareStatement(deletePersonaQuery)) {
+                preparedStatementPersona.setInt(1, personaId);
+                int affectedRowsPersona = preparedStatementPersona.executeUpdate();
+                if (affectedRowsPersona == 0) {
+                    throw new SQLException("La eliminación en la tabla persona falló, no se eliminó ninguna fila.");
+                }
+            }
+
+            connection.commit();
+        } catch (SQLException e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            this.desconectar();
+        }
+    }
 
     public void insert(ListFullUser usuarioPersona) throws SQLException {
         this.conectar();
+        //insert tabla persona
         String insertPersonaQuery = "INSERT INTO laboratorio.persona (nombre, apellido, telefono, email, dni, genero,fecha_creacion) VALUES (?, ?, ?, ?, ?, ?,?)";
+        //insert tabla usuario
         String insertUsuarioQuery = "INSERT INTO laboratorio.usuario (id_persona, nombre, clave, enabled) VALUES (?, ?, ?, ?)";
-
+        //insert tabla rol_usuario
+        String insertRolUsuarioQuery = "INSERT INTO laboratorio.rol_usuario (id_rol, id_usuario) VALUES (?, ?)";
         try {
             connection.setAutoCommit(false);  // Inicia una transacción
-
             // Insertar en la tabla persona
             try (PreparedStatement preparedStatementPersona = connection.prepareStatement(insertPersonaQuery, Statement.RETURN_GENERATED_KEYS)) {
                 preparedStatementPersona.setString(1, usuarioPersona.getNombrePersona());
@@ -228,11 +370,9 @@ public class UsuarioDAO extends Conexion {
                 preparedStatementPersona.setString(6, usuarioPersona.getGenero());
                 preparedStatementPersona.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
                 int affectedRowsPersona = preparedStatementPersona.executeUpdate();
-
                 if (affectedRowsPersona == 0) {
                     throw new SQLException("La inserción en la tabla persona falló, no se agregó ninguna fila.");
                 }
-
                 // Obtener el ID generado para la persona
                 try (ResultSet generatedKeys = preparedStatementPersona.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
@@ -242,9 +382,8 @@ public class UsuarioDAO extends Conexion {
                     }
                 }
             }
-
             // Insertar en la tabla usuario
-            try (PreparedStatement preparedStatementUsuario = connection.prepareStatement(insertUsuarioQuery)) {
+            try (PreparedStatement preparedStatementUsuario = connection.prepareStatement(insertUsuarioQuery, Statement.RETURN_GENERATED_KEYS)) {
                 preparedStatementUsuario.setInt(1, usuarioPersona.getPersonaId());
                 preparedStatementUsuario.setString(2, usuarioPersona.getNombreUsuario());
                 preparedStatementUsuario.setString(3, usuarioPersona.getClave());
@@ -255,8 +394,43 @@ public class UsuarioDAO extends Conexion {
                 if (affectedRowsUsuario == 0) {
                     throw new SQLException("La inserción en la tabla usuario falló, no se agregó ninguna fila.");
                 }
+                // Obtener el ID generado para el usuario
+                try (ResultSet generatedKeys = preparedStatementUsuario.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        usuarioPersona.setUsuarioId(generatedKeys.getInt(1));
+                    } else {
+                        throw new SQLException("No se pudo obtener el ID del usuario.");
+                    }
+                }
             }
-
+            try (PreparedStatement preparedStatementRolUsuario = connection.prepareStatement(insertRolUsuarioQuery)) {
+                preparedStatementRolUsuario.setInt(1, usuarioPersona.getIdRol());
+                preparedStatementRolUsuario.setInt(2, usuarioPersona.getUsuarioId());
+                int affectedRowsRolUsuario = preparedStatementRolUsuario.executeUpdate();
+                if (affectedRowsRolUsuario == 0) {
+                    throw new SQLException("La inserción en la tabla rol_usuario falló, no se agregó ninguna fila.");
+                }
+            }
+            if (usuarioPersona.getIdRol() == 2) {
+                String insertTecnico = "INSERT INTO laboratorio.tecnico (id_usuario) VALUES (?)";
+                try (PreparedStatement preparedStatementTecnico = connection.prepareStatement(insertTecnico, Statement.RETURN_GENERATED_KEYS)) {
+                    preparedStatementTecnico.setInt(1, usuarioPersona.getUsuarioId());
+                    int affectedRowsTecnico = preparedStatementTecnico.executeUpdate();
+                    if (affectedRowsTecnico == 0) {
+                        throw new SQLException("La inserción en la tabla tecnico falló, no se agregó ninguna fila.");
+                    }
+                }
+            }
+            if (usuarioPersona.getIdRol() == 3) {
+                String insertDocente = "INSERT INTO laboratorio.docente (id_persona) VALUES (?)";
+                try (PreparedStatement preparedStatementDocente = connection.prepareStatement(insertDocente, Statement.RETURN_GENERATED_KEYS)) {
+                    preparedStatementDocente.setInt(1, usuarioPersona.getPersonaId());
+                    int affectedRowsDocente = preparedStatementDocente.executeUpdate();
+                    if (affectedRowsDocente == 0) {
+                        throw new SQLException("La inserción en la tabla docente falló, no se agregó ninguna fila.");
+                    }
+                }
+            }
             connection.commit();  // Confirma la transacción
         } catch (SQLException e) {
             connection.rollback();  // Si ocurre un error, deshace la transacción
@@ -265,7 +439,8 @@ public class UsuarioDAO extends Conexion {
             this.desconectar();
         }
     }
-    public void delete(int personaId) throws SQLException {
+
+    public void delete2(int personaId) throws SQLException {
         this.conectar();
         String deleteUsuarioQuery = "DELETE FROM laboratorio.usuario WHERE id_persona = ?";
         String deletePersonaQuery = "DELETE FROM laboratorio.persona WHERE id = ?";

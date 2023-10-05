@@ -18,7 +18,7 @@ public class FacultadDAO extends Conexion {
     public void insert(Facultad facultad) throws SQLException {
         try {
             this.conectar();
-            String sql = "INSERT INTO laboratorio.facultad ( nombre, correo, descripcion,fecha_creacion) VALUES ( ?, ?, ?,?)";
+            String sql = "INSERT INTO laboratorio.facultad ( facultad, correo, descripcion,fecha_creacion) VALUES ( ?, ?, ?,?)";
             PreparedStatement statement = connection.prepareStatement(sql);
 
             statement.setString(1, facultad.getNombreFacd());
@@ -38,7 +38,7 @@ public class FacultadDAO extends Conexion {
     public void update(Facultad facultad) throws SQLException {
         try {
             this.conectar();
-            String sql = "UPDATE laboratorio.facultad SET nombre = ?, correo = ?, descripcion = ? WHERE id = ?";
+            String sql = "UPDATE laboratorio.facultad SET facultad = ?, correo = ?, descripcion = ? WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
 
             statement.setString(1, facultad.getNombreFacd());
@@ -79,7 +79,7 @@ public class FacultadDAO extends Conexion {
             while (resultSet.next()) {
                 Facultad facultad = new Facultad();
                 facultad.setIdFacd(resultSet.getInt("id"));
-                facultad.setNombreFacd(resultSet.getString("nombre"));
+                facultad.setNombreFacd(resultSet.getString("facultad"));
                 facultad.setCorreoFacd(resultSet.getString("correo"));
                 facultad.setDescripcionFacd(resultSet.getString("descripcion"));
                 facultad.setFechaCreacion(resultSet.getTimestamp("fecha_creacion"));

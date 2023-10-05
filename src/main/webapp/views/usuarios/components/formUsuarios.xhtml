@@ -1,3 +1,4 @@
+
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -5,11 +6,11 @@
                 xmlns:p="http://primefaces.org/ui">
 
 
-    <div class="card crud-demo">
-
+    <div class="p-grid ui-fluid">
+        <div class="p-col-12">
             <h:form id="form">
                 <p:growl id="messages" showDetail="true"/>
-                <div>
+                <div class="card crud-demo">
                     <p:toolbar>
                         <p:toolbarGroup>
                             <p:commandButton value="New" icon="pi pi-plus"
@@ -18,7 +19,6 @@
                                              oncomplete="PF('manageUserDialog').show()"
                                              styleClass="ui-button-success" style="margin-right: .5rem">
                                 <p:resetInput target=":dialogs:manage-user-content"/>
-                                <p:ajax listener="#{usuarioBean.EditCreateUser(false)}"/>
                             </p:commandButton>
                         </p:toolbarGroup>
                     </p:toolbar>
@@ -27,37 +27,35 @@
                                  reflow="true" styleClass="products-table" lazy="true"
                                  rowKey="#{user.personaId}" paginator="true" rows="10" rowSelectMode="add"
                                  paginatorPosition="bottom">
-                        <p:column headerText="Código" style="width: 25px;">
+                        <p:column headerText="Código" >
                             <h:outputText value="#{user.personaId}"/>
                         </p:column>
-                        <p:column headerText="Nombres">
+                        <p:column headerText="Nombres" >
                             <h:outputText value="#{user.nombrePersona}"/>
                         </p:column>
-                        <p:column headerText="Apellidos">
+                        <p:column headerText="Apellidos" >
                             <h:outputText value="#{user.apellido}"/>
                         </p:column>
-                        <p:column headerText="DNI">
+                        <p:column headerText="DNI" >
                             <h:outputText value="#{user.dni}"/>
                         </p:column>
-                        <p:column headerText="Email">
+                        <p:column headerText="Email" >
                             <h:outputText value="#{user.email}"/>
                         </p:column>
-                        <p:column headerText="Teléfono">
+                        <p:column headerText="Teléfono" >
                             <h:outputText value="#{user.telefono}"/>
                         </p:column>
-                        <p:column headerText="Rol">
-                            <h:outputText value="ADMINISTRADOR" rendered="#{user.idRol == '1'}"/>
-                            <h:outputText value="TECNICO DE LABORATORIO " rendered="#{user.idRol == '2'}"/>
-                            <h:outputText value="DOCENTE " rendered="#{user.idRol == '3'}"/>
+                        <p:column headerText="Género" >
+                            <h:outputText value="#{user.genero}"/>
                         </p:column>
-                        <p:column headerText="Cuenta Usuario">
+                        <p:column headerText="Cuenta Usuario" >
                             <h:outputText value="#{user.nombreUsuario}"/>
                         </p:column>
-                        <p:column headerText="Cuenta Contraseña">
-                            <h:outputText value="#{user.clave}"/>
+                        <p:column headerText="Cuenta Contraseña" >
+                            <h:outputText value="#{user.clave}" />
 
                         </p:column>
-                        <p:column headerText="Estado">
+                        <p:column headerText="Estado" >
                             <p:tag severity="success" value="Activado" rendered="#{user.enabled}"/>
                             <p:tag severity="warning" value="Desactivado" rendered="#{not user.enabled}"/>
                         </p:column>
@@ -70,7 +68,6 @@
                                              process="@this">
                                 <f:setPropertyActionListener value="#{user}"
                                                              target="#{usuarioBean.nuevoUsuario}"/>
-                                <p:ajax listener="#{usuarioBean.EditCreateUser(true)}"/>
                                 <p:resetInput target=":dialogs:manage-user-content"/>
                             </p:commandButton>
                             <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
@@ -115,21 +112,11 @@
                                              required="true"/>
                             </div>
                             <div class="field">
-                                <h:outputLabel for="option" value="Género:"/>
+                                <h:outputLabel for="option" value="Género:" />
                                 <p:selectOneMenu id="option" value="#{usuarioBean.nuevoUsuario.genero}">
                                     <f:selectItem itemLabel="Selecciona un género" itemValue=""/>
                                     <f:selectItem itemLabel="Hombre" itemValue="H"/>
                                     <f:selectItem itemLabel="Mujer" itemValue="M"/>
-                                </p:selectOneMenu>
-                            </div>
-                            <div class="field">
-                                <h:outputLabel for="rol" value="Rol:"/>
-                                <p:selectOneMenu id="rol" value="#{usuarioBean.nuevoUsuario.idRol}"
-                                                 disabled="#{ usuarioBean.createUser}">
-                                    <f:selectItem itemLabel="Selecciona un género" itemValue=""/>
-                                    <f:selectItem itemLabel="TECNICO DE LABORATORIO" itemValue="2"/>
-                                    <f:selectItem itemLabel="DOCENTE" itemValue="3"/>
-                                    <f:selectItem itemLabel="ADMINISTRADOR" itemValue="1"/>
                                 </p:selectOneMenu>
                             </div>
                             <div class="field">
@@ -139,12 +126,12 @@
                             </div>
                             <div class="field">
                                 <p:outputLabel for="passw">Contraseña </p:outputLabel>
-                                <p:outputLabel id="passw" value="#{usuarioBean.nuevoUsuario.clave}" required="true"/>
+                                <p:password id="passw" value="#{usuarioBean.nuevoUsuario.clave}"
+                                            required="true"/>
                             </div>
                             <div class="field">
                                 <h:outputLabel for="estado" value="Habilitado:" />
-                                <p:selectBooleanButton id="estado" onLabel="Si" offLabel="No" style="width:3rem"
-                                                       value="#{usuarioBean.nuevoUsuario.enabled}"/>
+                                <p:selectBooleanButton id="estado" onLabel="Yes" offLabel="No" style="width:6rem" value="#{usuarioBean.nuevoUsuario.enabled}"/>
                             </div>
 
                         </p:outputPanel>
@@ -168,7 +155,7 @@
                 </p:confirmDialog>
 
             </h:form>
-
+        </div>
     </div>
 
 </ui:composition>

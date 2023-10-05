@@ -18,4 +18,11 @@ public class ListFullUser {
     private String genero;
     private boolean enabled;
     Timestamp fechaCreacion;
+    //tabla rol_usuario
+    int idRol;
+    //tabla tecnico
+    int idTecnico;
+    //tabla docente
+    int idDocente;
+
 }

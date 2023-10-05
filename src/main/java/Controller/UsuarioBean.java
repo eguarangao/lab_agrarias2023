@@ -42,6 +42,7 @@ public class UsuarioBean implements Serializable {
     private List<ListFullUser> listFullUsers;
     private ListFullUser nuevoUsuario;
     private UsuarioDAO DAO = new UsuarioDAO();
+    private boolean isCreateUser;
 
     @PostConstruct
     public void main() {
@@ -49,14 +50,22 @@ public class UsuarioBean implements Serializable {
             this.listFullUsers = new ArrayList<>();
             listFullUsers = DAO.listarUsuariosPersonas();
             System.out.println(listFullUsers);
+            isCreateUser = false;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
+    public boolean isCreateUser() {
+        return isCreateUser;
+    }
 
-//    public String login() {
+    public void EditCreateUser(boolean createUser) {
+        this.isCreateUser = createUser;
+    }
+
+    //    public String login() {
 //        UsuarioDAO usuarioDAO=new UsuarioDAO();
 //        Usuario usuario = usuarioDAO.getUsuario(username);
 //        if (usuario != null && usuario.getClave().equals(password) ) {
