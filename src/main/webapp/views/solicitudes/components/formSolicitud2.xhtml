@@ -49,20 +49,26 @@
 <!--                    </p:selectManyCheckbox>-->
 <!--                </div>-->
 
-                <!--JORNADA  -->
+
+<!--                JORNADA-->
                 <div class="field p-col-12 p-md-3 mb-4">
-                    <p:selectManyMenu id="selectHorass" value="#{solicitudBeann.itemsSelecionados}" style="width: 200px;" filterMatchMode="contains" filterNormalize="true"
-                                      showCheckbox="true" styleClass="manymenu-advanced">
+                    <p:outputLabel for="selectHoras" value="Horario"/>
+<!--                    <p:selectManyMenu id="selectHoras" value="#{solicitudBeann.itemsSelecionados}" style="width: 200px;" filterMatchMode="contains" filterNormalize="true"-->
+<!--                                      showCheckbox="true" styleClass="manymenu-advanced">-->
+<!--                        <f:selectItems value="#{solicitudBeann.items}" var="hor" itemLabel="#{hor.fecha}" itemValue="#{hor.dato}" itemDisabled="#{not hor.dato}" />-->
+<!--&lt;!&ndash;                        <p:ajax update="@this" process="@this" />&ndash;&gt;-->
+<!--                    </p:selectManyMenu>-->
+
+                    <p:selectManyButton  id="selectHoras" value="#{solicitudBeann.itemsSelecionados}" >
                         <f:selectItems value="#{solicitudBeann.items}" var="hor" itemLabel="#{hor.fecha}" itemValue="#{hor.dato}" itemDisabled="#{not hor.dato}" />
-<!--                        <p:ajax update="@this" process="@this" />-->
-                    </p:selectManyMenu>
+                    </p:selectManyButton>
 
                 </div>
 
 
-
-
             </div>
+
+
 
             <div class="p-formgrid p-grid">
                 <!--TEMA  -->
