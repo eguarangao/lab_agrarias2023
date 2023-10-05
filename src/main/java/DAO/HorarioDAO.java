@@ -218,7 +218,7 @@ public class HorarioDAO extends Conexion {
             // Si no se encontraron registros, crear un objeto Horario con todas las jornadas en false
             if (!registrosEncontrados) {
                 Horario horas = new Horario();
-                horas.setId(0); // Puedes establecer un valor específico para el ID o dejarlo en 0
+                horas.setId(1); // Puedes establecer un valor específico para el ID o dejarlo en 0
                 horas.setFecha(java.sql.Date.valueOf(fecha));
                 horas.setJornada1(false);
                 horas.setJornada2(false);
@@ -235,6 +235,9 @@ public class HorarioDAO extends Conexion {
         } finally {
             this.desconectar();
         }
+        System.out.println("LISTA-DAO99898989");
+        System.out.println(listaHorario);
         return listaHorario;
+
     }
 }

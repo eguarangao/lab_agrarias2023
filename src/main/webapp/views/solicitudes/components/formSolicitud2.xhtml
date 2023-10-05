@@ -35,7 +35,7 @@
                                 disabled="#{solicitudBeann.idLaboratorio == 0}"
                                 locale="es"
                                 value="#{solicitudBeann.fechaReserva}">
-                        <p:ajax event="dateSelect" listener="#{solicitudBeann.listHoras}" update=":formb"/>
+                        <p:ajax event="dateSelect" listener="#{solicitudBeann.listHoras}" update="selectHoras :formb "/>
                     </p:calendar>
                 </div>
 
