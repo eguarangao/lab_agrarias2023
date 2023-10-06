@@ -13,5 +13,6 @@ public class AjustePerfil {
     String genero;
     String rolNombre;
     String rolDescripcion;
+    int idPersona;
 
 }

@@ -62,7 +62,7 @@ public class UsuarioDAO extends Conexion {
         AjustePerfil ajustePerfil = null;
         try {
             this.conectar();
-            PreparedStatement ps = connection.prepareStatement("select u.nombre as usuario, u.clave as clave, p.nombre as nombre,\n" +
+            PreparedStatement ps = connection.prepareStatement("select p.id, u.nombre as usuario, u.clave as clave, p.nombre as nombre,\n" +
                     "       p.apellido, p.telefono, p.email,\n" +
                     "       p.dni, p.genero, r.nombre as nombre_rol,r.descripcion\n" +
                     "from laboratorio.usuario u\n" +
@@ -78,6 +78,7 @@ public class UsuarioDAO extends Conexion {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 ajustePerfil = new AjustePerfil();
+                ajustePerfil.setIdPersona(rs.getInt("id"));
                 ajustePerfil.setUsuario(rs.getString("usuario"));
                 ajustePerfil.setClave(rs.getString("clave"));
                 ajustePerfil.setNombre(rs.getString("nombre"));
@@ -96,6 +97,50 @@ public class UsuarioDAO extends Conexion {
             e.printStackTrace();
         }
         return ajustePerfil;
+    }
+    public void updateAjustePerfil(AjustePerfil ajustePerfil) {
+        try {
+            this.conectar();
+            PreparedStatement ps = connection.prepareStatement("UPDATE laboratorio.persona\n" +
+                    "\tSET nombre=?, apellido=?, telefono=?, email=?, dni=?, genero=?\n" +
+                    "\tWHERE id = ?;");
+            PreparedStatement ps2 = connection.prepareStatement("UPDATE laboratorio.usuario SET nombre=?, clave=? WHERE id_persona = ?;");
+
+          //
+            ps.setString(1, ajustePerfil.getNombre());
+            ps.setString(2, ajustePerfil.getApellido());
+            ps.setString(3, ajustePerfil.getTelefono());
+            ps.setString(4, ajustePerfil.getEmail());
+            ps.setString(5, ajustePerfil.getDni());
+            ps.setString(6, ajustePerfil.getGenero());
+            ps.setInt(7, ajustePerfil.getIdPersona());
+         //   ps.setString(8, ajustePerfil.getRolNombre());
+          //  ps.setString(9, ajustePerfil.getRolDescripcion());
+          //  ps.setString(10, ajustePerfil.getUsuario());
+         //   ps.setString(11, ajustePerfil.getRolNombre());
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("La actualización fue exitosa.");
+            } else {
+                System.out.println("No se realizó ninguna actualización.");
+            }
+            ps2.setString(2, ajustePerfil.getClave());
+            ps2.setString(1, ajustePerfil.getUsuario());
+            ps2.setInt(3, ajustePerfil.getIdPersona());
+            int rowsUpdated2 = ps2.executeUpdate();
+
+            if (rowsUpdated2 > 0) {
+                System.out.println("La actualización fue exitosa.");
+            } else {
+                System.out.println("No se realizó ninguna actualización.");
+            }
+
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            desconectar();
+        }
     }
 
     public AjustePerfil UpdateAjustePerfil(AjustePerfil ajustePerfil) {

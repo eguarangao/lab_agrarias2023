@@ -263,6 +263,11 @@ public class UsuarioBean implements Serializable {
 
         }
     }
+    public void actualizarAjustePerfil(AjustePerfil ajustePerfil) {
+        DAO.updateAjustePerfil(ajustePerfil);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario actualizado"));
+        PrimeFaces.current().ajax().update("form-Perfil","msgs");
+    }
 
 
     public void openNew() {

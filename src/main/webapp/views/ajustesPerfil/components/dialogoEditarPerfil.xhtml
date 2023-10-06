@@ -4,80 +4,80 @@
         xmlns:p="http://primefaces.org/ui"
         xmlns:f="http://xmlns.jcp.org/jsf/core"
         xmlns:h="http://xmlns.jcp.org/jsf/html">
-   <div class="p-grid ui-fluid">
-      <p:dialog header="Editar Perfil" showEffect="fade" modal="true"
-                widgetVar="dialogoEditarPerfil" responsive="true" width="75%"
-                draggable="false" height="auto">
+    <div class="p-grid ui-fluid">
+        <p:dialog header="Editar Perfil" showEffect="fade" modal="true"
+                  widgetVar="dialogoEditarPerfil" responsive="true"
+                  draggable="false" height="auto">
 
 
-         <p:fieldset legend="DATOS PERSONALES">
-            <p:outputPanel id="manage-perfilDatosPersonales-edit" class="ui-accordion-content">
-               <div class="p-formgrid p-grid">
+            <p:fieldset legend="DATOS PERSONALES">
+                <p:outputPanel id="manage-perfilDatosPersonales-edit" class="ui-accordion-content">
+                    <div class="p-formgrid p-grid">
 
-                  <div class="p-field p-col-12 p-md-2">
-                     <p:outputLabel value="Cedula" class="p-col-12"/>
-                     <p:inputText  value="#{usuarioBean.ajustePerfil.dni}"/>
-                  </div>
-                  <div class="p-field p-col-12 p-md-5">
-                     <p:outputLabel value="Nombre" class="p-col-12"/>
-                     <p:inputText  value="#{usuarioBean.ajustePerfil.nombre}"/>
-                  </div>
-                  <div class="p-field p-col-12 p-md-5">
-                     <p:outputLabel value="Apellido" class="p-col-12"/>
-                     <p:inputText  value="#{usuarioBean.ajustePerfil.apellido}"/>
-                  </div>
-               </div>
-               <div class="p-formgrid p-grid">
-
-
-
-                  <div class="p-field p-col-12 p-md-2">
-                     <p:outputLabel value="Genero" class="p-col-12"/>
-                     <p:inputText  value="#{usuarioBean.ajustePerfil.genero}"/>
-                  </div>
-                  <div class="p-field p-col-12 p-md-2">
-                     <p:outputLabel value="Celular" class="p-col-12"/>
-                     <p:inputText  value="#{usuarioBean.ajustePerfil.telefono}"/>
-                  </div>
-                  <div class="p-field p-col-12 p-md-4">
-                     <p:outputLabel value="Correo" class="p-col-12"/>
-                     <p:inputText  value="#{usuarioBean.ajustePerfil.email}"/>
-
-                  </div>
-
-               </div>
-
-            </p:outputPanel>
-         </p:fieldset>
-
-         <p:fieldset legend="SISTEMA" style="margin-top: 12px;">
-            <p:outputPanel id="manage-perfilSistema-edit" class="ui-fluid" >
-               <div class="p-formgrid p-grid">
-
-                  <div class="p-field p-col-12 p-md-3">
-                     <p:outputLabel value="USUARIO:" class="p-col-12"/>
-                     <p:inputText  value="#{usuarioBean.ajustePerfil.usuario}"/>
-
-                  </div>
-                  <div class="p-field p-col-12 p-md-3">
-                     <p:outputLabel value="CONTRASEÑA:" class="p-col-12"/>
-                     <p:inputText type="password" value="#{usuarioBean.ajustePerfil.clave }"/>
-                  </div>
-               </div>
-            </p:outputPanel>
-         </p:fieldset>
-
-         <p:outputPanel class="ui-fluid">
-            <br/>
-            <div class="p-formgrid p-grid">
-               <div class="p-field p-col-12 p-md-1">
-                  <p:commandButton value="Guardar" />
-               </div>
-            </div>
-         </p:outputPanel>
+                        <div class="p-field p-col-12 p-md-2">
+                            <p:outputLabel value="Cedula" class="p-col-12"/>
+                            <p:inputText value="#{usuarioBean.ajustePerfil.dni}"/>
+                        </div>
+                        <div class="p-field p-col-12 p-md-5">
+                            <p:outputLabel value="Nombre" class="p-col-12"/>
+                            <p:inputText value="#{usuarioBean.ajustePerfil.nombre}"/>
+                        </div>
+                        <div class="p-field p-col-12 p-md-5">
+                            <p:outputLabel value="Apellido" class="p-col-12"/>
+                            <p:inputText value="#{usuarioBean.ajustePerfil.apellido}"/>
+                        </div>
+                    </div>
+                    <div class="p-formgrid p-grid">
 
 
+                        <div class="p-field p-col-12 p-md-2">
+                            <p:outputLabel value="Genero" class="p-col-12"/>
+                            <p:selectOneMenu id="option" value="#{usuarioBean.ajustePerfil.genero}">
+                                <f:selectItem itemLabel="Selecciona un género" itemValue=""/>
+                                <f:selectItem itemLabel="Hombre" itemValue="H"/>
+                                <f:selectItem itemLabel="Mujer" itemValue="M"/>
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="p-field p-col-12 p-md-2">
+                            <p:outputLabel value="Celular" class="p-col-12"/>
+                            <p:inputText value="#{usuarioBean.ajustePerfil.telefono}"/>
+                        </div>
+                        <div class="p-field p-col-12 p-md-4">
+                            <p:outputLabel value="Correo" class="p-col-12"/>
+                            <p:inputText value="#{usuarioBean.ajustePerfil.email}"/>
 
-      </p:dialog>
-   </div>
+                        </div>
+
+                    </div>
+
+                </p:outputPanel>
+            </p:fieldset>
+
+            <p:fieldset legend="SISTEMA" style="margin-top: 12px;">
+                <p:outputPanel id="manage-perfilSistema-edit" class="ui-fluid">
+                    <div class="p-formgrid p-grid">
+
+                        <div class="p-field p-col-12 p-md-3">
+                            <p:outputLabel value="USUARIO:" class="p-col-12"/>
+                            <p:inputText value="#{usuarioBean.ajustePerfil.usuario}"/>
+
+                        </div>
+                        <div class="p-field p-col-12 p-md-3">
+                            <p:outputLabel value="CONTRASEÑA:" class="p-col-12"/>
+                            <p:inputText type="password" value="#{usuarioBean.ajustePerfil.clave }"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+            </p:fieldset>
+
+            <f:facet name="footer">
+                <p:commandButton value="Guardar" icon="pi pi-check"
+                                 actionListener="#{usuarioBean.actualizarAjustePerfil(usuarioBean.ajustePerfil)}"
+                                 onclick="PF('dialogoEditarPerfil').hide()"/>
+                <p:commandButton value="Cancelar" icon="pi pi-times" class="ui-button-secondary"
+                                 onclick="PF('dialogoEditarPerfil').hide()"/>
+            </f:facet>
+
+        </p:dialog>
+    </div>
 </ui:composition>
