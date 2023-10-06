@@ -5,6 +5,7 @@ import DAO.RolDAO;
 import DAO.UsuarioDAO;
 import Model.*;
 import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
@@ -40,6 +41,7 @@ public class UsuarioBean implements Serializable {
     private boolean isTecnico = false;
     private boolean isADocente = false;
     private List<ListFullUser> listFullUsers;
+    private List<ListFullUser> listFullDocente;
     private ListFullUser nuevoUsuario;
     private UsuarioDAO DAO = new UsuarioDAO();
     private boolean isCreateUser;
@@ -47,10 +49,14 @@ public class UsuarioBean implements Serializable {
     @PostConstruct
     public void main() {
         try {
+            PrimeFaces.current().ajax().update("form:dt-user");
             this.listFullUsers = new ArrayList<>();
             listFullUsers = DAO.listarUsuariosPersonas();
-            System.out.println(listFullUsers);
+            PrimeFaces.current().ajax().update("formUser:dt-user");
+            this.listFullDocente = new ArrayList<>();
+            listFullDocente = DAO.listarUsuariosDocentes();
             isCreateUser = false;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -261,13 +267,15 @@ public class UsuarioBean implements Serializable {
 
     public void openNew() {
         this.nuevoUsuario = new ListFullUser();
+
     }
 
     public void addUsuario() {
         try {
-            if (this.nuevoUsuario.getFechaCreacion()==null) {
+            if (this.nuevoUsuario.getFechaCreacion() == null) {
                 DAO.insert(nuevoUsuario);
                 listFullUsers = DAO.listarUsuariosPersonas();
+                listFullDocente= DAO.listarUsuariosDocentes();
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario agregado"));
             } else {
                 DAO.update(nuevoUsuario);
@@ -276,6 +284,7 @@ public class UsuarioBean implements Serializable {
             }
             PrimeFaces.current().executeScript("PF('manageUserDialog').hide()");
             PrimeFaces.current().ajax().update("form:messages");
+            PrimeFaces.current().ajax().update("formUser:messages");
 
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar la facultad"));
@@ -284,13 +293,15 @@ public class UsuarioBean implements Serializable {
     }
 
     public void delete() {
-        try{
+        try {
             int deletedId = nuevoUsuario.getPersonaId();
             DAO.delete(deletedId);
             listFullUsers = DAO.listarUsuariosPersonas();
+            listFullDocente = DAO.listarUsuariosDocentes();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario Eliminado"));
             PrimeFaces.current().ajax().update("form:messages", "form:dt-user");
-        }catch (Exception e){
+            PrimeFaces.current().ajax().update("formUser:messages", "formUser:dt-user");
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

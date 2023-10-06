@@ -162,7 +162,43 @@ public class UsuarioDAO extends Conexion {
 
         return usuariosPersonas;
     }
+    public List<ListFullUser> listarUsuariosDocentes() throws SQLException {
+        List<ListFullUser> usuariosPersonas = new ArrayList<>();
+        this.conectar();
+        String query = "SELECT * FROM laboratorio.persona p \n" +
+                "                INNER JOIN laboratorio.usuario u ON p.id = u.id_persona\n" +
+                "                INNER JOIN laboratorio.rol_usuario ru ON ru.id_usuario = u.id \n" +
+                "\t\tINNER join laboratorio.rol ON rol.id = ru.id_rol where rol.id=3;";
 
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                ListFullUser usuarioPersona = new ListFullUser();
+                usuarioPersona.setUsuarioId(resultSet.getInt("id"));
+                usuarioPersona.setNombreUsuario(resultSet.getString("nombre"));
+                usuarioPersona.setClave(resultSet.getString("clave"));
+                usuarioPersona.setEnabled(resultSet.getBoolean("enabled"));
+                usuarioPersona.setFechaCreacion(resultSet.getTimestamp("fecha_creacion"));
+
+                usuarioPersona.setPersonaId(resultSet.getInt("id"));
+                usuarioPersona.setNombrePersona(resultSet.getString("nombre"));
+                usuarioPersona.setApellido(resultSet.getString("apellido"));
+                usuarioPersona.setTelefono(resultSet.getString("telefono"));
+                usuarioPersona.setEmail(resultSet.getString("email"));
+                usuarioPersona.setDni(resultSet.getString("dni"));
+                usuarioPersona.setGenero(resultSet.getString("genero"));
+                //tabla rol_usuario
+                usuarioPersona.setIdRol(resultSet.getInt("id_rol"));
+
+                usuariosPersonas.add(usuarioPersona);
+            }
+        } finally {
+            this.desconectar();
+        }
+
+        return usuariosPersonas;
+    }
     public void update(ListFullUser usuarioPersona) throws SQLException {
         this.conectar();
         String updatePersonaQuery = "UPDATE laboratorio.persona SET nombre = ?, apellido = ?, telefono = ?, email = ?, dni = ?, genero = ? WHERE id = ?";

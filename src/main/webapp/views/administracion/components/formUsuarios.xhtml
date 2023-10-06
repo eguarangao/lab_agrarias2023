@@ -27,7 +27,7 @@
                                  reflow="true" styleClass="products-table" lazy="true"
                                  rowKey="#{user.personaId}" paginator="true" rows="10" rowSelectMode="add"
                                  paginatorPosition="bottom">
-                        <p:column headerText="Código" style="width: 25px;">
+                        <p:column headerText="Código" style="width: 30px;">
                             <h:outputText value="#{user.personaId}"/>
                         </p:column>
                         <p:column headerText="Nombres">
@@ -126,7 +126,7 @@
                                 <h:outputLabel for="rol" value="Rol:"/>
                                 <p:selectOneMenu id="rol" value="#{usuarioBean.nuevoUsuario.idRol}"
                                                  disabled="#{ usuarioBean.createUser}">
-                                    <f:selectItem itemLabel="Selecciona un género" itemValue=""/>
+                                    <f:selectItem itemLabel="Selecciona un rol" itemValue=""/>
                                     <f:selectItem itemLabel="TECNICO DE LABORATORIO" itemValue="2"/>
                                     <f:selectItem itemLabel="DOCENTE" itemValue="3"/>
                                     <f:selectItem itemLabel="ADMINISTRADOR" itemValue="1"/>
@@ -139,7 +139,7 @@
                             </div>
                             <div class="field">
                                 <p:outputLabel for="passw">Contraseña </p:outputLabel>
-                                <p:outputLabel id="passw" value="#{usuarioBean.nuevoUsuario.clave}" required="true"/>
+                                <p:inputText id="passw" value="#{usuarioBean.nuevoUsuario.clave}" required="true"/>
                             </div>
                             <div class="field">
                                 <h:outputLabel for="estado" value="Habilitado:" />
