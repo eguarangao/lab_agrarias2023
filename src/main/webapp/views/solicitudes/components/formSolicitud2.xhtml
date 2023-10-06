@@ -73,7 +73,7 @@
                     <!--                          <f:selectItems value="#{solicitudBeann.items}" var="hor" itemLabel="#{hor.fecha}" itemValue="#{hor.dato}" itemDisabled="#{not hor.dato}" />-->
                     <!--                          </p:selectCheckboxMenu>-->
 
-                    <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.itemsSelecionados}"
+                    <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.value}"
                                           layout="responsive"
                                           columns="3">
                         <f:selectItems value="#{solicitudBeann.items}" var="item" itemLabel="#{item.fecha}"
@@ -81,7 +81,6 @@
                                        itemStyle="#{item.dato ? '' : 'color: red;'}"
                                        itemValue="#{item.id}"/>
                     </p:selectManyCheckbox>
-
 
                 </div>
 

@@ -40,6 +40,10 @@ public class SolicitudBeann implements Serializable {
     EquipoDAO equipoDAO;
 
     Horario horario = new Horario();
+
+    Horario horarioBD = new Horario();
+
+
     Solicitud solicitud = new Solicitud();
 
     int idLaboratorio = 0;
@@ -61,8 +65,9 @@ public class SolicitudBeann implements Serializable {
     List<Equipo> equiposRequeridos;
 
     List<Item> itemsSelecionados;
+    String value;
 
-    public void  FindAllEquipos() throws SQLException {
+    public void FindAllEquipos() throws SQLException {
         equipoDAO = new EquipoDAO();
         equipos = new ArrayList<>();
 
@@ -271,13 +276,55 @@ public class SolicitudBeann implements Serializable {
 
     }
 
+    public void asignarHoras() {
+//        horarioBD.setFecha(fechaReserva); // Asignar la fecha de reserva
+//
+//        // Recorrer la lista de itemsSelecionados y asignar los valores de 'dato' a las propiedades de jornada
+//        for (int i = 0; i < 8; i++) {
+//            boolean dato = itemsSelecionados.get(i).isDato();
+//            switch (i) {
+//                case 0:
+//                    horarioBD.setJornada1(dato);
+//                    break;
+//                case 1:
+//                    horarioBD.setJornada2(dato);
+//                    break;
+//                case 2:
+//                    horarioBD.setJornada3(dato);
+//                    break;
+//                case 3:
+//                    horarioBD.setJornada4(dato);
+//                    break;
+//                case 4:
+//                    horarioBD.setJornada5(dato);
+//                    break;
+//                case 5:
+//                    horarioBD.setJornada6(dato);
+//                    break;
+//                case 6:
+//                    horarioBD.setJornada7(dato);
+//                    break;
+//                case 7:
+//                    horarioBD.setJornada8(dato);
+//                    break;
+//            }
+//        }
+        // Ahora 'horarioBD' contiene la información actualizada de las jornadas y la fecha.
+        // Puedes usar 'horarioBD' según tus necesidades.
+        System.out.println(horarioBD);
+        System.out.println("items Seleccionados");
+        System.out.println(itemsSelecionados);
+        System.out.println(itemsSelecionados.size());
+    }
+
+
 
     @PostConstruct
     public void init() {
         try {
             // Llama al método para cargar los laboratorios al iniciar el bean.
             finAllLaboratorio();
-            equiposRequeridos= new ArrayList<>();
+            equiposRequeridos = new ArrayList<>();
             itemsSelecionados = new ArrayList<>();
             //horarios = horarioDAO.findByLaboratorioIdAndFecha(idLaboratorio, fechaReserva.toString());
 //            solicitud = new Solicitud();
