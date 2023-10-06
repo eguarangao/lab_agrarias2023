@@ -17,26 +17,28 @@ public class EquipoDAO extends Conexion {
         ResultSet rs;
         try {
             this.conectar();
-            PreparedStatement st = this.getConnection().prepareStatement("select *\n" +
-                    "from laboratorio.equipo e\n" +
-                    "         inner join laboratorio.categoria_equipo ce on ce.id = e.id_categoria_equipo\n" +
-                    "         inner join laboratorio.laboratorio lb on e.id_laboratorio = lb.id\n" +
-                    "where lb.id = ?;");
+            String sql = "select * from laboratorio.equipo eq inner join laboratorio.categoria_equipo ce on ce.id_categoria = eq.id_categoria_equipo where eq.id_laboratorio = ?";
+            PreparedStatement st = this.getConnection().prepareStatement(sql);
             st.setInt(1, idLaboratorio);
             rs = st.executeQuery();
             while (rs.next()) {
                 Equipo equipo = new Equipo();
 
                 equipo.setId(rs.getInt("id"));
-                equipo.setDescripcion(rs.getString("nombre"));
+                equipo.setDescripcion(rs.getString("descripcion"));
 
                 equipos.add(equipo);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw e;
         } finally {
             this.desconectar();
         }
+        System.out.println("...Equipos...");
+        System.out.println(equipos);
         return equipos;
     }
+
+
+
 }

@@ -1,5 +1,6 @@
 package Controller;
 
+import DAO.EquipoDAO;
 import DAO.HorarioDAO;
 import DAO.LaboratorioDAO;
 import DAO.SolicitudDAO;
@@ -36,6 +37,7 @@ public class SolicitudBeann implements Serializable {
     LaboratorioDAO laboratorioDAO;
     SolicitudDAO solicitudDAO;
     HorarioDAO horarioDAO;
+    EquipoDAO equipoDAO;
 
     Horario horario = new Horario();
     Solicitud solicitud = new Solicitud();
@@ -56,8 +58,16 @@ public class SolicitudBeann implements Serializable {
     List<Laboratorio> laboratorios;
     List<Horario> horarios;
     List<Equipo> equipos;
+    List<Equipo> equiposRequeridos;
 
     List<Item> itemsSelecionados;
+
+    public void  FindAllEquipos() throws SQLException {
+        equipoDAO = new EquipoDAO();
+        equipos = new ArrayList<>();
+
+        equipos = equipoDAO.findByLaboratorioID(idLaboratorio);
+    }
 
 
     //select
@@ -267,6 +277,7 @@ public class SolicitudBeann implements Serializable {
         try {
             // Llama al método para cargar los laboratorios al iniciar el bean.
             finAllLaboratorio();
+            equiposRequeridos= new ArrayList<>();
             itemsSelecionados = new ArrayList<>();
             //horarios = horarioDAO.findByLaboratorioIdAndFecha(idLaboratorio, fechaReserva.toString());
 //            solicitud = new Solicitud();

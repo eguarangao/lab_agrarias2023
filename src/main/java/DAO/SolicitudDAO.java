@@ -19,8 +19,6 @@ public class SolicitudDAO extends Conexion {
             this.conectar();
             this.getConnection().setAutoCommit(false);
 
-            int idExcel;
-            int idPDF;
             int idHorario = 0;
             int idSolicitud = 0;
             boolean existeHorario;
@@ -122,7 +120,8 @@ public class SolicitudDAO extends Conexion {
             st4.setInt(8, solicitud.getLaboratorio().getId()); //laboratorio
             st4.setString(9, solicitud.getPeriodo().getNamePeriodo()); //periodo
             st4.setLong(10, solicitud.getHorario().getId()); //horario
-            st4.setInt(11, solicitud.getDocente().getId()); //docente
+//            st4.setInt(11, solicitud.getDocente().getId()); //docente
+            st4.setInt(11, 1); //docente
             st4.setBytes(12, solicitud.getPdfResolucion().getBytes());
             st4.setBytes(13, solicitud.getExcelEstudiantes().getBytes());
             st4.executeUpdate();
