@@ -19,7 +19,7 @@ public class RolDAO extends Conexion {
             PreparedStatement st = this.getConnection().prepareStatement("SELECT ro.id as id, ro.nombre as nombre\n" +
                     "FROM laboratorio.usuario us\n" +
                     "         INNER JOIN laboratorio.rol_usuario ru ON us.id = ru.id_usuario\n" +
-                    "         INNER JOIN laboratorio.rol ro ON ru.id_rol = ro.id WHERE us.nombre =?;");
+                    "         INNER JOIN laboratorio.rol ro ON ru.id_rol = ro.id WHERE us.nombre_usuario =?;");
             st.setString(1, username);
             rs = st.executeQuery();
             while (rs.next()) {

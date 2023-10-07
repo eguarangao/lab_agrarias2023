@@ -20,13 +20,13 @@ public class UsuarioDAO extends Conexion {
         Usuario usuario = null;
         try {
             this.conectar();
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM laboratorio.usuario us WHERE nombre = ? AND clave=? AND enabled=true");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM laboratorio.usuario us WHERE nombre_usuario = ? AND clave=? AND enabled=true");
             ps.setString(1, username);
             ps.setString(2, clave);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 usuario = new Usuario();
-                usuario.setNombre(rs.getString("nombre"));
+                usuario.setNombre(rs.getString("nombre_usuario"));
                 usuario.setClave(rs.getString("clave"));
                 usuario.setId(rs.getInt("id"));
                 usuario.setEnabled(rs.getBoolean("enabled"));
@@ -63,7 +63,7 @@ public class UsuarioDAO extends Conexion {
         AjustePerfil ajustePerfil = null;
         try {
             this.conectar();
-            PreparedStatement ps = connection.prepareStatement("select p.id, u.nombre as usuario, u.clave as clave, p.nombre as nombre,\n" +
+            PreparedStatement ps = connection.prepareStatement("select p.id, u.nombre_usuario as usuario, u.clave as clave, p.nombre as nombre,\n" +
                     "       p.apellido, p.telefono, p.email,\n" +
                     "       p.dni, p.genero, r.nombre as nombre_rol,r.descripcion\n" +
                     "from laboratorio.usuario u\n" +
@@ -73,7 +73,7 @@ public class UsuarioDAO extends Conexion {
                     "                    on u.id = ru.id_usuario\n" +
                     "         inner join laboratorio.rol r\n" +
                     "                    on r.id = ru.id_rol\n" +
-                    "where u.nombre = ? and r.nombre = ?;");
+                    "where u.nombre_usuario = ? and r.nombre = ?;");
             ps.setString(1, usuario);
             ps.setString(2, nameRol);
             ResultSet rs = ps.executeQuery();
@@ -105,7 +105,7 @@ public class UsuarioDAO extends Conexion {
             PreparedStatement ps = connection.prepareStatement("UPDATE laboratorio.persona\n" +
                     "\tSET nombre=?, apellido=?, telefono=?, email=?, dni=?, genero=?\n" +
                     "\tWHERE id = ?;");
-            PreparedStatement ps2 = connection.prepareStatement("UPDATE laboratorio.usuario SET nombre=?, clave=? WHERE id_persona = ?;");
+            PreparedStatement ps2 = connection.prepareStatement("UPDATE laboratorio.usuario SET nombre_usuario=?, clave=? WHERE id_persona = ?;");
 
           //
             ps.setString(1, ajustePerfil.getNombre());
@@ -185,17 +185,26 @@ public class UsuarioDAO extends Conexion {
             while (resultSet.next()) {
                 ListFullUser usuarioPersona = new ListFullUser();
                 usuarioPersona.setUsuarioId(resultSet.getInt("id"));
-                usuarioPersona.setNombreUsuario(resultSet.getString("nombre"));
-                usuarioPersona.setClave(resultSet.getString("clave"));
-                usuarioPersona.setEnabled(resultSet.getBoolean("enabled"));
-                usuarioPersona.setFechaCreacion(resultSet.getTimestamp("fecha_creacion"));
-
-                usuarioPersona.setPersonaId(resultSet.getInt("id"));
                 usuarioPersona.setNombrePersona(resultSet.getString("nombre"));
                 usuarioPersona.setApellido(resultSet.getString("apellido"));
                 usuarioPersona.setTelefono(resultSet.getString("telefono"));
                 usuarioPersona.setEmail(resultSet.getString("email"));
                 usuarioPersona.setDni(resultSet.getString("dni"));
+                usuarioPersona.setGenero(resultSet.getString("genero"));
+                usuarioPersona.setFechaCreacion(resultSet.getTimestamp("fecha_creacion"));
+                usuarioPersona.setPersonaId(resultSet.getInt("id"));
+
+                usuarioPersona.setNombreUsuario(resultSet.getString("nombre_usuario"));
+                usuarioPersona.setClave(resultSet.getString("clave"));
+                usuarioPersona.setEnabled(resultSet.getBoolean("enabled"));
+                usuarioPersona.setFechaCreacion(resultSet.getTimestamp("fecha_creacion"));
+
+
+
+
+
+
+
                 usuarioPersona.setGenero(resultSet.getString("genero"));
                 //tabla rol_usuario
                 usuarioPersona.setIdRol(resultSet.getInt("id_rol"));
@@ -222,7 +231,7 @@ public class UsuarioDAO extends Conexion {
             while (resultSet.next()) {
                 ListFullUser usuarioPersona = new ListFullUser();
                 usuarioPersona.setUsuarioId(resultSet.getInt("id"));
-                usuarioPersona.setNombreUsuario(resultSet.getString("nombre"));
+                usuarioPersona.setNombreUsuario(resultSet.getString("nombre_usuario"));
                 usuarioPersona.setClave(resultSet.getString("clave"));
                 usuarioPersona.setEnabled(resultSet.getBoolean("enabled"));
                 usuarioPersona.setFechaCreacion(resultSet.getTimestamp("fecha_creacion"));
@@ -248,7 +257,7 @@ public class UsuarioDAO extends Conexion {
     public void update(ListFullUser usuarioPersona) throws SQLException {
         this.conectar();
         String updatePersonaQuery = "UPDATE laboratorio.persona SET nombre = ?, apellido = ?, telefono = ?, email = ?, dni = ?, genero = ? WHERE id = ?";
-        String updateUsuarioQuery = "UPDATE laboratorio.usuario SET nombre = ?, clave = ?, enabled = ? WHERE id_persona = ?";
+        String updateUsuarioQuery = "UPDATE laboratorio.usuario SET nombre_usuario = ?, clave = ?, enabled = ? WHERE id_persona = ?";
 
         try {
             connection.setAutoCommit(false);  // Inicia una transacción
@@ -437,7 +446,7 @@ public class UsuarioDAO extends Conexion {
         //insert tabla persona
         String insertPersonaQuery = "INSERT INTO laboratorio.persona (nombre, apellido, telefono, email, dni, genero,fecha_creacion) VALUES (?, ?, ?, ?, ?, ?,?)";
         //insert tabla usuario
-        String insertUsuarioQuery = "INSERT INTO laboratorio.usuario (id_persona, nombre, clave, enabled) VALUES (?, ?, ?, ?)";
+        String insertUsuarioQuery = "INSERT INTO laboratorio.usuario (id_persona, nombre_usuario, clave, enabled) VALUES (?, ?, ?, ?)";
         //insert tabla rol_usuario
         String insertRolUsuarioQuery = "INSERT INTO laboratorio.rol_usuario (id_rol, id_usuario) VALUES (?, ?)";
         try {
@@ -451,6 +460,8 @@ public class UsuarioDAO extends Conexion {
                 preparedStatementPersona.setString(5, usuarioPersona.getDni());
                 preparedStatementPersona.setString(6, usuarioPersona.getGenero());
                 preparedStatementPersona.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
+                usuarioPersona.setNombreUsuario(usuarioPersona.getDni());
+                usuarioPersona.setClave(usuarioPersona.getDni());
                 int affectedRowsPersona = preparedStatementPersona.executeUpdate();
                 if (affectedRowsPersona == 0) {
                     throw new SQLException("La inserción en la tabla persona falló, no se agregó ninguna fila.");
@@ -469,7 +480,7 @@ public class UsuarioDAO extends Conexion {
                 preparedStatementUsuario.setInt(1, usuarioPersona.getPersonaId());
                 preparedStatementUsuario.setString(2, usuarioPersona.getNombreUsuario());
                 preparedStatementUsuario.setString(3, usuarioPersona.getClave());
-                preparedStatementUsuario.setBoolean(4, usuarioPersona.isEnabled());
+                preparedStatementUsuario.setBoolean(4, true);
 
                 int affectedRowsUsuario = preparedStatementUsuario.executeUpdate();
 
