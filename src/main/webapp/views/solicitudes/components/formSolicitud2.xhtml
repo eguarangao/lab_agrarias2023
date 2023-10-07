@@ -105,6 +105,8 @@
                     <p:outputLabel for="analisis" value="Análisis"/>
                     <p:inputText id="analisis" value="#{solicitudBean.solicitud.analisis}" maxlength="35"/>
                 </div>
+
+
                 <div class="field p-col-12 p-md-2">
                     <p:outputLabel for="codigo" value="Código"/>
                     <p:inputText id="codigo" value="#{solicitudBean.solicitud.codigo}" maxlength="35"/>
@@ -123,9 +125,10 @@
                         </f:selectItem>
                     </p:selectOneMenu>
                 </div>
+                <!--Docente  -->
                 <div class="field p-col-12 p-md-3">
                     <p:outputLabel for="docente" value="Docente"/>
-                    <p:inputText id="docente" maxlength="35"/>
+                    <p:inputText id="docente" value="#{solicitudBeann.docente}" maxlength="35" disabled=""/>
                 </div>
             </div>
 

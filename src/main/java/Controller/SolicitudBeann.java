@@ -1,9 +1,6 @@
 package Controller;
 
-import DAO.EquipoDAO;
-import DAO.HorarioDAO;
-import DAO.LaboratorioDAO;
-import DAO.SolicitudDAO;
+import DAO.*;
 import Model.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
@@ -13,6 +10,7 @@ import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
+import jakarta.servlet.http.HttpSession;
 import lombok.Data;
 import org.primefaces.event.SelectEvent;
 
@@ -39,6 +37,11 @@ public class SolicitudBeann implements Serializable {
     SolicitudDAO solicitudDAO;
     HorarioDAO horarioDAO;
     EquipoDAO equipoDAO;
+    DocenteDAO docenteDAO;
+
+    UsuarioDAO usuarioDAO;
+
+    UsuarioBean usuarioBean;
 
     Horario horario = new Horario();
 
@@ -50,11 +53,13 @@ public class SolicitudBeann implements Serializable {
     int idLaboratorio = 0;
     int idLaboratorio2;
     int idHorario;
+    int idUsuarioSession=0;
     Date fecha;
     String tipoSolicitud;
     String fechaReserva2;
     Date fechaEspecifica;
     Date fechaReserva;
+    String docente;
     String fechaString = "2023-05-01";
     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -318,6 +323,10 @@ public class SolicitudBeann implements Serializable {
         System.out.println(itemsSelecionados.size());
     }
 
+//    public int getIdUsurioSession() {
+//        Usuario usuarioLogueado = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+//        return usuarioLogueado.getId();
+//    }
 
 
     @PostConstruct
@@ -325,6 +334,19 @@ public class SolicitudBeann implements Serializable {
         try {
             // Llama al método para cargar los laboratorios al iniciar el bean.
             finAllLaboratorio();
+            docenteDAO = new DocenteDAO();
+            usuarioDAO = new UsuarioDAO();
+            usuarioBean = new UsuarioBean();
+
+
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            Usuario usuarioLogueado = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
+            idUsuarioSession= usuarioLogueado.getId();
+          docente= String.valueOf(docenteDAO.findByUsuarioID(getIdUsuarioSession()).get(0).getPersona().getApellido());
+
+
+//            docenteDAO.findByUsuarioID(usuarioBean.getIdUsuarioSession());
+
             equiposRequeridos = new ArrayList<>();
             itemsSelecionados = new ArrayList<>();
             //horarios = horarioDAO.findByLaboratorioIdAndFecha(idLaboratorio, fechaReserva.toString());
