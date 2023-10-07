@@ -65,13 +65,13 @@ public class EquipoDAO extends Conexion {
 
                     equipo.setId(resultSet.getInt("id"));
 
-                    laboratorio.setId(resultSet.getInt("id_laboratorio"));
+                    equipo.setId(resultSet.getInt("id_laboratorio"));
                     laboratorio.setNombre(resultSet.getString("nom_laboratorio"));
 
                     aula.setId(resultSet.getInt("id_aula"));
                     aula.setNombre(resultSet.getString("aula"));
 
-                    categoriaEquipo.setId(resultSet.getInt("id_categoria_equipo"));
+                    equipo.setId(resultSet.getInt("id_categoria_equipo"));
                     categoriaEquipo.setNombre(resultSet.getString("categoria"));
 
                     equipo.setCodigo(resultSet.getString("codigo"));
