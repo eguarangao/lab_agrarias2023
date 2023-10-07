@@ -90,50 +90,66 @@
 
          <h:form id="dialogEquipo">
             <p:dialog header="Agregar nuevo Equipo" showEffect="fade" modal="true" widgetVar="manageEquipoDialog"
-                      responsive="true">
+                      responsive="true" style="max-width: 980px;">
                <p:outputPanel id="manage-equipo-content" class="ui-fluid">
                <p:outputPanel rendered="#{not empty equipoBean.newEquipo}">
 
-                     <div class="field">
-                        <p:outputLabel for="laboratory">Laboratorio</p:outputLabel>
-                        <p:inputText id="laboratory" value="#{equipoBean.newEquipo.laboratorio.id}"
-                                     required="true"/>
-                     </div>
-                     <div class="field">
-                        <p:outputLabel for="category">Área</p:outputLabel>
-                        <p:inputText id="category" value="#{equipoBean.newEquipo.categoriaEquipo.id}"
-                                     required="true"/>
-                     </div>
-                     <div class="field">
-                        <p:outputLabel for="code">Código</p:outputLabel>
-                        <p:inputText id="code" value="#{equipoBean.newEquipo.codigo}"
-                                     required="true"/>
-                     </div>
-                     <div class="field">
-                        <p:outputLabel for="description">Descripción</p:outputLabel>
-                        <p:inputText id="description" value="#{equipoBean.newEquipo.descripcion}"
-                                     required="true"/>
-                     </div>
-                     <div class="field">
-                        <p:outputLabel for="brand">Marca </p:outputLabel>
-                        <p:inputText id="brand" value="#{equipoBean.newEquipo.marca}"
-                                     required="true"/>
-                     </div>
-                     <div class="field">
-                        <p:outputLabel for="model">Modelo </p:outputLabel>
-                        <p:inputText id="model" value="#{equipoBean.newEquipo.modelo}"
-                                     required="true"/>
-                     </div>
-                     <div class="field">
-                        <p:outputLabel for="serialNumber">Nº Serio </p:outputLabel>
-                        <p:inputText id="serialNumber" value="#{equipoBean.newEquipo.numeroSerie}"
-                                     required="true"/>
-                     </div>
 
-                     <div class="field">
-                        <h:outputLabel for="estado" value="Habilitado:" />
-                        <p:selectBooleanButton id="estado" onLabel="Si" offLabel="No" style="width:3rem"
-                                               value="#{equipoBean.newEquipo.estado}"/>
+                     <div class="p-formgrid p-grid">
+
+                        <div class="field p-col-12 p-md-3">
+                           <p:outputLabel for="laboratory">Laboratorio</p:outputLabel>
+                           <p:inputText id="laboratory" value="#{equipoBean.newEquipo.laboratorio.id}"
+                                        required="true"/>
+                        </div>
+
+                        <div class="field p-col-12 p-md-3">
+                           <p:outputLabel for="category">Área</p:outputLabel>
+                           <p:inputText id="category" value="#{equipoBean.newEquipo.categoriaEquipo.id}"
+                                        required="true"/>
+
+                        </div>
+
+                        <div class="field p-col-12 p-md-3">
+                           <p:outputLabel for="code">Código</p:outputLabel>
+                           <p:inputText id="code" value="#{equipoBean.newEquipo.codigo}"
+                                        required="true"/>
+
+                        </div>
+
+                        <div class="field p-col-12 p-md-3">
+                           <p:outputLabel for="description">Descripción</p:outputLabel>
+                           <p:inputText id="description" value="#{equipoBean.newEquipo.descripcion}"
+                                        required="true"/>
+                        </div>
+
+                        <div class="field p-col-12 p-md-3">
+                           <p:outputLabel for="brand">Marca </p:outputLabel>
+                           <p:inputText id="brand" value="#{equipoBean.newEquipo.marca}"
+                                        required="true"/>
+                        </div>
+
+                        <div class="field p-col-12 p-md-3">
+                           <p:outputLabel for="model">Modelo </p:outputLabel>
+                           <p:inputText id="model" value="#{equipoBean.newEquipo.modelo}"
+                                        required="true"/>
+                        </div>
+
+                        <div class="field p-col-12 p-md-3">
+                           <p:outputLabel for="serialNumber">Nº Serio </p:outputLabel>
+                           <p:inputText id="serialNumber" value="#{equipoBean.newEquipo.numeroSerie}"
+                                        required="true"/>
+                        </div>
+
+                        <div class="field p-col-12 p-md-3 " style="margin-top: 3px;">
+                           <h:outputLabel for="estado" value="Estado:" />
+                           <div style="display: block">
+                           <p:selectBooleanButton id="estado" onLabel="Activado" offLabel="Desactivado"
+                                                  value="#{equipoBean.newEquipo.estado}"/>
+                           </div>
+                        </div>
+
+
                      </div>
 
                </p:outputPanel>

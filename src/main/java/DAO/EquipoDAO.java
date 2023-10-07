@@ -5,7 +5,6 @@ import Model.Aula;
 import Model.CategoriaEquipo;
 import Model.Laboratorio;
 import global.Conexion;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +12,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class EquipoDAO extends Conexion {
 
@@ -28,10 +26,8 @@ public class EquipoDAO extends Conexion {
             rs = st.executeQuery();
             while (rs.next()) {
                 Equipo equipo = new Equipo();
-
                 equipo.setId(rs.getInt("id"));
                 equipo.setDescripcion(rs.getString("descripcion"));
-
                 equipos.add(equipo);
             }
         } catch (SQLException e) {
@@ -44,9 +40,6 @@ public class EquipoDAO extends Conexion {
         return equipos;
     }
 
-
-
-
     public List<Equipo> listarEquiposPorTecnico(int tecnicoID) throws SQLException {
         List<Equipo> Listequipos = new ArrayList<>();
         this.conectar();
@@ -56,7 +49,6 @@ public class EquipoDAO extends Conexion {
             preparedStatement.setInt(1, tecnicoID);
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
 
-
                 while (resultSet.next()) {
                     Equipo equipo = new Equipo();
                     Aula aula = new Aula();
@@ -65,13 +57,13 @@ public class EquipoDAO extends Conexion {
 
                     equipo.setId(resultSet.getInt("id"));
 
-                    equipo.setId(resultSet.getInt("id_laboratorio"));
+                    laboratorio.setId(resultSet.getInt("id_laboratorio"));
                     laboratorio.setNombre(resultSet.getString("nom_laboratorio"));
 
                     aula.setId(resultSet.getInt("id_aula"));
                     aula.setNombre(resultSet.getString("aula"));
 
-                    equipo.setId(resultSet.getInt("id_categoria_equipo"));
+                    categoriaEquipo.setId(resultSet.getInt("id_categoria_equipo"));
                     categoriaEquipo.setNombre(resultSet.getString("categoria"));
 
                     equipo.setCodigo(resultSet.getString("codigo"));
@@ -87,13 +79,11 @@ public class EquipoDAO extends Conexion {
                     equipo.setLaboratorio(laboratorio);
 
                     Listequipos.add(equipo);
-
                 }
             }
         } finally {
             this.desconectar();
         }
-
         return Listequipos;
     }
 
@@ -101,7 +91,7 @@ public class EquipoDAO extends Conexion {
         this.conectar();
         String query = "select * from laboratorio.AgregarEquipo(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, equipo.getLaboratorio().getId());
             preparedStatement.setInt(2, equipo.getCategoriaEquipo().getId());
             preparedStatement.setString(3, equipo.getCodigo());
@@ -127,7 +117,6 @@ public class EquipoDAO extends Conexion {
 
         try {
             connection.setAutoCommit(false);
-
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, equipoId);
             preparedStatement.executeUpdate();
