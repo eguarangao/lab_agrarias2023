@@ -37,6 +37,8 @@ public class UsuarioBean implements Serializable {
     private String username;
     private String password;
 
+    private int idUsuarioSession;
+
     private boolean isAdministrador = false;
     private boolean isTecnico = false;
     private boolean isADocente = false;
@@ -92,8 +94,13 @@ public class UsuarioBean implements Serializable {
     public void verificarSession() throws IOException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         Usuario usuario = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
+        idUsuarioSession = usuario.getId();
         System.out.println("USAURIO LOGUEADO");
         System.out.println(usuario);
+
+        System.out.println("ID USAURIO SESSION");
+        System.out.println(idUsuarioSession);
+
         if (usuario == null) {
             facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath());
 //        } else {
@@ -265,10 +272,11 @@ public class UsuarioBean implements Serializable {
 
         }
     }
+
     public void actualizarAjustePerfil(AjustePerfil ajustePerfil) {
         DAO.updateAjustePerfil(ajustePerfil);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario actualizado"));
-        PrimeFaces.current().ajax().update("form-Perfil","msgs");
+        PrimeFaces.current().ajax().update("form-Perfil", "msgs");
     }
 
 
@@ -282,7 +290,7 @@ public class UsuarioBean implements Serializable {
             if (this.nuevoUsuario.getFechaCreacion() == null) {
                 DAO.insert(nuevoUsuario);
                 listFullUsers = DAO.listarUsuariosPersonas();
-                listFullDocente= DAO.listarUsuariosDocentes();
+                listFullDocente = DAO.listarUsuariosDocentes();
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario agregado"));
             } else {
                 DAO.update(nuevoUsuario);
