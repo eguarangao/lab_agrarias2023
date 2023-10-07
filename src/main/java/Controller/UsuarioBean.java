@@ -47,6 +47,7 @@ public class UsuarioBean implements Serializable {
     private ListFullUser nuevoUsuario;
     private UsuarioDAO DAO = new UsuarioDAO();
     private boolean isCreateUser;
+    private boolean deshabilitado;
 
     @PostConstruct
     public void main() {
@@ -58,6 +59,8 @@ public class UsuarioBean implements Serializable {
             this.listFullDocente = new ArrayList<>();
             listFullDocente = DAO.listarUsuariosDocentes();
             isCreateUser = false;
+            deshabilitado=true;
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,6 +74,7 @@ public class UsuarioBean implements Serializable {
 
     public void EditCreateUser(boolean createUser) {
         this.isCreateUser = createUser;
+        deshabilitado  = !createUser;
     }
 
     //    public String login() {
@@ -294,6 +298,8 @@ public class UsuarioBean implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario agregado"));
             } else {
                 DAO.update(nuevoUsuario);
+                listFullUsers = DAO.listarUsuariosPersonas();
+                listFullDocente = DAO.listarUsuariosDocentes();
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario actualizado"));
 
             }
