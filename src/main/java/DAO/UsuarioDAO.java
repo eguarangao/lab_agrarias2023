@@ -28,6 +28,7 @@ public class UsuarioDAO extends Conexion {
                 usuario = new Usuario();
                 usuario.setNombre(rs.getString("nombre"));
                 usuario.setClave(rs.getString("clave"));
+                usuario.setId(rs.getInt("id"));
                 usuario.setEnabled(rs.getBoolean("enabled"));
                 System.out.println(usuario);
             }

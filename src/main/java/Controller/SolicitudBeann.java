@@ -8,6 +8,7 @@ import Model.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -334,6 +335,16 @@ public class SolicitudBeann implements Serializable {
             // También puedes agregar un mensaje de error para mostrar en la vista.
             FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al cargar los laboratorios", null));
+        }
+    }
+
+    public void validateSelection(FacesContext context, UIComponent component, Object value) {
+        List<Item> selectedItems = (List<Item>) value;
+
+        if (selectedItems != null && selectedItems.size() > 3) {
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Solo se permiten un máximo de 3 selecciones.");
+            context.addMessage(null, message);
+            // Clear the selection or take any other necessary action to handle the error.
         }
     }
 

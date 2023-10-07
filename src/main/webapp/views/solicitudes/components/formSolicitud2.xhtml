@@ -25,7 +25,8 @@
                         <f:selectItem itemLabel="Seleccione laboratorio" noSelectionOption="true"/>
                         <f:selectItems value="#{solicitudBeann.laboratorios}" var="lab"
                                        itemLabel="#{lab.nombre}" itemValue="#{lab.id}"/>
-                        <p:ajax event="change" listener="#{solicitudBeann.FindAllEquipos()}" update="calendarReserva selectHoras"/>
+                        <p:ajax event="change" listener="#{solicitudBeann.FindAllEquipos()}"
+                                update="calendarReserva selectHoras"/>
                     </p:selectOneMenu>
                 </div>
 
@@ -66,7 +67,7 @@
 
 
                 <div class="p-field p-col-12 p-md-6">
-                                            <p:outputLabel for="selectHoras" value="Horas" />
+                    <p:outputLabel for="selectHoras" value="Horas"/>
                     <!--                        <p:selectCheckboxMenu id="selectHoras"  label="Cities"-->
                     <!--                                              multiple="true"  scrollHeight="250"-->
                     <!--                                              value="#{solicitudBeann.itemsSelecionados}" showSelectAll="true">-->
@@ -133,7 +134,8 @@
                 <div class="p-grid p-justify-around">
                     <div class="p-field p-col-12 p-md-12">
                         <p:fieldset legend="EQUIPOS REQUERIDOS">
-                            <p:selectCheckboxMenu id="comboEquipos" label="Cities" style="min-width: 15rem" value="#{solicitudBeann.equiposRequeridos}"
+                            <p:selectCheckboxMenu id="comboEquipos" label="Cities" style="min-width: 15rem"
+                                                  value="#{solicitudBeann.equiposRequeridos}"
                                                   multiple="true" filter="true" filterMatchMode="startsWith"
                                                   panelStyle="width: 30rem" scrollHeight="250">
                                 <f:selectItems value="#{solicitudBeann.equipos}"

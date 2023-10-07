@@ -92,6 +92,8 @@ public class UsuarioBean implements Serializable {
     public void verificarSession() throws IOException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         Usuario usuario = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
+        System.out.println("USAURIO LOGUEADO");
+        System.out.println(usuario);
         if (usuario == null) {
             facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath());
 //        } else {
