@@ -64,6 +64,11 @@ public class SolicitudBeann implements Serializable {
     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 
 
+    public void imprimir(){
+        System.out.println("Items seleccionados");
+        System.out.println(itemsSelecionados);
+    }
+
     List<Item> items;
     List<Laboratorio> laboratorios;
     List<Horario> horarios;
@@ -139,13 +144,13 @@ public class SolicitudBeann implements Serializable {
         String contextPath = externalContext.getRequestContextPath();
 
         if ("SOLICITUD PRÁCTICAS ESTUDIANTES".equals(tipoSolicitud)) {
-            externalContext.redirect(contextPath + "/views/solicitudes/newSolicitud.xhtml");
+            externalContext.redirect(contextPath + "/views/solicitudes/registroSolicitud.xhtml");
             System.out.println("holaaaaaaaaaaaaa" + tipoSolicitud);
         } else if ("SOLICITUD PRÁCTICAS DE PROYECTO DE INVESTIGACÓN".equals(tipoSolicitud)) {
-            externalContext.redirect(contextPath + "/views/solicitudes/newSolicitud.xhtml");
+            externalContext.redirect(contextPath + "/views/solicitudes/registroSolicitud.xhtml");
             System.out.println("holaaaaaaaaaaaaa" + tipoSolicitud);
         } else if ("SOLICITUD PRÁCTICAS DE TESIS".equals(tipoSolicitud)) {
-            externalContext.redirect(contextPath + "/views/solicitudes/newSolicitud.xhtml");
+            externalContext.redirect(contextPath + "/views/solicitudes/registroSolicitud.xhtml");
         }
 
     }
@@ -337,6 +342,7 @@ public class SolicitudBeann implements Serializable {
             docenteDAO = new DocenteDAO();
             usuarioDAO = new UsuarioDAO();
             usuarioBean = new UsuarioBean();
+            itemsSelecionados = new ArrayList<>();
 
 
             FacesContext facesContext = FacesContext.getCurrentInstance();

@@ -74,14 +74,16 @@
                     <!--                          <f:selectItems value="#{solicitudBeann.items}" var="hor" itemLabel="#{hor.fecha}" itemValue="#{hor.dato}" itemDisabled="#{not hor.dato}" />-->
                     <!--                          </p:selectCheckboxMenu>-->
 
-                    <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.value}"
+                    <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.itemsSelecionados}"
                                           layout="responsive"
-                                          columns="3">
+                                          columns="3" converter="omnifaces.SelectItemsConverter" >
                         <f:selectItems value="#{solicitudBeann.items}" var="item" itemLabel="#{item.fecha}"
                                        itemDisabled="#{not item.dato}"
                                        itemStyle="#{item.dato ? '' : 'color: red;'}"
                                        itemValue="#{item.id}"/>
                     </p:selectManyCheckbox>
+
+                    <p:commandButton value="imprimir" actionListener="#{solicitudBeann.imprimir()}"/>
 
                 </div>
 
