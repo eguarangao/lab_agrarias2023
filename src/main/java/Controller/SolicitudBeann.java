@@ -53,7 +53,7 @@ public class SolicitudBeann implements Serializable {
     int idLaboratorio = 0;
     int idLaboratorio2;
     int idHorario;
-    int idUsuarioSession=0;
+    int idUsuarioSession = 0;
     Date fecha;
     String tipoSolicitud;
     String fechaReserva2;
@@ -64,10 +64,7 @@ public class SolicitudBeann implements Serializable {
     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 
 
-    public void imprimir(){
-        System.out.println("Items seleccionados");
-        System.out.println(itemsSelecionados);
-    }
+
 
     List<Item> items;
     List<Laboratorio> laboratorios;
@@ -78,11 +75,24 @@ public class SolicitudBeann implements Serializable {
     List<Item> itemsSelecionados;
     String value;
 
+    public void imprimir() {
+        System.out.println("Items seleccionados");
+//        System.out.println(itemsSelecionados);
+    }
+
     public void FindAllEquipos() throws SQLException {
         equipoDAO = new EquipoDAO();
         equipos = new ArrayList<>();
 
         equipos = equipoDAO.findByLaboratorioID(idLaboratorio);
+    }
+
+
+    public void validarSeleccionHoras() {
+        // Aquí puedes procesar los elementos seleccionados y guardarlos en tu lista
+        for (Item item : itemsSelecionados) {
+            // Realiza las acciones necesarias para guardar el elemento           // Puedes agregarlo a otra lista, guardar en una base de datos, etc.
+        }
     }
 
 
@@ -347,8 +357,8 @@ public class SolicitudBeann implements Serializable {
 
             FacesContext facesContext = FacesContext.getCurrentInstance();
             Usuario usuarioLogueado = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
-            idUsuarioSession= usuarioLogueado.getId();
-          docente= String.valueOf(docenteDAO.findByUsuarioID(getIdUsuarioSession()).get(0).getPersona().getApellido());
+            idUsuarioSession = usuarioLogueado.getId();
+            docente = String.valueOf(docenteDAO.findByUsuarioID(getIdUsuarioSession()).get(0).getPersona().getApellido());
 
 
 //            docenteDAO.findByUsuarioID(usuarioBean.getIdUsuarioSession());

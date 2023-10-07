@@ -19,14 +19,14 @@
 <!--         <f:event type="preRenderView" listener="#{equipoMB.listarEquiposByEncargado(loginMB.httpSession.getAttribute('idPersona'))}"/>-->
 
 
-<!--         <p:growl id="msj" showDetail="true"/>-->
+         <p:growl id="messages" showDetail="true"/>
 
       <!--     TOOLBAR-->
          <ui:include src="/views/solicitudes/components/subNavbarSolicitudes.xhtml"/>
 
 
          <!--REGISTRO FORM-->
-         <h:form id="formb" enctype="multipart/form-data" >
+         <h:form id="formS" enctype="multipart/form-data" >
             <!--VISTA REGISTRAR-->
             <ui:include src="/views/solicitudes/components/nuevaSolicitud.xhtml"/>
          </h:form>
@@ -39,7 +39,21 @@
 
 
 <!--         <h:outputScript name="calendar_es.js" library="js"/>-->
+
+<!--                  <h:outputScript name="validarSeleccionHoras.js" library="js"/>-->
+<!--         <h:outputScript name="js/validarHoras.js" library="manhattan-layout"/>-->
+
+         <h:outputScript name="prueba.js" library="js"/>
+
+
       </ui:define>
    </ui:composition>
+
+
+
+   <!-- Incluir los scripts aquí -->
+
+
+
 </h:body>
 </html>

@@ -15,7 +15,7 @@
 
             <!--LABORATORIO  -->
             <div class="field p-col-12 p-md-3">
-                <p:outputLabel value="Laboratorio"/>
+                <p:outputLabel value="Laboratorioss"/>
                 <!--SELECT LABORATORIOS-->
                 <p:selectOneMenu id="selectLaboratorios"
                                  value="#{solicitudBeann.idLaboratorio}">
@@ -33,7 +33,7 @@
                             disabled="#{solicitudBeann.idLaboratorio == 0}"
                             locale="es"
                             value="#{solicitudBeann.fechaReserva}">
-                    <p:ajax event="dateSelect" listener="#{solicitudBeann.listHoras}" update="selectHoras :formb "/>
+                    <p:ajax event="dateSelect" listener="#{solicitudBeann.listHoras}" update="selectHoras :formS "/>
                 </p:calendar>
             </div>
 
@@ -72,15 +72,15 @@
                 <!--                          </p:selectCheckboxMenu>-->
 
                 <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.itemsSelecionados}"
-                                      layout="responsive"
-                                      columns="3" converter="omnifaces.SelectItemsConverter">
+                                      layout="responsive" columns="3"
+                                      onchange="validarSeleccion()">
                     <f:selectItems value="#{solicitudBeann.items}" var="item" itemLabel="#{item.fecha}"
-                                   itemDisabled="#{not item.dato}"
-                                   itemStyle="#{item.dato ? '' : 'color: red;'}"
-                                   itemValue="#{item.id}"/>
+                                   itemDisabled="#{not item.dato}" itemStyle="#{item.dato ? '' : 'color: red;'}"
+                                   itemValue="#{item}"/>
                 </p:selectManyCheckbox>
+                <p:message for="selectHoras" />
+<!--                <p:commandButton value="imprimir"  actionListener="#{solicitudBeann.imprimir()}"/>-->
 
-                <p:commandButton value="imprimir" actionListener="#{solicitudBeann.imprimir()}"/>
 
             </div>
 
