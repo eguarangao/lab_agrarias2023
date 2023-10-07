@@ -12,11 +12,10 @@ public class Equipo {
     private String marca;
     private String modelo;
     private String numeroSerie;
-    private String estado;
-    private String imagen;
     private Date fechaAdquisicion;
-    private Date FechaRegistro;
+    private Boolean estado;
     //Relaciones entidades
     private Aula aula;
     private CategoriaEquipo categoriaEquipo;
+    private Laboratorio laboratorio;
 }

@@ -3,9 +3,168 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
+
    <div class="p-grid ui-fluid">
       <div class="p-col-12">
-         //
+         <h:form id="form-equipo">
+            <p:growl id="messages" showDetail="true"/>
+            <div class="card crud-demo">
+               <p:toolbar>
+                  <p:toolbarGroup>
+                     <p:commandButton value="Nuevo equipo" icon="pi pi-plus"
+                                      actionListener="#{equipoBean.nuevoEquipo()}"
+                                      update=":dialogEquipo:manage-equipo-content"
+                                      oncomplete="PF('manageEquipoDialog').show()"
+                                      styleClass="ui-button-success" style="margin-right: .5rem">
+                        <p:resetInput target=":dialogEquipo:manage-equipo-content"/>
+                     </p:commandButton>
+
+
+                  </p:toolbarGroup>
+               </p:toolbar>
+               <p:dataTable id="dt-equipos" widgetVar="dtEquipos" var="dtequipos"
+                            value="#{equipoBean.listequipos}" reflow="true" styleClass="products-table"
+                            lazy="true" rowKey="#{dtequipos.id}" paginator="true" rows="10" rowSelectMode="add"
+                            paginatorPosition="bottom"
+               >
+                  <p:column headerText="id">
+                     <h:outputText value="#{dtequipos.id}"/>
+                  </p:column>
+                  <p:column headerText="Codigo">
+                     <h:outputText value="#{dtequipos.codigo}"/>
+                  </p:column>
+
+                  <p:column headerText="Categoria">
+                     <h:outputText value="#{dtequipos.categoriaEquipo.nombre}"/>
+                  </p:column>
+
+                  <p:column headerText="Descripción">
+                     <h:outputText value="#{dtequipos.descripcion}"/>
+                  </p:column>
+
+                  <p:column headerText="Marca">
+                     <h:outputText value="#{dtequipos.marca}"/>
+                  </p:column>
+
+                  <p:column headerText="Modelo">
+                     <h:outputText value="#{dtequipos.modelo}"/>
+                  </p:column>
+
+                  <p:column headerText="Nº Serie">
+                     <h:outputText value="#{dtequipos.numeroSerie}"/>
+                  </p:column>
+
+                  <p:column headerText="Fecha adquisición">
+                     <h:outputText value="#{dtequipos.fechaAdquisicion}"/>
+                  </p:column>
+
+                  <p:column headerText="Área">
+                     <h:outputText value="#{dtequipos.aula.nombre}"/>
+                  </p:column>
+
+                  <p:column headerText="Estado">
+                     <p:tag severity="success" value="Activado" rendered="#{dtequipos.estado}"/>
+                     <p:tag severity="warning" value="Desactivado" rendered="#{not dtequipos.estado}"/>
+                  </p:column>
+
+
+                  <p:column headerText="Acciones" exportable="false">
+                     <p:commandButton icon="pi pi-pencil"
+                                      styleClass="edit-button rounded-button ui-button-success"
+                                      process="@this">
+
+                     </p:commandButton>
+                     <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                      process="@this"
+                                      oncomplete="PF('deleteEquipoDialog').show()"
+                     >
+                        <f:setPropertyActionListener value="#{dtequipos}"
+                                                     target="#{equipoBean.newEquipo}"/>
+                     </p:commandButton>
+                  </p:column>
+               </p:dataTable>
+
+            </div>
+         </h:form>
+
+
+         <h:form id="dialogEquipo">
+            <p:dialog header="Agregar nuevo Equipo" showEffect="fade" modal="true" widgetVar="manageEquipoDialog"
+                      responsive="true">
+               <p:outputPanel id="manage-equipo-content" class="ui-fluid">
+               <p:outputPanel rendered="#{not empty equipoBean.newEquipo}">
+
+                     <div class="field">
+                        <p:outputLabel for="laboratory">Laboratorio</p:outputLabel>
+                        <p:inputText id="laboratory" value="#{equipoBean.newEquipo.laboratorio.id}"
+                                     required="true"/>
+                     </div>
+                     <div class="field">
+                        <p:outputLabel for="category">Área</p:outputLabel>
+                        <p:inputText id="category" value="#{equipoBean.newEquipo.categoriaEquipo.id}"
+                                     required="true"/>
+                     </div>
+                     <div class="field">
+                        <p:outputLabel for="code">Código</p:outputLabel>
+                        <p:inputText id="code" value="#{equipoBean.newEquipo.codigo}"
+                                     required="true"/>
+                     </div>
+                     <div class="field">
+                        <p:outputLabel for="description">Descripción</p:outputLabel>
+                        <p:inputText id="description" value="#{equipoBean.newEquipo.descripcion}"
+                                     required="true"/>
+                     </div>
+                     <div class="field">
+                        <p:outputLabel for="brand">Marca </p:outputLabel>
+                        <p:inputText id="brand" value="#{equipoBean.newEquipo.marca}"
+                                     required="true"/>
+                     </div>
+                     <div class="field">
+                        <p:outputLabel for="model">Modelo </p:outputLabel>
+                        <p:inputText id="model" value="#{equipoBean.newEquipo.modelo}"
+                                     required="true"/>
+                     </div>
+                     <div class="field">
+                        <p:outputLabel for="serialNumber">Nº Serio </p:outputLabel>
+                        <p:inputText id="serialNumber" value="#{equipoBean.newEquipo.numeroSerie}"
+                                     required="true"/>
+                     </div>
+
+                     <div class="field">
+                        <h:outputLabel for="estado" value="Habilitado:" />
+                        <p:selectBooleanButton id="estado" onLabel="Si" offLabel="No" style="width:3rem"
+                                               value="#{equipoBean.newEquipo.estado}"/>
+                     </div>
+
+               </p:outputPanel>
+               </p:outputPanel>
+
+               <f:facet name="footer">
+                  <p:commandButton value="Save" icon="pi pi-check"
+                                   actionListener="#{equipoBean.addEquipo()}"
+                                   update="manage-equipo-content, form-equipo:dt-equipos"
+                                   process="manage-equipo-content @this"/>
+                  <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageEquipoDialog').hide()"
+                                   class="ui-button-secondary" type="button"/>
+
+               </f:facet>
+
+
+
+            </p:dialog>
+            <p:confirmDialog widgetVar="deleteEquipoDialog" showEffect="fade" width="300"
+                             message="Deseas eliminar el Equipo?" header="Confirmar" severity="warn">
+               <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{equipoBean.eliminarEquipo()}"
+                                process="@this"
+                                oncomplete="PF('deleteEquipoDialog').hide()"/>
+               <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                onclick="PF('deleteEquipoDialog').hide()"/>
+            </p:confirmDialog>
+
+
+         </h:form>
+
+
 
       </div>
    </div>

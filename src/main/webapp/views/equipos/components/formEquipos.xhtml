@@ -4,93 +4,19 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
    <div class="p-grid ui-fluid">
+      <div class="p-col-12">
+         <h:form>
+            <p:menubar>
+               <p:menuitem value="Mantenimientos"  outcome="/views/administracion/administracion">
+               </p:menuitem>
+
+               <p:menuitem value="Reporte averias" outcome="/views/administracion/components/formFacultades">
+               </p:menuitem>
+
+            </p:menubar>
+         </h:form>
+      </div>
    </div>
-   <h:form id ="formb" enctype="multipart/form-data">
-      <div class="card" align="center">
-         <p:toolbarGroup id="tol">
-            <p:outputLabel value="EQUIPOS DE LABORATORIO" > </p:outputLabel>
-         </p:toolbarGroup>
-      </div>
-      <div class="card ui-fluid">
-         <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true"/>
-         <div class="p-formgrid p-grid">
-            <!--FECHA DE RESERVA  -->
-            <div class="field p-col-12 p-md-2">
-               <p:outputLabel for="calendarReserva" value="Fecha de Reserva"/>
-               <p:calendar id="calendarReserva" locale="es"/>
-            </div>
-            <!--LABORATORIO  -->
-            <div class="field p-col-12 p-md-3">
-               <p:outputLabel value="Laboratorio"/>
-            </div>
-            <!--HORARIO  -->
-            <div class="field p-col-12 p-md-2">
-               <p:outputLabel value="Horario"/>
 
-            </div>
-            <!--TEMA  -->
-            <div class="field p-col-12 p-md-5">
-               <p:outputLabel for="tema" value="Tema"/>
-               <p:inputText id="tema" maxlength="35"/>
-            </div>
-            <!--OBJETIVO  -->
-            <div class="field p-col-12 p-md-3">
-               <p:outputLabel for="objetivo" value="Objetivo"/>
-               <p:inputText id="objetivo" maxlength="35"/>
-            </div>
-            <!--ANALISIS  -->
-            <div class="field p-col-12 p-md-3">
-               <p:outputLabel for="analisis" value="Análisis"/>
-               <p:inputText id="analisis" maxlength="35"/>
-            </div>
-            <div class="field p-col-12 p-md-2">
-               <p:outputLabel for="periodo" value="Periodo"/>
-               <p:inputText id="periodo" maxlength="35"/>
-            </div>
-            <div class="field p-col-12 p-md-2">
-               <p:outputLabel for="docente" value="Docente"/>
-               <p:inputText id="docente" maxlength="35"/>
-            </div>
-            <!--FECHA DE SOLICITUD  -->
-            <div class="field p-col-12 p-md-2">
-               <p:outputLabel for="calendarSolicita" value="Fecha de Solicitud"/>
-               <p:calendar id="calendarSolicita" locale="es"/>
-            </div>
-         </div>
-         <!-- EQUIPOS -->
-         <div class="card" style="margin-top: 5px;">
-            <div class="p-grid p-justify-around">
-               <div class="p-field p-col-12 p-md-4">
-                  <p:fieldset legend="EQUIPOS REQUERIDOS">
-
-                     <p:commandButton  update=":formb"/>
-                  </p:fieldset>
-               </div>
-               <div class="p-field p-col-12 p-md-4">
-                  <p:fieldset legend="Cargar resoluciòn">
-                     <p:fileUpload id="archivo"
-                     />
-                  </p:fieldset>
-
-               </div>
-            </div>
-         </div>
-         <div class="p-grid p-justify-end">
-            <div class="p-col-2">
-               <p:commandButton value="Guardar"
-                                icon="pi pi-check"
-                                ajax="false"
-                                update=":formm:tol,formm:archivo"
-                                actionListener="#{solicitudBean.getTipoSolicitudes()}"
-               />
-            </div>
-            <div class="p-col-2">
-               <p:commandButton value="Cerrar" icon="pi pi-times"
-                                styleClass="ui-button-danger" process="@this"
-               />
-            </div>
-         </div>
-      </div>
-   </h:form>
 </ui:composition>
 
