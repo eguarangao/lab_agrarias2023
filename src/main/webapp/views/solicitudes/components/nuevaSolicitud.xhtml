@@ -64,24 +64,23 @@
 
 
             <div class="p-field p-col-12 p-md-6">
-                <p:outputLabel for="selectHoras" value="Horas"/>
-                <!--                        <p:selectCheckboxMenu id="selectHoras"  label="Cities"-->
-                <!--                                              multiple="true"  scrollHeight="250"-->
-                <!--                                              value="#{solicitudBeann.itemsSelecionados}" showSelectAll="true">-->
-                <!--                          <f:selectItems value="#{solicitudBeann.items}" var="hor" itemLabel="#{hor.fecha}" itemValue="#{hor.dato}" itemDisabled="#{not hor.dato}" />-->
-                <!--                          </p:selectCheckboxMenu>-->
+<!--                <p:outputLabel for="selectHoras" value="Horas"/>-->
+<!--                &lt;!&ndash;                        <p:selectCheckboxMenu id="selectHoras"  label="Cities"&ndash;&gt;-->
+<!--                &lt;!&ndash;                                              multiple="true"  scrollHeight="250"&ndash;&gt;-->
+<!--                &lt;!&ndash;                                              value="#{solicitudBeann.itemsSelecionados}" showSelectAll="true">&ndash;&gt;-->
+<!--                &lt;!&ndash;                          <f:selectItems value="#{solicitudBeann.items}" var="hor" itemLabel="#{hor.fecha}" itemValue="#{hor.dato}" itemDisabled="#{not hor.dato}" />&ndash;&gt;-->
+<!--                &lt;!&ndash;                          </p:selectCheckboxMenu>&ndash;&gt;-->
 
                 <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.itemsSelecionados}"
                                       layout="responsive" columns="3"
-                                      onchange="validarSeleccion()">
+                                      onchange="#{solicitudBeann.imprimir()}" styleClass="text-danger">
                     <f:selectItems value="#{solicitudBeann.items}" var="item" itemLabel="#{item.fecha}"
-                                   itemDisabled="#{not item.dato}" itemStyle="#{item.dato ? '' : 'color: red;'}"
-                                   itemValue="#{item}"/>
+                                   itemDisabled="#{not item.dato}" itemValue="#{item}" />
+                    <p:ajax event="change" listener="#{solicitudBeann.imprimir()}" />
                 </p:selectManyCheckbox>
-                <p:message for="selectHoras" />
-<!--                <p:commandButton value="imprimir"  actionListener="#{solicitudBeann.imprimir()}"/>-->
 
-
+<!--                <p:message for="selectHoras" />-->
+                <p:commandButton value="imprimir"  actionListener="#{solicitudBeann.imprimir()}"/>
             </div>
 
 

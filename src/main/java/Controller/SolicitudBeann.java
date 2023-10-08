@@ -12,9 +12,11 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpSession;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.primefaces.event.SelectEvent;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -27,10 +29,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
 @Named
-@ViewScoped
+@SessionScoped
 public class SolicitudBeann implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
     //DAO
     LaboratorioDAO laboratorioDAO;
@@ -66,18 +70,20 @@ public class SolicitudBeann implements Serializable {
 
 
 
-    List<Item> items;
+    private List<Item> items;
     List<Laboratorio> laboratorios;
     List<Horario> horarios;
     List<Equipo> equipos;
     List<Equipo> equiposRequeridos;
 
-    List<Item> itemsSelecionados;
+   private  List<Item> itemsSelecionados;
     String value;
 
     public void imprimir() {
         System.out.println("Items seleccionados");
-//        System.out.println(itemsSelecionados);
+        System.out.println(itemsSelecionados);
+        System.out.println("Items seleccionados tamaño lista");
+        System.out.println(itemsSelecionados.size());
     }
 
     public void FindAllEquipos() throws SQLException {
