@@ -175,21 +175,21 @@ public class SolicitudBean implements Serializable {
 
     public void saveSolicitud() throws SQLException {
 
-        solicitud = new Solicitud();
-        solicitudDAO = new SolicitudDAO();
-        equipos = new ArrayList<>();
-        try {
-            Laboratorio laboratorio = new Laboratorio();
-            laboratorio.setId(idLaboratorio);
-            solicitud.setLaboratorio(laboratorio);
-            Docente docente = new Docente();
-            docente.setId(1);
-            solicitud.setDocente(docente);
-
-            solicitudDAO.save(solicitud, horario, equipos, idItems, formato.format(fechaDate));
-        } catch (Exception e) {
-            System.out.println(e.toString() + "EBERT ERROR");
-        }
+//        solicitud = new Solicitud();
+//        solicitudDAO = new SolicitudDAO();
+//        equipos = new ArrayList<>();
+//        try {
+//            Laboratorio laboratorio = new Laboratorio();
+//            laboratorio.setId(idLaboratorio);
+//            solicitud.setLaboratorio(laboratorio);
+//            Docente docente = new Docente();
+//            docente.setId(1);
+//            solicitud.setDocente(docente);
+//
+//            solicitudDAO.save(solicitud, horario, equipos, idItems, formato.format(fechaDate));
+//        } catch (Exception e) {
+//            System.out.println(e.toString() + "EBERT ERROR");
+//        }
     }
 
 

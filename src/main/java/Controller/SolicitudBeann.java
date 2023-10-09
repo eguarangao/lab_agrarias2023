@@ -8,12 +8,10 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
-import jakarta.servlet.http.HttpSession;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.primefaces.event.SelectEvent;
+import org.primefaces.PrimeFaces;
 
 import java.io.IOException;
 import java.io.Serial;
@@ -21,9 +19,9 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,7 +65,7 @@ public class SolicitudBeann implements Serializable {
     String fechaString = "2023-05-01";
     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 
-
+    boolean desactivarElementos;
 
 
     private List<Item> items;
@@ -76,7 +74,8 @@ public class SolicitudBeann implements Serializable {
     List<Equipo> equipos;
     List<Equipo> equiposRequeridos;
 
-   private  List<Item> itemsSelecionados;
+    private List<Item> itemsSelecionados;
+    private List<Item> elementosDeshabilitados = new ArrayList<>();
     String value;
 
     public void imprimir() {
@@ -84,6 +83,14 @@ public class SolicitudBeann implements Serializable {
         System.out.println(itemsSelecionados);
         System.out.println("Items seleccionados tamaño lista");
         System.out.println(itemsSelecionados.size());
+
+        validarSeleccionHoras();
+    }
+
+    public void save() throws SQLException {
+        horario = asignarHoras(itemsSelecionados);
+        horario.setFecha(fechaReserva);
+        solicitudDAO.save2(horario, idLaboratorio);
     }
 
     public void FindAllEquipos() throws SQLException {
@@ -93,11 +100,179 @@ public class SolicitudBeann implements Serializable {
         equipos = equipoDAO.findByLaboratorioID(idLaboratorio);
     }
 
+    int seleccionCount = 0;
+    int MAX_SELECCIONES = 3;
+//    public void validarSeleccionHoras() {
+//
+//         String mensajeError = "";
+////        // Aquí puedes procesar los elementos seleccionados y guardarlos en tu lista
+////        for (Item item : itemsSelecionados) {
+////            // Realiza las acciones necesarias para guardar el elemento           // Puedes agregarlo a otra lista, guardar en una base de datos, etc.
+////        }
+//
+////        if (itemsSelecionados != null && itemsSelecionados.size() > MAX_SELECCIONES) {
+//        if (itemsSelecionados != null && itemsSelecionados.size() > MAX_SELECCIONES) {
+//            mensajeError = "No se pueden seleccionar más de " + MAX_SELECCIONES + " horas.";
+//            System.out.println(mensajeError);
+//            // Deselecciona la última casilla marcada si se excede el límite
+//            itemsSelecionados.remove(itemsSelecionados.size() - 1);
+//
+//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Máximo de horas", mensajeError);
+//            PrimeFaces.current().dialog().showMessageDynamic(message);
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(mensajeError));
+//        } else {
+//            mensajeError = "";
+//        }
+//    }
+
+//    public void validarSeleccionHoras() {
+//        String mensajeError = "";
+//
+//        if (itemsSelecionados != null && itemsSelecionados.size() > MAX_SELECCIONES) {
+//            mensajeError = "No se pueden seleccionar más de " + MAX_SELECCIONES + " horas.";
+//        } else if (itemsSelecionados != null && itemsSelecionados.size() > 1) {
+//            List<Integer> indicesSeleccionados = new ArrayList<>();
+//            for (Item item : itemsSelecionados) {
+//                indicesSeleccionados.add(item.getId()); // Agregamos el índice a la lista
+//            }
+//
+//            Collections.sort(indicesSeleccionados); // Ordena los índices seleccionados
+//
+//            boolean sonConsecutivos = true;
+//            for (int i = 0; i < indicesSeleccionados.size() - 1; i++) {
+//                if (indicesSeleccionados.get(i + 1) != indicesSeleccionados.get(i) + 1) {
+//                    sonConsecutivos = false;
+//                    break;
+//                }
+//            }
+//
+//            if (!sonConsecutivos) {
+//                mensajeError = "Solo puedes seleccionar horas consecutivas.";
+//            }
+//        }
+//
+//        if (!mensajeError.isEmpty()) {
+//            System.out.println(mensajeError);
+//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Validación de horas", mensajeError);
+//            PrimeFaces.current().dialog().showMessageDynamic(message);
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(mensajeError));
+//        }
+//    }
+//
+
+
+//    public void validarSeleccionHoras() {
+//        String mensajeError = "";
+//
+//        if (itemsSelecionados != null && itemsSelecionados.size() > MAX_SELECCIONES) {
+//            mensajeError = "No se pueden seleccionar más de " + MAX_SELECCIONES + " horas.";
+//            desactivarElementos = true; // Desactiva todos los elementos
+//        } else if (itemsSelecionados != null && itemsSelecionados.size() > 1) {
+//            List<Integer> indicesSeleccionados = new ArrayList<>();
+//            for (Item item : itemsSelecionados) {
+//                indicesSeleccionados.add(item.getId()); // Agregamos el índice a la lista
+//            }
+//
+//            Collections.sort(indicesSeleccionados); // Ordena los índices seleccionados
+//
+//            boolean sonConsecutivos = true;
+//            for (int i = 0; i < indicesSeleccionados.size() - 1; i++) {
+//                if (indicesSeleccionados.get(i + 1) != indicesSeleccionados.get(i) + 1) {
+//                    sonConsecutivos = false;
+//                    break;
+//                }
+//            }
+//
+//            if (!sonConsecutivos) {
+//                mensajeError = "Solo puedes seleccionar horas consecutivas.";
+//                desactivarElementos = true; // Desactiva todos los elementos
+//            }
+//        } else {
+//            desactivarElementos = false; // Si no se cumple ninguna restricción, no desactiva ningún elemento
+//        }
+//
+//        if (!mensajeError.isEmpty()) {
+//            System.out.println(mensajeError);
+//            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Validación de horas", mensajeError);
+//            PrimeFaces.current().dialog().showMessageDynamic(message);
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(mensajeError));
+//        }
+//    }
+
+
+    public Horario asignarHoras(List<Item> idItems) {
+        Horario myHorario = new Horario();
+        myHorario.setFecha(fechaReserva); // Asegúrate de definir fechaReserva antes de usarla
+
+        // Asumiendo que idItems tiene al menos 8 elementos
+        for (int i = 0; i < itemsSelecionados.size(); i++) {
+            switch (i) {
+                case 0:
+                    myHorario.setJornada1(idItems.get(i).isDato());
+                    break;
+                case 1:
+                    myHorario.setJornada2(idItems.get(i).isDato());
+                    break;
+                case 2:
+                    myHorario.setJornada3(idItems.get(i).isDato());
+                    break;
+                case 3:
+                    myHorario.setJornada4(idItems.get(i).isDato());
+                    break;
+                case 4:
+                    myHorario.setJornada5(idItems.get(i).isDato());
+                    break;
+                case 5:
+                    myHorario.setJornada6(idItems.get(i).isDato());
+                    break;
+                case 6:
+                    myHorario.setJornada7(idItems.get(i).isDato());
+                    break;
+                case 7:
+                    myHorario.setJornada8(idItems.get(i).isDato());
+                    break;
+            }
+        }
+
+        System.out.println("prueba retorno Horario");
+        System.out.println(myHorario);
+        return myHorario;
+    }
+
+
 
     public void validarSeleccionHoras() {
-        // Aquí puedes procesar los elementos seleccionados y guardarlos en tu lista
-        for (Item item : itemsSelecionados) {
-            // Realiza las acciones necesarias para guardar el elemento           // Puedes agregarlo a otra lista, guardar en una base de datos, etc.
+        String mensajeError = "";
+
+        if (itemsSelecionados != null && itemsSelecionados.size() > MAX_SELECCIONES) {
+            mensajeError = "No se pueden seleccionar más de " + MAX_SELECCIONES + " horas.";
+            elementosDeshabilitados.addAll(itemsSelecionados.subList(MAX_SELECCIONES, itemsSelecionados.size()));
+        } else if (itemsSelecionados != null && itemsSelecionados.size() > 1) {
+            List<Integer> indicesSeleccionados = new ArrayList<>();
+            for (Item item : itemsSelecionados) {
+                indicesSeleccionados.add(item.getId());
+            }
+
+            Collections.sort(indicesSeleccionados);
+
+            boolean sonConsecutivos = true;
+            for (int i = 0; i < indicesSeleccionados.size() - 1; i++) {
+                if (indicesSeleccionados.get(i + 1) != indicesSeleccionados.get(i) + 1) {
+                    sonConsecutivos = false;
+                    break;
+                }
+            }
+
+            if (!sonConsecutivos) {
+                mensajeError = "Solo puedes seleccionar horas consecutivas.";
+            }
+        }
+
+        if (!mensajeError.isEmpty()) {
+            System.out.println(mensajeError);
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Validación de horas", mensajeError);
+            PrimeFaces.current().dialog().showMessageDynamic(message);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(mensajeError));
         }
     }
 
@@ -360,6 +535,8 @@ public class SolicitudBeann implements Serializable {
             usuarioBean = new UsuarioBean();
             itemsSelecionados = new ArrayList<>();
 
+            solicitudDAO = new SolicitudDAO();
+            desactivarElementos = false;
 
             FacesContext facesContext = FacesContext.getCurrentInstance();
             Usuario usuarioLogueado = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");

@@ -10,6 +10,8 @@
     </div>
     <div class="card ui-fluid">
         <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true"/>
+        <p:growl id="mesa" showDetail="true" skipDetailIfEqualsSummary="true"/>
+        <p:messages id="messages" showDetail="true" autoUpdate="true" />
         <div class="p-formgrid p-grid">
 
 
@@ -73,14 +75,16 @@
 
                 <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.itemsSelecionados}"
                                       layout="responsive" columns="3"
-                                      onchange="#{solicitudBeann.imprimir()}" styleClass="text-danger">
+
+                                      onchange="#{solicitudBeann.imprimir()}" styleClass="text-danger" >
                     <f:selectItems value="#{solicitudBeann.items}" var="item" itemLabel="#{item.fecha}"
-                                   itemDisabled="#{not item.dato}" itemValue="#{item}" />
-                    <p:ajax event="change" listener="#{solicitudBeann.imprimir()}" />
+                                   itemDisabled="#{not item.dato or solicitudBeann.desactivarElementos }" itemValue="#{item}" />
+                    <p:ajax event="change" listener="#{solicitudBeann.imprimir()}" update="selectHoras"/>
                 </p:selectManyCheckbox>
+                <p:message id="mensajeError" for="selectHoras" display="text" />
 
 <!--                <p:message for="selectHoras" />-->
-                <p:commandButton value="imprimir"  actionListener="#{solicitudBeann.imprimir()}"/>
+                <p:commandButton value="imprimir"  actionListener="#{solicitudBeann.imprimir()}" />
             </div>
 
 
@@ -152,7 +156,7 @@
                 <div class="p-field p-col-12 p-md-4">
                     <p:fieldset legend="Documento de resolución">
                         <p:fileUpload mode="simple" skinSimple="true"
-                                      value=""
+                                      value="#{solicitudBeann.solicitud.pdfResolucion}"
                                       label="Subir resolución"
                                       sizeLimit="10485760"
                                       allowTypes="/(\.|\/)(pdf)$/"/>
@@ -161,7 +165,7 @@
                 <div class="p-field p-col-12 p-md-4">
                     <p:fieldset legend="Lista de estudiantes">
                         <p:fileUpload mode="simple" widgetVar="ff"
-                                      value=""
+                                      value="#{solicitudBeann.solicitud.excelEstudiantes}"
                                       label="Subir lista de estudiantes"
                                       skinSimple="true"
                                       sizeLimit="10485760"
@@ -176,7 +180,7 @@
                 <p:commandButton value="Guardar"
                                  icon="pi pi-check"
                                  ajax="false"
-                                 actionListener="#"
+                                 actionListener="#{solicitudBeann.save()}"
                 />
             </div>
             <div class="p-col-2">
