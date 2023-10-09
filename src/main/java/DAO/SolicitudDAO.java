@@ -364,7 +364,7 @@ public class SolicitudDAO extends Conexion {
 //
 
 
-    public void save2(Horario horario, int idLaboratorio) throws SQLException {
+    public void save2(Solicitud solicitud, Horario horario, int idLaboratorio, String tipoSolicitud) throws SQLException {
         System.out.println(horario + "DAO");
         int idHorario = 0;
         try {
@@ -405,9 +405,56 @@ public class SolicitudDAO extends Conexion {
             ResultSet rsS = stMAX.executeQuery();
             if (rsS.next()) {
                 idHorario = rsS.getInt(1);
+                horario.setId(idHorario);
                 // hacer algo con el valor de idHorario
             }
             stMAX.close();
+
+
+            //   REGISTRA LA SOLICITUD
+           String sqlRegistrarSolicitud="insert into laboratorio.solicitud (codigo, \n" +
+                   "                                   tema, \n" +
+                   "                                   objetivo, \n" +
+                   "                                   fecha_registro, \n" +
+                   "                                   enabled, \n" +
+                   "                                   tipo, \n" +
+                   "                                   analisis, \n" +
+                   "                                   id_laboratorio,\n" +
+                   "                                   id_periodo,\n" +
+                   "                                   id_horarios, \n" +
+                   "                                   id_docente, \n" +
+                   "                                   pdf_resolucion, \n" +
+                   "                                   excel_estudiante, \n" +
+                   "                                   pdf_aprobacion)\n" +
+                   "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+            PreparedStatement st4 = this.getConnection().prepareStatement(sqlRegistrarSolicitud);
+            st4.setString(1, solicitud.getCodigo());  //Codigo
+            st4.setString(2, solicitud.getTema());  //Tema
+            st4.setString(3, solicitud.getObjetivo()); //Objetivo
+            //Configuramos la fecha del sistema actual
+            LocalDateTime fechaSistema = LocalDateTime.now();
+            Date fechaRegistro = Date.from(fechaActual.atZone(ZoneId.systemDefault()).toInstant());
+
+            java.util.Date fecha = fechaRegistro;
+            java.sql.Date fechaActualSql = new java.sql.Date(fecha.getTime());
+
+            st4.setDate(4,fechaActualSql); //Fecha Registro
+            st4.setBoolean(5, !solicitud.isEnabled()); //Enabled
+            st4.setString(6,tipoSolicitud); //Tipo
+            st4.setString(7, solicitud.getAnalisis()); //Analisis
+            st4.setInt(8, idLaboratorio); //laboratorio
+            st4.setInt(9, 1); //periodo
+            st4.setLong(10, horario.getId()); //horario
+//            st4.setInt(11, solicitud.getDocente().getId()); //docente
+            st4.setInt(11, 1); //docente
+            st4.setBytes(12, solicitud.getPdfResolucion().getBytes());
+            st4.setBytes(13, solicitud.getExcelEstudiantes().getBytes());
+            st4.setBytes(14, solicitud.getPdfResolucion().getBytes());
+            System.out.println("este es el excell");
+            System.out.println(solicitud.getExcelEstudiantes().getBytes());
+            st4.executeUpdate();
+            st4.close();
+
 
             this.getConnection().commit(); // Commit de la transacción si todo sale bien
 

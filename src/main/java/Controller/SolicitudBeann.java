@@ -90,7 +90,7 @@ public class SolicitudBeann implements Serializable {
     public void save() throws SQLException {
         horario = asignarHoras(itemsSelecionados);
         horario.setFecha(fechaReserva);
-        solicitudDAO.save2(horario, idLaboratorio);
+        solicitudDAO.save2(solicitud, horario, idLaboratorio, tipoSolicitud);
     }
 
     public void FindAllEquipos() throws SQLException {
@@ -238,7 +238,6 @@ public class SolicitudBeann implements Serializable {
         System.out.println(myHorario);
         return myHorario;
     }
-
 
 
     public void validarSeleccionHoras() {
@@ -533,6 +532,7 @@ public class SolicitudBeann implements Serializable {
             docenteDAO = new DocenteDAO();
             usuarioDAO = new UsuarioDAO();
             usuarioBean = new UsuarioBean();
+            solicitud = new Solicitud();
             itemsSelecionados = new ArrayList<>();
 
             solicitudDAO = new SolicitudDAO();
