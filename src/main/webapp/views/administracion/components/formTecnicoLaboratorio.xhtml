@@ -1,0 +1,139 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="../../../template/baseTemplate.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <ui:include src="subNavBarAdministracion.xhtml"/>
+        <div class="p-grid ui-fluid">
+            <div class="p-col-12">
+                <h:form id="form">
+                    <p:growl id="messages" showDetail="true"/>
+                    <div class="card crud-demo">
+                        <p:toolbar>
+
+                            <p:toolbarGroup>
+                                <h:outputLabel for="facd" value="Facultad:"/>
+                                <p:selectOneMenu id="facd" value="#{tecnicoLaboratorioBean.idFacultad}"
+                                                 styleClass="form-control">
+                                    <f:selectItem itemLabel="Seleccione una facultad"/>
+                                    <f:selectItems value="#{facultadBean.facultades}" var="fad"
+                                                   itemLabel="#{fad.nombreFacd}" itemValue="#{fad.idFacd}"/>
+                                    <p:ajax event="change"
+
+                                            listener="#{tecnicoLaboratorioBean.listLabByFacultad()}"
+
+                                            update="form:lab"
+                                    />
+                                </p:selectOneMenu>
+                            </p:toolbarGroup>
+
+                            <p:toolbarGroup>
+                                <h:outputLabel for="lab" value="Laboratorio:"/>
+                                <p:selectOneMenu id="lab" value="#{tecnicoLaboratorioBean.idLaboratorio}">
+                                    <f:selectItem itemLabel="Seleccione un laboratorio"/>
+                                    <f:selectItems value="#{tecnicoLaboratorioBean.listLab}" var="labr"
+                                                   itemLabel="#{labr.nombre}" itemValue="#{labr.id}"/>
+                                </p:selectOneMenu>
+                            </p:toolbarGroup>
+                            <p:toolbarGroup>
+                                <p:commandButton value="Buscar" icon="pi pi-search"
+                                                 actionListener="#{tecnicoLaboratorioBean.listAulaByLab()}"
+                                                 update="form:dt-facd"
+                                                 styleClass="ui-button-success" style="margin-right: .5rem">
+                                </p:commandButton>
+                            </p:toolbarGroup>
+                        </p:toolbar>
+                        <p:dataTable
+                                     id="dt-facd" widgetVar="dtFacd" var="facd"
+                                     value="#{tecnicoLaboratorioBean.listAula}"
+                                     rowKey="#{facd.id}"
+                                     reflow="true" styleClass="products-table" lazy="true"
+                                     paginator="true" rows="10" rowSelectMode="add"
+                                     paginatorPosition="bottom">
+                            <f:facet name="header">
+                                <div class="products-table-header">
+                                    <span style="font-weight: bold">Aulas</span>
+                                    <span class="filter-container ui-input-icon-left">
+                                    <p:commandButton value="New" icon="pi pi-plus"
+                                                     actionListener="#{tecnicoLaboratorioBean.openNew()}"
+                                                     update=":dialogs:manage-facd-content"
+                                                     oncomplete="PF('manageFacdDialog').show()"
+                                                     styleClass="ui-button-success" style="margin-right: .5rem">
+                                        <p:resetInput target=":dialogs:manage-facd-content"/>
+                                    </p:commandButton>
+                                    </span>
+                                </div>
+                            </f:facet>
+                            <p:column headerText="Code">
+                                <h:outputText value="#{facd.id}"/>
+                            </p:column>
+                            <p:column headerText="Nombre aula">
+                                <h:outputText value="#{facd.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Capacidad">
+                                <h:outputText value="#{facd.capacidad}"/>
+                            </p:column>
+                            <p:column headerText="Acciones" exportable="false">
+                                <p:commandButton icon="pi pi-pencil"
+                                                 update=":dialogs:manage-facd-content"
+                                                 oncomplete="PF('manageFacdDialog').show()"
+                                                 styleClass="edit-button rounded-button ui-button-success"
+                                                 process="@this">
+
+                                    <p:resetInput target=":dialogs:manage-facd-content"/>
+                                </p:commandButton>
+                                <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                                 process="@this"
+                                                 oncomplete="PF('deleteFacdDialog').show()"
+                                >
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </h:form>
+
+
+                <h:form id="dialogs">
+                    <p:dialog header="Aula" showEffect="fade" modal="true" widgetVar="manageFacdDialog"
+                              responsive="true">
+                        <p:outputPanel id="manage-facd-content" class="ui-fluid">
+                            <p:outputPanel rendered="#{not empty tecnicoLaboratorioBean.nuevaAula}">
+                                <div class="field">
+                                    <p:outputLabel for="name">Nombre aula</p:outputLabel>
+                                    <p:inputText maxlength="30" id="name" value="#{tecnicoLaboratorioBean.nuevaAula.nombre}"
+                                                 required="true"/>
+                                </div>
+                                <div class="field">
+                                    <p:outputLabel for="inicio">Capacidad</p:outputLabel>
+                                    <p:inputNumber maxValue="40" minValue="10" id="inicio" required="true" value="#{tecnicoLaboratorioBean.nuevaAula.capacidad}"/>
+
+                                </div>
+
+                            </p:outputPanel>
+                        </p:outputPanel>
+                        <f:facet name="footer">
+                            <p:commandButton value="Save" icon="pi pi-check"
+                                             actionListener="#{periodoBean.addPeriodo()}"
+                                             update="manage-facd-content, form:dt-facd"
+                                             process="manage-facd-content @this"/>
+                            <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageFacdDialog').hide()"
+                                             class="ui-button-secondary" type="button"/>
+                        </f:facet>
+                    </p:dialog>
+                    <p:confirmDialog widgetVar="deleteFacdDialog" showEffect="fade" width="300"
+                                     message="Delete the periodo?" header="Confirm" severity="warn">
+                        <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{periodoBean.delete()}"
+                                         process="@this"
+                                         oncomplete="PF('deleteFacdDialog').hide()"/>
+                        <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                         onclick="PF('deleteFacdDialog').hide()"/>
+                    </p:confirmDialog>
+
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
