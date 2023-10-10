@@ -96,6 +96,8 @@ public class SolicitudBeann implements Serializable {
     public void FindAllEquipos() throws SQLException {
         equipoDAO = new EquipoDAO();
         equipos = new ArrayList<>();
+        System.out.println("id laboratorio");
+        System.out.println(idLaboratorio);
 
         equipos = equipoDAO.findByLaboratorioID(idLaboratorio);
     }

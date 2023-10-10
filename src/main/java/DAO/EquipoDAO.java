@@ -20,7 +20,11 @@ public class EquipoDAO extends Conexion {
         ResultSet rs;
         try {
             this.conectar();
-            String sql = "select * from laboratorio.equipo eq inner join laboratorio.categoria_equipo ce on ce.id_categoria = eq.id_categoria_equipo where eq.id_laboratorio = ?";
+            String sql = "select *\n" +
+                    "from laboratorio.equipo eq\n" +
+                    "         inner join laboratorio.aula au on eq.id_aula_equipo = au.id_aula\n" +
+                    "         inner join laboratorio.laboratorio_aula la on au.id_aula = la.id_aula\n" +
+                    "where la.id = ?;\n";
             PreparedStatement st = this.getConnection().prepareStatement(sql);
             st.setInt(1, idLaboratorio);
             rs = st.executeQuery();
