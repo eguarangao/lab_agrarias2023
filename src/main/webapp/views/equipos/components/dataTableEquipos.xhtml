@@ -23,7 +23,7 @@
 
                   <p:toolbarGroup style="float: right;">
                      <p:selectOneMenu id="laboratoriosDelTecnico"
-                                      value="#{equipoBean.idUsuarioSession}"
+                                      value="#{equipoBean.idlaboratorioSession}"
                                       style="width: 200px;">
                         <f:selectItem itemLabel="Seleccione laboratorio" noSelectionOption="true"
                                       itemValue="0"/>
@@ -86,7 +86,6 @@
                      <p:tag severity="warning" value="Desactivado" rendered="#{not dtequipos.estado}"/>
                   </p:column>
 
-
                   <p:column headerText="Acciones" exportable="false">
                      <p:commandButton icon="pi pi-pencil"
                                       update=":dialogEquipo:manage-equipo-content"
@@ -95,13 +94,12 @@
                                       process="@this">
                         <f:setPropertyActionListener value="#{dtequipos}"
                                                      target="#{equipoBean.newEquipo}"/>
-                        <p:resetInput target=":dialogs:manage-equipo-content"/>
+                        <p:resetInput target=":dialogEquipo:manage-equipo-content"/>
 
                      </p:commandButton>
                      <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
                                       process="@this"
-                                      oncomplete="PF('deleteEquipoDialog').show()"
-                     >
+                                      oncomplete="PF('deleteEquipoDialog').show()">
                         <f:setPropertyActionListener value="#{dtequipos}"
                                                      target="#{equipoBean.newEquipo}"/>
                      </p:commandButton>
@@ -120,7 +118,6 @@
 
 
                      <div class="p-formgrid p-grid">
-
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="selectArea">Área</p:outputLabel>
                            <p:selectOneMenu id="selectArea"
@@ -130,13 +127,9 @@
                               <f:selectItems value="#{equipoBean.listaula}" var="au"
                                              itemLabel="#{au.nombre}" itemValue="#{au.id}"/>
                            </p:selectOneMenu>
-
                         </div>
 
-
                         <div class="field p-col-12 p-md-3">
-
-
                            <p:outputLabel for="SelecCategory">Categoria</p:outputLabel>
                            <p:selectOneMenu id="SelecCategory"
                                             value="#{equipoBean.newEquipo.categoriaEquipo.id}">
@@ -145,7 +138,6 @@
                               <f:selectItems value="#{equipoBean.listCatergoria}" var="cate"
                                              itemLabel="#{cate.nombre}" itemValue="#{cate.id}"/>
                            </p:selectOneMenu>
-
                         </div>
 
                         <div class="field p-col-12 p-md-3">

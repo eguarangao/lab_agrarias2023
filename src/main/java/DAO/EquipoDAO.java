@@ -1,9 +1,6 @@
 package DAO;
 
-import Model.Equipo;
-import Model.Aula;
-import Model.CategoriaEquipo;
-import Model.Laboratorio;
+import Model.*;
 import global.Conexion;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -207,6 +204,30 @@ public class EquipoDAO extends Conexion {
         return ListLaboratorios;
     }
 
+    public List<Laboratorio> ListarLosLaboratorios() throws SQLException {
+        List<Laboratorio> ListLaboratorios = new ArrayList<>();
+        this.conectar();
+        String query = "select * from laboratorio.listartodosloslaboratorios()";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                while (resultSet.next()) {
+
+                    Laboratorio laboratorio = new Laboratorio();
+
+                    laboratorio.setId(resultSet.getInt("id"));
+                    laboratorio.setNombre(resultSet.getString("nom_laboratorio"));
+
+                    ListLaboratorios.add(laboratorio);
+                }
+            }
+        } finally {
+            this.desconectar();
+        }
+        return ListLaboratorios;
+    }
+
     public List<CategoriaEquipo> listarCategorias() throws SQLException {
         List<CategoriaEquipo> ListCategoriaEquipos = new ArrayList<>();
         this.conectar();
@@ -257,9 +278,60 @@ public class EquipoDAO extends Conexion {
         return ListAulas;
     }
 
+    public List<Aula> ListaAulas() throws SQLException {
+        List<Aula> ListAulas = new ArrayList<>();
+        this.conectar();
+        String query = "select * from laboratorio.listaraulasequipos()";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                while (resultSet.next()) {
+
+                    Aula aula = new Aula();
+
+                    aula.setId(resultSet.getInt("id_aula"));
+                    aula.setNombre(resultSet.getString("aula"));
+
+                    ListAulas.add(aula);
+                }
+                System.out.println("Ya liste aulas al inicio");
+            }
+        } finally {
+            this.desconectar();
+        }
+        return ListAulas;
+    }
+
+    public void editarEquipo(Equipo equipo) {
+        try  {
+            this.conectar();
+            String query = "SELECT laboratorio.editarequipo(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+                preparedStatement.setInt(1, equipo.getId());
+                preparedStatement.setInt(2, equipo.getAula().getId());
+                preparedStatement.setInt(3, equipo.getCategoriaEquipo().getId());
+                preparedStatement.setString(4, equipo.getCodigo());
+                preparedStatement.setString(5, equipo.getDescripcion());
+                preparedStatement.setString(6, equipo.getMarca());
+                preparedStatement.setString(7, equipo.getModelo());
+                preparedStatement.setString(8, equipo.getNumeroSerie());
+                preparedStatement.setTimestamp(9, Timestamp.valueOf(LocalDateTime.now()));
+                preparedStatement.setBoolean(10, equipo.getEstado());
+
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            this.desconectar();
+        }
+    }
     public boolean VerificadorAdmin(int ID) throws SQLException {
         boolean verificador = false;
-
         try {
             this.conectar();
             String query = "select * from laboratorio.verificaradministrador(?)";

@@ -13,6 +13,8 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import lombok.Data;
 import org.primefaces.PrimeFaces;
+
+import java.awt.*;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ public class EquipoBean implements Serializable {
     private boolean mostrarTablaEquipos = false;
     private boolean botonEquipoDisabled = true;
     private int idUsuarioSession;
+    private int idlaboratorioSession;
 
     @PostConstruct
     public void main() {
@@ -39,17 +42,16 @@ public class EquipoBean implements Serializable {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             Usuario usuario = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
             idUsuarioSession = usuario.getId();
+
             if(DaoEquipo.VerificadorAdmin(idUsuarioSession)){
-                System.out.println("Eres un administrador" + idUsuarioSession);
-
+                ListarTodosLaboratorios();
             }
-            if (DaoEquipo.VerificadorTecnic(idUsuarioSession)){
+            else if (DaoEquipo.VerificadorTecnic(idUsuarioSession)){
                 ListarLaboratorios();
+            }
+            else{ System.out.println("No existe usuario"); }
 
-            }
-            else{
-                System.out.println("Eres nada jejejeje");
-            }
+            ListarCategoriaEquipo();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,7 +73,7 @@ public class EquipoBean implements Serializable {
     public void TablaEquiposPorLaboratorio() throws SQLException {
         try {
             this.Listequipos = new ArrayList<>();
-            Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idUsuarioSession);
+            Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
             mostrarTablaEquipos = !Listequipos.isEmpty();
             botonEquipoDisabled = Listequipos.isEmpty();
             PrimeFaces.current().ajax().update("form-equipo:tablaEquipos", "form-equipo:dt-equipos","form-equipo:botonNewEquipo" );
@@ -80,10 +82,16 @@ public class EquipoBean implements Serializable {
         }
     }
 
+    public void ListarTodosLaboratorios() throws SQLException {
+        this.listlaboratorios = new ArrayList<>();
+        listlaboratorios = DaoEquipo.ListarLosLaboratorios();
+        System.out.println(listlaboratorios);
+
+    }
+
     public void ListarLaboratorios() throws SQLException {
         this.listlaboratorios = new ArrayList<>();
         listlaboratorios = DaoEquipo.listarlaboratoriosPorTecnico(idUsuarioSession);
-        System.out.println(listlaboratorios);
 
     }
 
@@ -97,7 +105,16 @@ public class EquipoBean implements Serializable {
     public void ListarAulaxLaboratorio() {
         try {
             this.listaula = new ArrayList<>();
-            listaula = DaoEquipo.ListarAulaPorLaboratorio(idUsuarioSession);
+            listaula = DaoEquipo.ListarAulaPorLaboratorio(idlaboratorioSession);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void ListarAulasEquipo() {
+        try {
+            this.listaula = new ArrayList<>();
+            listaula = DaoEquipo.ListaAulas();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -106,6 +123,7 @@ public class EquipoBean implements Serializable {
     public void SelectLaboratorioTecnico() throws SQLException {
         try {
             TablaEquiposPorLaboratorio();
+            ListarAulaxLaboratorio();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -125,8 +143,13 @@ public class EquipoBean implements Serializable {
         try {
             if (this.newEquipo.getFechaAdquisicion() == null) {
                 DaoEquipo.agregarEquipo(newEquipo);
-                Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idUsuarioSession);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipo agregado correctamente"));
+                Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipo agregado"));
+            } else {
+                System.out.println("Entre a la parte de editar");
+                DaoEquipo.editarEquipo(newEquipo);
+                Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipo actualizado"));
             }
             PrimeFaces.current().executeScript("PF('manageEquipoDialog').hide()");
             PrimeFaces.current().ajax().update("form-equipo:messages");
@@ -138,17 +161,30 @@ public class EquipoBean implements Serializable {
     }
     public void eliminarEquipo() {
         try {
-            int EliminarEquipoID = newEquipo.getId();
-                DaoEquipo.eliminarEquipo(EliminarEquipoID);
-                Listequipos = DaoEquipo.listarEquiposPorTecnico(idUsuarioSession);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipo Eliminado"));
-                PrimeFaces.current().executeScript("PF('manageEquipoDialog').hide()");
-                PrimeFaces.current().ajax().update("form-equipo:messages", "form-equipo:dt-equipos");
+            int eliminarEquipoID = newEquipo.getId();
+            DaoEquipo.eliminarEquipo(eliminarEquipoID);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipo Eliminado"));
+            PrimeFaces.current().executeScript("PF('manageEquipoDialog').hide()");
+            PrimeFaces.current().ajax().update("form-equipo:messages", "form-equipo:dt-equipos");
+
+            if(DaoEquipo.VerificadorAdmin(idUsuarioSession)){
+                Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idUsuarioSession);
+            }
+            else if (DaoEquipo.VerificadorTecnic(idUsuarioSession)){
+                Listequipos = DaoEquipo.listarEquiposPorTecnico(idlaboratorioSession);
+            }
+            else{ System.out.println("ERROR"); }
 
 
-        } catch (SQLException e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+
+
+
     }
 
 
