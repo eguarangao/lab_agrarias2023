@@ -11,21 +11,36 @@
             <div class="card crud-demo">
                <p:toolbar>
                   <p:toolbarGroup>
-                     <p:commandButton value="Nuevo equipo" icon="pi pi-plus"
+                     <p:commandButton id="botonNewEquipo" value="Nuevo equipo" icon="pi pi-plus"
                                       actionListener="#{equipoBean.nuevoEquipo()}"
                                       update=":dialogEquipo:manage-equipo-content"
                                       oncomplete="PF('manageEquipoDialog').show()"
-                                      styleClass="ui-button-success" style="margin-right: .5rem">
+                                      styleClass="ui-button-success" style="margin-right: .5rem"
+                                      disabled="#{equipoBean.botonEquipoDisabled}">
                         <p:resetInput target=":dialogEquipo:manage-equipo-content"/>
                      </p:commandButton>
-
-
                   </p:toolbarGroup>
+
+                  <p:toolbarGroup style="float: right;">
+                     <p:selectOneMenu id="laboratoriosDelTecnico"
+                                      value="#{equipoBean.idUsuarioSession}"
+                                      style="width: 200px;">
+                        <f:selectItem itemLabel="Seleccione laboratorio" noSelectionOption="true"
+                                      itemValue="0"/>
+                        <f:selectItems value="#{equipoBean.listlaboratorios}" var="labo"
+                                       itemLabel="#{labo.nombre}" itemValue="#{labo.id}"/>
+                        <p:ajax event="change"
+                                listener="#{equipoBean.SelectLaboratorioTecnico()}"
+                                update="dt-equipos"/>
+                     </p:selectOneMenu>
+                  </p:toolbarGroup>
+
                </p:toolbar>
+               <p:outputPanel id="tablaEquipos">
                <p:dataTable id="dt-equipos" widgetVar="dtEquipos" var="dtequipos"
                             value="#{equipoBean.listequipos}" reflow="true" styleClass="products-table"
                             lazy="true" rowKey="#{dtequipos.id}" paginator="true" rows="10" rowSelectMode="add"
-                            paginatorPosition="bottom"
+                            paginatorPosition="bottom" rendered="#{equipoBean.mostrarTablaEquipos}"
                >
                   <p:column headerText="id">
                      <h:outputText value="#{dtequipos.id}"/>
@@ -58,6 +73,10 @@
                      <h:outputText value="#{dtequipos.fechaAdquisicion}"/>
                   </p:column>
 
+                   <p:column headerText="Laboratorio">
+                       <h:outputText value="#{dtequipos.laboratorio.nombre}"/>
+                   </p:column>
+
                   <p:column headerText="Área">
                      <h:outputText value="#{dtequipos.aula.nombre}"/>
                   </p:column>
@@ -70,8 +89,13 @@
 
                   <p:column headerText="Acciones" exportable="false">
                      <p:commandButton icon="pi pi-pencil"
+                                      update=":dialogEquipo:manage-equipo-content"
+                                      oncomplete="PF('manageEquipoDialog').show()"
                                       styleClass="edit-button rounded-button ui-button-success"
                                       process="@this">
+                        <f:setPropertyActionListener value="#{dtequipos}"
+                                                     target="#{equipoBean.newEquipo}"/>
+                        <p:resetInput target=":dialogs:manage-equipo-content"/>
 
                      </p:commandButton>
                      <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
@@ -83,7 +107,7 @@
                      </p:commandButton>
                   </p:column>
                </p:dataTable>
-
+               </p:outputPanel>
             </div>
          </h:form>
 
@@ -98,15 +122,29 @@
                      <div class="p-formgrid p-grid">
 
                         <div class="field p-col-12 p-md-3">
-                           <p:outputLabel for="laboratory">Laboratorio</p:outputLabel>
-                           <p:inputText id="laboratory" value="#{equipoBean.newEquipo.laboratorio.id}"
-                                        required="true"/>
+                           <p:outputLabel for="selectArea">Área</p:outputLabel>
+                           <p:selectOneMenu id="selectArea"
+                                            value="#{equipoBean.newEquipo.aula.id}">
+                              <f:selectItem itemLabel="Seleccione aula" noSelectionOption="true"
+                                            itemValue="0"/>
+                              <f:selectItems value="#{equipoBean.listaula}" var="au"
+                                             itemLabel="#{au.nombre}" itemValue="#{au.id}"/>
+                           </p:selectOneMenu>
+
                         </div>
 
+
                         <div class="field p-col-12 p-md-3">
-                           <p:outputLabel for="category">Área</p:outputLabel>
-                           <p:inputText id="category" value="#{equipoBean.newEquipo.categoriaEquipo.id}"
-                                        required="true"/>
+
+
+                           <p:outputLabel for="SelecCategory">Categoria</p:outputLabel>
+                           <p:selectOneMenu id="SelecCategory"
+                                            value="#{equipoBean.newEquipo.categoriaEquipo.id}">
+                              <f:selectItem itemLabel="Seleccione Categoria" noSelectionOption="true"
+                                            itemValue="0"/>
+                              <f:selectItems value="#{equipoBean.listCatergoria}" var="cate"
+                                             itemLabel="#{cate.nombre}" itemValue="#{cate.id}"/>
+                           </p:selectOneMenu>
 
                         </div>
 
@@ -156,7 +194,7 @@
                </p:outputPanel>
 
                <f:facet name="footer">
-                  <p:commandButton value="Save" icon="pi pi-check"
+                  <p:commandButton value="Guardar" icon="pi pi-check"
                                    actionListener="#{equipoBean.addEquipo()}"
                                    update="manage-equipo-content, form-equipo:dt-equipos"
                                    process="manage-equipo-content @this"/>
