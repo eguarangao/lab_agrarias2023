@@ -22,6 +22,7 @@ import java.util.List;
 public class PeriodoBean implements Serializable {
     private PeriodoDAO periodoDAO = new PeriodoDAO();
     private Periodo nuevoPeriodo = new Periodo();
+
     private List<Periodo> periodos;
     @PostConstruct
     public void main() {

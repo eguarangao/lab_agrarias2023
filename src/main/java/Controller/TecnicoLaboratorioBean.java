@@ -6,6 +6,8 @@ import Model.Laboratorio;
 import Model.ListFullUser;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import lombok.Data;
 import org.primefaces.PrimeFaces;
@@ -14,6 +16,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Named
 @SessionScoped
@@ -24,6 +27,7 @@ public class TecnicoLaboratorioBean implements Serializable {
     private List<Aula> listAula;
     private int idLaboratorio;
     private int idFacultad;
+    private int idPeriodo;
     private boolean rendered;
     private Aula nuevaAula;
 
@@ -53,6 +57,37 @@ public class TecnicoLaboratorioBean implements Serializable {
         this.nuevaAula = new Aula();
 
     }
+    public void addAula(){
+        try{
+             if(nuevaAula.getFechaCreacion()==null){
+                 tecnicoDAO.insert(idLaboratorio,nuevaAula);
+                 listAulaByLab();
+                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Aula agregada"));
+             }else {
+                 tecnicoDAO.update(nuevaAula);
+                 listAulaByLab();
+                 PrimeFaces.current().ajax().update("form:messages", "form:dt-facd");
+                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Aula actualizada"));
+            }
 
+            PrimeFaces.current().executeScript("PF('manageFacdDialog').hide()");
+        }catch (Exception e){
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar Aula"));
+            e.printStackTrace();
+        }
+    }
+    public void delete() {
+        try {
+
+            tecnicoDAO.deleteLaboratorioAulaAndAula(nuevaAula);
+            listAulaByLab();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Aula eliminada"));
+            PrimeFaces.current().ajax().update("form:messages", "form:dt-facd");
+            PrimeFaces.current().ajax().update("formUser:messages", "formUser:dt-facd");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }
