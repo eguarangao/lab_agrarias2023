@@ -7,6 +7,7 @@ import Model.Usuario;
 import global.Conexion;
 import jakarta.inject.Inject;
 import lombok.Data;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ public class UsuarioDAO extends Conexion {
                 usuario.setEnabled(rs.getBoolean("enabled"));
                 System.out.println(usuario);
             }
+
             rs.close();
             ps.close();
         } catch (Exception e) {
@@ -442,6 +444,7 @@ public class UsuarioDAO extends Conexion {
     }
 
     public void insert(ListFullUser usuarioPersona) throws SQLException {
+        String hashedPassword = BCrypt.hashpw(usuarioPersona.getClave().toString().trim(), BCrypt.gensalt());
         this.conectar();
         //insert tabla persona
         String insertPersonaQuery = "INSERT INTO laboratorio.persona (nombre, apellido, telefono, email, dni, genero,fecha_creacion) VALUES (?, ?, ?, ?, ?, ?,?)";
@@ -479,7 +482,7 @@ public class UsuarioDAO extends Conexion {
             try (PreparedStatement preparedStatementUsuario = connection.prepareStatement(insertUsuarioQuery, Statement.RETURN_GENERATED_KEYS)) {
                 preparedStatementUsuario.setInt(1, usuarioPersona.getPersonaId());
                 preparedStatementUsuario.setString(2, usuarioPersona.getNombreUsuario());
-                preparedStatementUsuario.setString(3, usuarioPersona.getClave());
+                preparedStatementUsuario.setString(3, hashedPassword);
                 preparedStatementUsuario.setBoolean(4, true);
 
                 int affectedRowsUsuario = preparedStatementUsuario.executeUpdate();
@@ -572,5 +575,61 @@ public class UsuarioDAO extends Conexion {
         }
     }
 
+    public boolean verificarCredenciales(String username, String password) throws SQLException{
+        // Recupera la contraseña hash almacenada en la base de datos para el usuario 'username'
+        String hashedPasswordFromDB = getHashedPasswordFromDatabase(username);
 
+        // Compara la contraseña ingresada con la contraseña almacenada
+        return BCrypt.checkpw(password, hashedPasswordFromDB);
+    }
+    public String getHashedPasswordFromDatabase(String username)throws SQLException{
+       ResultSet rs;
+        String sql = "SELECT  us.clave as clave FROM laboratorio.usuario us where us.nombre_usuario = ?";
+        String passwordBD="";
+        try {
+            this.conectar();
+            PreparedStatement st = this.getConnection().prepareStatement(sql);
+            st.setString(1, username);
+            rs = st.executeQuery();
+            while (rs.next()) {
+                passwordBD = rs.getString("clave");
+            }
+            return passwordBD;
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            this.desconectar();
+        }
+
+    }
+    public Usuario getUsuario2(String username, String password) {
+        Usuario usuario = null;
+        try {
+            this.conectar();
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM laboratorio.usuario us WHERE nombre_usuario = ? AND enabled=true");
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                // Obtén la contraseña encriptada almacenada en la base de datos
+                String hashedPasswordFromDB = rs.getString("clave");
+
+                // Verifica si la contraseña ingresada coincide con la almacenada en la base de datos
+                if (BCrypt.checkpw(password, hashedPasswordFromDB)) {
+                    usuario = new Usuario();
+                    usuario.setNombre(rs.getString("nombre_usuario"));
+                    usuario.setClave(rs.getString("clave"));
+                    usuario.setId(rs.getInt("id"));
+                    usuario.setEnabled(rs.getBoolean("enabled"));
+                    System.out.println(usuario);
+                }
+            }
+
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return usuario;
+    }
 }

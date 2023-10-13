@@ -66,13 +66,11 @@
                                                     <p:resetInput target=":dialogs:manage-facd-content"/>
                                                 </p:commandButton>
                                                 <p:commandButton value="Asignar" icon="pi pi-users"
-
-
                                                                  oncomplete="PF('manageFacd2Dialog').show()"
+                                                                 update=":dialogs2:manage-facd2-content"
                                                                  styleClass="ui-button-secondary" style="margin-right: .5rem">
-
+                                                    <p:resetInput target=":dialogs2:manage-facd2-content"/>
                                                 </p:commandButton>
-
                                             </div>
                                         </div>
                                     </div>
@@ -153,10 +151,10 @@
 
                 </h:form>
                 <h:form id="dialogs2">
-                    <p:dialog header="Aula" showEffect="fade" modal="true" widgetVar="manageFacd2Dialog"
+                    <p:dialog header="Asignación" showEffect="fade" modal="true" widgetVar="manageFacd2Dialog"
                               responsive="true">
                         <p:outputPanel id="manage-facd2-content" class="ui-fluid">
-                            <p:outputPanel rendered="#{not empty tecnicoLaboratorioBean.nuevaAula}">
+                            <p:outputPanel >
                                 <div class="field">
                                     <p:outputLabel for="per">Periodo</p:outputLabel>
                                     <p:selectOneMenu id="per" value="#{tecnicoLaboratorioBean.idPeriodo}"
@@ -186,7 +184,7 @@
                                     </p:commandButton>
                                 </div>
                                 <p:dataTable
-                                        id="dt-facd2" widgetVar="dtFacd" var="facd"
+                                        id="dt-facd2" widgetVar="dtFacd2" var="facd"
                                         value="#{tecnicoLaboratorioBean.listAula}"
                                         rowKey="#{facd.id}"
                                         reflow="true" styleClass="products-table" lazy="true"
@@ -199,10 +197,10 @@
                                                     <div class="ui-inputgroup">
                                                         <p:commandButton value="New" icon="pi pi-plus"
                                                                          actionListener="#{tecnicoLaboratorioBean.openNew()}"
-                                                                         update=":dialogs:manage-facd-content"
-                                                                         oncomplete="PF('manageFacdDialog').show()"
+                                                                         update=":dialogs2:manage-facd2-content"
+                                                                         oncomplete="PF('manageFacd2Dialog').show()"
                                                                          styleClass="ui-button-success" style="margin-right: .5rem">
-                                                            <p:resetInput target=":dialogs:manage-facd-content"/>
+                                                            <p:resetInput target=":dialogs2:manage-facd2-content"/>
                                                         </p:commandButton>
                                                         <p:commandButton value="Asignar" icon="pi pi-users"
 
@@ -231,17 +229,17 @@
                                     </p:column>
                                     <p:column headerText="Acciones" exportable="false">
                                         <p:commandButton icon="pi pi-pencil"
-                                                         update=":dialogs:manage-facd-content"
-                                                         oncomplete="PF('manageFacdDialog').show()"
+                                                         update=":dialogs:manage-facd2-content"
+                                                         oncomplete="PF('manageFacd2Dialog').show()"
                                                          styleClass="edit-button rounded-button ui-button-success"
                                                          process="@this">
                                             <f:setPropertyActionListener value="#{facd}"
                                                                          target="#{tecnicoLaboratorioBean.nuevaAula}"/>
-                                            <p:resetInput target=":dialogs:manage-facd-content"/>
+                                            <p:resetInput target=":dialogs:manage-facd2-content"/>
                                         </p:commandButton>
                                         <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
                                                          process="@this"
-                                                         oncomplete="PF('deleteFacdDialog').show()"
+                                                         oncomplete="PF('deleteFacd2Dialog').show()"
                                         > <f:setPropertyActionListener value="#{facd}"
                                                                        target="#{tecnicoLaboratorioBean.nuevaAula}"/>
                                         </p:commandButton>
@@ -256,7 +254,7 @@
                         <f:facet name="footer">
                             <p:commandButton value="Save" icon="pi pi-check"
                                              actionListener="#{tecnicoLaboratorioBean.addAula()}"
-                                             update="manage-facd2-content, form:dt-facd"
+                                             update="manage-facd2-content, dialogs2:dt-facd2"
                                              process="manage-facd2-content @this"/>
                             <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageFacd2Dialog').hide()"
                                              class="ui-button-secondary" type="button"/>
