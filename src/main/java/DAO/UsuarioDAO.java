@@ -8,6 +8,7 @@ import global.Conexion;
 import jakarta.inject.Inject;
 import lombok.Data;
 import org.mindrot.jbcrypt.BCrypt;
+import utils.PasswordHashing;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioDAO extends Conexion {
+
+    PasswordHashing passwordHashing = new PasswordHashing(); // Aquí estás creando una instancia de PasswordHashing
 
 
     public Usuario getUsuario(String username, String clave) {
@@ -482,7 +485,7 @@ public class UsuarioDAO extends Conexion {
             try (PreparedStatement preparedStatementUsuario = connection.prepareStatement(insertUsuarioQuery, Statement.RETURN_GENERATED_KEYS)) {
                 preparedStatementUsuario.setInt(1, usuarioPersona.getPersonaId());
                 preparedStatementUsuario.setString(2, usuarioPersona.getNombreUsuario());
-                preparedStatementUsuario.setString(3, hashedPassword);
+                preparedStatementUsuario.setString(3, passwordHashing.hashPassword(usuarioPersona.getDni()) );
                 preparedStatementUsuario.setBoolean(4, true);
 
                 int affectedRowsUsuario = preparedStatementUsuario.executeUpdate();
@@ -615,7 +618,10 @@ public class UsuarioDAO extends Conexion {
                 String hashedPasswordFromDB = rs.getString("clave");
 
                 // Verifica si la contraseña ingresada coincide con la almacenada en la base de datos
-                if (BCrypt.checkpw(password, hashedPasswordFromDB)) {
+//                if (BCrypt.checkpw(password, hashedPasswordFromDB)) {
+                System.out.println("VALOR DE VALIDACION");
+                System.out.println(passwordHashing.verifyPassword(password,hashedPasswordFromDB));
+                if (passwordHashing.verifyPassword(password,hashedPasswordFromDB)) {
                     usuario = new Usuario();
                     usuario.setNombre(rs.getString("nombre_usuario"));
                     usuario.setClave(rs.getString("clave"));

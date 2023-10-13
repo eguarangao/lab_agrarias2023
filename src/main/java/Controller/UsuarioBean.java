@@ -192,7 +192,8 @@ public class UsuarioBean implements Serializable {
         Usuario usuario = null;
         UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-        usuario = usuarioDAO.getUsuario(username, password);
+        usuario = usuarioDAO.getUsuario2(username, password);
+
         if (usuario != null) {
             btnLogin = true;
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", usuario);
