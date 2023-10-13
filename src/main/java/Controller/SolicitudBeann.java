@@ -12,6 +12,7 @@ import jakarta.inject.Named;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.primefaces.PrimeFaces;
+import org.primefaces.model.file.UploadedFile;
 
 import java.io.IOException;
 import java.io.Serial;
@@ -65,6 +66,10 @@ public class SolicitudBeann implements Serializable {
     String fechaString = "2023-05-01";
     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 
+    private UploadedFile fileResolucionPDF;
+    private UploadedFile fileListaEstudiantes;
+
+
     boolean desactivarElementos;
 
 
@@ -90,7 +95,7 @@ public class SolicitudBeann implements Serializable {
     public void save() throws SQLException {
         horario = asignarHoras(itemsSelecionados);
         horario.setFecha(fechaReserva);
-        solicitudDAO.save2(solicitud, horario, idLaboratorio, tipoSolicitud);
+        solicitudDAO.save2(solicitud, horario, idLaboratorio, tipoSolicitud, fileResolucionPDF, fileListaEstudiantes);
     }
 
     public void FindAllEquipos() throws SQLException {

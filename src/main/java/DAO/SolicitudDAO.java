@@ -2,6 +2,8 @@ package DAO;
 
 import Model.*;
 import global.Conexion;
+import org.primefaces.component.fileupload.FileUpload;
+import org.primefaces.model.file.UploadedFile;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -133,8 +135,8 @@ public class SolicitudDAO extends Conexion {
             st4.setLong(10, solicitud.getHorario().getId()); //horario
 //            st4.setInt(11, solicitud.getDocente().getId()); //docente
             st4.setInt(11, 1); //docente
-            st4.setBytes(12, solicitud.getPdfResolucion().getBytes());
-            st4.setBytes(13, solicitud.getExcelEstudiantes().getBytes());
+//            st4.setBinaryStream(12, solicitud.getPdfResolucion().getBytes());
+//            st4.setBinaryStream(13, solicitud.getExcelEstudiantes().getBytes());
             st4.executeUpdate();
 
             st4.close();
@@ -364,7 +366,7 @@ public class SolicitudDAO extends Conexion {
 //
 
 
-    public void save2(Solicitud solicitud, Horario horario, int idLaboratorio, String tipoSolicitud) throws SQLException {
+    public void save2(Solicitud solicitud, Horario horario, int idLaboratorio, String tipoSolicitud,  UploadedFile pdfResolucion, UploadedFile listaEstudiantes) throws SQLException {
         System.out.println(horario + "DAO");
         int idHorario = 0;
         try {
@@ -447,9 +449,9 @@ public class SolicitudDAO extends Conexion {
             st4.setLong(10, horario.getId()); //horario
 //            st4.setInt(11, solicitud.getDocente().getId()); //docente
             st4.setInt(11, 1); //docente
-            st4.setBytes(12, solicitud.getPdfResolucion().getBytes());
-            st4.setBytes(13, solicitud.getExcelEstudiantes().getBytes());
-            st4.setBytes(14, solicitud.getPdfResolucion().getBytes());
+            st4.setBinaryStream(12, pdfResolucion.getInputStream());
+            st4.setBinaryStream(13, listaEstudiantes.getInputStream());
+            st4.setBinaryStream(14, pdfResolucion.getInputStream());
             System.out.println("este es el excell");
             System.out.println(solicitud.getExcelEstudiantes().getBytes());
             st4.executeUpdate();
