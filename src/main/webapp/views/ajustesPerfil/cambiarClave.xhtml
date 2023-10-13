@@ -1,0 +1,57 @@
+<ui:composition template="/template/baseTemplate.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+            <p:growl id="msgs" showDetail="true"/>
+        <div class="container">
+            <div class="card" style="margin: 0 auto; max-width: 35%; margin-bottom: 7px;">
+                <p:toolbarGroup>
+                    <h4>Cambiar Contraseña</h4>
+                </p:toolbarGroup>
+            </div>
+            <div class="card" style="margin: 0 auto; max-width: 35%;" >
+                <h:form id="form-cambiarClave">
+                    <p:fieldset legend="La clave debe cumplir con los siguientes parámetros" style="text-align: left;">
+                        <li>* Al menos<strong> una letra.</strong></li>
+                        <li>* Al menos<strong> una letra en mayúscula y una letra en minúscula.</strong></li>
+                        <li>* Al menos<strong> un número.</strong></li>
+                        <li>* Al menos ha de contener<strong> 8 caracteres.</strong></li>
+                        <li>* La nueva clave <strong> debe ser igual</strong> a repetir clave.</li>
+                    </p:fieldset>
+
+                    <p:fieldset legend="Contraseña" style="text-align: left; margin-top: 15px;">
+                        <div class="ui-fluid" >
+                            <div class="field">
+                                    <p:outputLabel value="Contraseña actual:"/>
+                                    <p:password id="claveactual" value="#{usuarioBean.mostrarClave}" placeholder="Ingrese contraseña actual"
+                                                toggleMask="true" redisplay="true" style="width: 100%;"/>
+                                </div>
+                            <div class="field">
+                                <p:outputLabel for="clavenew" value="Contraseña nueva:" styleClass="col-fixed"/>
+                                    <p:password id="clavenew" value="#{usuarioBean.compararClave}" placeholder="Ingrese contraseña nueva"
+                                                toggleMask="true" redisplay="true" style="width: 100%;"
+                                                match="clavenewrepetir" label="Password 1" required="true"/>
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="clavenewrepetir" value="Repetir contraseña nueva:" styleClass="col-fixed"/>
+                                <p:password id="clavenewrepetir" value="#{usuarioBean.compararClave}"  placeholder="Repetir contraseña actual"
+                                            toggleMask="true" redisplay="true" style="width: 100%;" label="Password 2" required="true"/>
+                            </div>
+                        </div>
+                        <div class="p-formgrid" style="float: right; margin-top: 12px;">
+                            <div class="p-field" >
+                                <p:commandButton value="Guardar" icon="pi pi-check"
+                                                 actionListener="#{usuarioBean.cambiarClave()}"
+                                                 update="form-cambiarClave"/>
+                                <p:commandButton value="Cancelar"  icon="pi pi-times"
+                                                 class="ui-button-secondary" type="button"/>
+                            </div>
+                        </div>
+                    </p:fieldset>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

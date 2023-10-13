@@ -49,6 +49,9 @@ public class UsuarioBean implements Serializable {
     private boolean isCreateUser;
     private boolean deshabilitado;
 
+    private String mostrarClave = "";
+    private String compararClave;
+
     @PostConstruct
     public void main() {
         try {
@@ -329,5 +332,24 @@ public class UsuarioBean implements Serializable {
 
     }
 
+    public String getMostrarClave() {
+        return mostrarClave;
+    }
 
+    public void setMostrarClave(String mostrarClave) {
+        this.mostrarClave = mostrarClave;
+    }
+
+    public String getCompararClave() {
+        return compararClave;
+    }
+
+    public void setCompararClave(String compararClave) {
+        this.compararClave = compararClave;
+    }
+
+    public void cambiarClave(){
+        System.out.println("SOPECHOSO");
+
+    }
 }
