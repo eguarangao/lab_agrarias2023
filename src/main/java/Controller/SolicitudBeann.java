@@ -11,10 +11,13 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.io.IOUtils;
 import org.primefaces.PrimeFaces;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serial;
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -77,6 +80,7 @@ public class SolicitudBeann implements Serializable {
     List<Laboratorio> laboratorios;
     List<Horario> horarios;
     List<Equipo> equipos;
+
     List<Equipo> equiposRequeridos;
 
     private List<Item> itemsSelecionados;
@@ -92,11 +96,26 @@ public class SolicitudBeann implements Serializable {
         validarSeleccionHoras();
     }
 
-    public void save() throws SQLException {
-        horario = asignarHoras(itemsSelecionados);
-        horario.setFecha(fechaReserva);
-        solicitudDAO.save2(solicitud, horario, idLaboratorio, tipoSolicitud, fileResolucionPDF, fileListaEstudiantes);
-    }
+//    public void handlePDFUploadPdfAprobacion(FileUploadEvent event) throws IOException {
+//        InputStream input = event.getFile().getInputStream();
+//        solicitud.setPdfAprobacion(IOUtils.toByteArray(input)); // Utiliza una biblioteca para convertir InputStream a byte[]
+//    }
+//    public void handlePDFResolucion(FileUploadEvent event) throws IOException {
+//        InputStream input = event.getFile().getInputStream();
+//        solicitud.setPdfResolucion(IOUtils.toByteArray(input)); // Utiliza una biblioteca para convertir InputStream a byte[]
+//    }
+//
+//    public void handleExcellEstudiantes(FileUploadEvent event) throws IOException {
+//        InputStream input = event.getFile().getInputStream();
+//        solicitud.setExcelEstudiantes(IOUtils.toByteArray(input)); // Utiliza una biblioteca para convertir InputStream a byte[]
+//    }
+
+
+//    public void save() throws SQLException {
+//        horario = asignarHoras(itemsSelecionados);
+//        horario.setFecha(fechaReserva);
+//        solicitudDAO.save2(solicitud, horario, idLaboratorio, tipoSolicitud, fileResolucionPDF, fileListaEstudiantes);
+//    }
 
     public void FindAllEquipos() throws SQLException {
         equipoDAO = new EquipoDAO();
@@ -207,42 +226,126 @@ public class SolicitudBeann implements Serializable {
 //    }
 
 
-    public Horario asignarHoras(List<Item> idItems) {
-        Horario myHorario = new Horario();
-        myHorario.setFecha(fechaReserva); // Asegúrate de definir fechaReserva antes de usarla
+//    public Horario asignarHoras(List<Item> idItems) {
+//        Horario myHorario = new Horario();
+//        myHorario.setFecha(fechaReserva); // Asegúrate de definir fechaReserva antes de usarla
+//
+//        // Asumiendo que idItems tiene al menos 8 elementos
+//        for (int i = 0; i < itemsSelecionados.size(); i++) {
+//            switch (i) {
+//                case 0:
+//                    myHorario.setJornada1(idItems.get(i).isDato());
+//                    break;
+//                case 1:
+//                    myHorario.setJornada2(idItems.get(i).isDato());
+//                    break;
+//                case 2:
+//                    myHorario.setJornada3(idItems.get(i).isDato());
+//                    break;
+//                case 3:
+//                    myHorario.setJornada4(idItems.get(i).isDato());
+//                    break;
+//                case 4:
+//                    myHorario.setJornada5(idItems.get(i).isDato());
+//                    break;
+//                case 5:
+//                    myHorario.setJornada6(idItems.get(i).isDato());
+//                    break;
+//                case 6:
+//                    myHorario.setJornada7(idItems.get(i).isDato());
+//                    break;
+//                case 7:
+//                    myHorario.setJornada8(idItems.get(i).isDato());
+//                    break;
+//            }
+//        }
+//
+//        System.out.println("prueba retorno Horario");
+//        System.out.println(myHorario);
+//        return myHorario;
+//    }
 
-        // Asumiendo que idItems tiene al menos 8 elementos
-        for (int i = 0; i < itemsSelecionados.size(); i++) {
-            switch (i) {
-                case 0:
-                    myHorario.setJornada1(idItems.get(i).isDato());
+
+    public Horario asignarHoras() {
+        // Crear un objeto de Horario
+        Horario myHorario = new Horario();
+        System.out.println("LISTA DE ITEMS SELECCIONADOS");
+        System.out.println(itemsSelecionados);
+
+        List<Item> itemsBdInvertidos = items;
+
+
+        System.out.println("LISTA DE ITEMS BD");
+        System.out.println(items);
+
+        //Invertir elementos de BD
+//        for (Item item : items) {
+//            Item itemNew =  new Item();
+//            itemNew.setDato(!item.isDato());
+//            itemNew.setFecha(item.getFecha());
+//            itemNew.setId(item.getId());
+//            itemsBdInvertidos.add(itemNew);
+//        }
+
+
+        System.out.println("LISTA DE ITEMS BD INVERTIDA");
+        System.out.println(itemsBdInvertidos);
+
+
+        // Fusionar las listas
+        for (Item selectedItem : itemsSelecionados) {
+            int selectedItemId = selectedItem.getId();
+            for (Item item : itemsBdInvertidos) {
+                if (item.getId() == selectedItemId) {
+                    item.setDato(false);
                     break;
+                }
+            }
+        }
+
+        System.out.println("Listas Fusionadas");
+        System.out.println(itemsBdInvertidos);
+
+
+        for (Item selectedItem : itemsBdInvertidos) {
+            boolean verifica = selectedItem.isDato();
+            int selectedItemId = selectedItem.getId();
+
+            // Usar un switch para asignar los valores a los atributos de Horario basados en 'verifica'
+            switch (selectedItemId) {
                 case 1:
-                    myHorario.setJornada2(idItems.get(i).isDato());
+                    myHorario.setJornada1(verifica);
                     break;
                 case 2:
-                    myHorario.setJornada3(idItems.get(i).isDato());
+                    myHorario.setJornada2(verifica);
                     break;
                 case 3:
-                    myHorario.setJornada4(idItems.get(i).isDato());
+                    myHorario.setJornada3(verifica);
                     break;
                 case 4:
-                    myHorario.setJornada5(idItems.get(i).isDato());
+                    myHorario.setJornada4(verifica);
                     break;
                 case 5:
-                    myHorario.setJornada6(idItems.get(i).isDato());
+                    myHorario.setJornada5(verifica);
                     break;
                 case 6:
-                    myHorario.setJornada7(idItems.get(i).isDato());
+                    myHorario.setJornada6(verifica);
                     break;
                 case 7:
-                    myHorario.setJornada8(idItems.get(i).isDato());
+                    myHorario.setJornada7(verifica);
+                    break;
+                case 8:
+                    myHorario.setJornada8(verifica);
+                    break;
+                default:
+                    // Manejar casos no válidos, si es necesario
                     break;
             }
         }
 
-        System.out.println("prueba retorno Horario");
+        System.out.println("Horario generado:");
         System.out.println(myHorario);
+        horario.setFecha(fechaReserva);
         return myHorario;
     }
 
@@ -484,46 +587,46 @@ public class SolicitudBeann implements Serializable {
 
     }
 
-    public void asignarHoras() {
-//        horarioBD.setFecha(fechaReserva); // Asignar la fecha de reserva
-//
-//        // Recorrer la lista de itemsSelecionados y asignar los valores de 'dato' a las propiedades de jornada
-//        for (int i = 0; i < 8; i++) {
-//            boolean dato = itemsSelecionados.get(i).isDato();
-//            switch (i) {
-//                case 0:
-//                    horarioBD.setJornada1(dato);
-//                    break;
-//                case 1:
-//                    horarioBD.setJornada2(dato);
-//                    break;
-//                case 2:
-//                    horarioBD.setJornada3(dato);
-//                    break;
-//                case 3:
-//                    horarioBD.setJornada4(dato);
-//                    break;
-//                case 4:
-//                    horarioBD.setJornada5(dato);
-//                    break;
-//                case 5:
-//                    horarioBD.setJornada6(dato);
-//                    break;
-//                case 6:
-//                    horarioBD.setJornada7(dato);
-//                    break;
-//                case 7:
-//                    horarioBD.setJornada8(dato);
-//                    break;
-//            }
-//        }
-        // Ahora 'horarioBD' contiene la información actualizada de las jornadas y la fecha.
-        // Puedes usar 'horarioBD' según tus necesidades.
-        System.out.println(horarioBD);
-        System.out.println("items Seleccionados");
-        System.out.println(itemsSelecionados);
-        System.out.println(itemsSelecionados.size());
-    }
+//    public void asignarHoras() {
+////        horarioBD.setFecha(fechaReserva); // Asignar la fecha de reserva
+////
+////        // Recorrer la lista de itemsSelecionados y asignar los valores de 'dato' a las propiedades de jornada
+////        for (int i = 0; i < 8; i++) {
+////            boolean dato = itemsSelecionados.get(i).isDato();
+////            switch (i) {
+////                case 0:
+////                    horarioBD.setJornada1(dato);
+////                    break;
+////                case 1:
+////                    horarioBD.setJornada2(dato);
+////                    break;
+////                case 2:
+////                    horarioBD.setJornada3(dato);
+////                    break;
+////                case 3:
+////                    horarioBD.setJornada4(dato);
+////                    break;
+////                case 4:
+////                    horarioBD.setJornada5(dato);
+////                    break;
+////                case 5:
+////                    horarioBD.setJornada6(dato);
+////                    break;
+////                case 6:
+////                    horarioBD.setJornada7(dato);
+////                    break;
+////                case 7:
+////                    horarioBD.setJornada8(dato);
+////                    break;
+////            }
+////        }
+//        // Ahora 'horarioBD' contiene la información actualizada de las jornadas y la fecha.
+//        // Puedes usar 'horarioBD' según tus necesidades.
+//        System.out.println(horarioBD);
+//        System.out.println("items Seleccionados");
+//        System.out.println(itemsSelecionados);
+//        System.out.println(itemsSelecionados.size());
+//    }
 
 //    public int getIdUsurioSession() {
 //        Usuario usuarioLogueado = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");

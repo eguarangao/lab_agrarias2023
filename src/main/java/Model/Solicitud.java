@@ -16,9 +16,9 @@ public class Solicitud {
     private Date fechaSolicita;
     private String tipo;
     private String analisis;
-    private String excelEstudiantes;
-    private String pdfResolucion;
-    private String pdfAprobacion;
+    private byte[] excelEstudiantes;
+    private byte[] pdfResolucion;
+    private byte[] pdfAprobacion;
 
     //Relaciones
     private Horario horario;

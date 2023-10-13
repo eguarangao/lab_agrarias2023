@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -452,8 +453,8 @@ public class SolicitudDAO extends Conexion {
             st4.setBinaryStream(12, pdfResolucion.getInputStream());
             st4.setBinaryStream(13, listaEstudiantes.getInputStream());
             st4.setBinaryStream(14, pdfResolucion.getInputStream());
-            System.out.println("este es el excell");
-            System.out.println(solicitud.getExcelEstudiantes().getBytes());
+            System.out.println("este es el PDF RESOLUCION");
+            System.out.println(Arrays.toString(pdfResolucion.getInputStream().readAllBytes()));
             st4.executeUpdate();
             st4.close();
 
