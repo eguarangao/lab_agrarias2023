@@ -438,9 +438,7 @@ public class SolicitudDAO extends Conexion {
             } else {
                 // REGISTRA HORARIO
                 String sqlInsertSolicitud = "insert into laboratorio.horario (fecha, jornada1,  jornada2, jornada3, jornada4, jornada5,  jornada6, jornada7, jornada8, id_laboratorio) values (?,?,?,?,?,?,?,?,?,?);";
-
                 PreparedStatement st2 = this.getConnection().prepareStatement(sqlInsertSolicitud);
-
 
                 // Luego, asigna fechaSql a tu PreparedStatement
                 st2.setDate(1, fechaSql);
@@ -525,15 +523,11 @@ public class SolicitudDAO extends Conexion {
                 //REGISTRAR LOS EQUIPOS DE LABORATORIO
             for (int i = 0; i < solicitud.getEquipos().size(); i++) {
                 System.out.println(idSolicitudMax);
-
                 int idEquipo = solicitud.getEquipos().get(i).getId();
-                PreparedStatement st6 = this.getConnection().prepareStatement("insert into laboratorio.equipo_solicitud ( id_equipo, id_solicitud) values (?,?)");
+                PreparedStatement st6 = this.getConnection().prepareStatement("insert into laboratorio.equipo_solicitud  (id_equipo, id_solicitud) values (?,?);");
                 st6.setInt(1, idEquipo);  //idEquipo
                 st6.setInt(2, idSolicitudMax );  //idSolicitud
-                System.out.println("ID SOLICITUD FOR - EQUIPOS");
-                System.out.println(idSolicitudMax);
-                System.out.println("ID EQUIPO");
-                System.out.println(idEquipo);
+                st6.executeUpdate();
                 st6.close();
 
                 // Hacer algo con el objeto "equipo" en cada iteración
