@@ -63,6 +63,26 @@ public class HorarioDAO extends Conexion {
     }
 
 
+    public boolean existeHorario(int idLaboratorio, String fecha) {
+        boolean registrosEncontrados = false;
+        try {
+            this.conectar();
+            PreparedStatement ps = connection.prepareStatement("select * from laboratorio.horario where id_laboratorio = ? and fecha =   '" + fecha + "'");
+            ps.setInt(1, idLaboratorio);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                registrosEncontrados = true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            this.desconectar();
+        }
+        return registrosEncontrados;
+    }
+
+
 
 
     public List<Horario> findByLaboratorioIdAndFecha(int id, String fecha) {

@@ -738,7 +738,8 @@ public class SolicitudBeann implements Serializable {
 
 //            findAllPeridosEnabled();
 
-            //Peridos
+            //Periodos
+            periodo = new Periodo();
             periodos = new ArrayList<>();
             periodoDAO = new PeriodoDAO();
             findAllPeridosEnabled();
