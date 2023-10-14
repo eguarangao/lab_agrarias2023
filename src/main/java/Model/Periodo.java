@@ -12,8 +12,7 @@ import java.sql.Timestamp;
 public class Periodo {
     private int id;
     private String namePeriodo;
-    private int inicioPeriodo;
-    private int finPeriodo;
-    private boolean enabled;
     Timestamp fechaCreacion;
+    private boolean enabled;
+
 }

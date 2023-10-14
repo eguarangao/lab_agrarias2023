@@ -8,6 +8,7 @@ import org.primefaces.model.file.UploadedFile;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -367,8 +368,7 @@ public class SolicitudDAO extends Conexion {
 //
 
 
-    public void save2(Solicitud solicitud, Horario horario, int idLaboratorio, String tipoSolicitud,  UploadedFile pdfResolucion, UploadedFile listaEstudiantes) throws SQLException {
-        System.out.println(horario + "DAO");
+    public void save2(Solicitud solicitud, UploadedFile pdfResolucion, UploadedFile listaEstudiantes) throws SQLException {
         int idHorario = 0;
         try {
             this.conectar();
@@ -382,24 +382,34 @@ public class SolicitudDAO extends Conexion {
 
             PreparedStatement stRS = this.getConnection().prepareStatement(sqlInsertSolicitud);
 
-            // Supongamos que horario.getFecha() devuelve un java.util.Date
-            java.util.Date fechaUtil = horario.getFecha();
+//            // Supongamos que horario.getFecha() devuelve un java.util.Date
+//            java.util.Date fechaUtil = solicitud.getHorario().getFecha();
+//            java.sql.Date fechaSql = new java.sql.Date(fechaUtil.getTime());
+//
+//            // Luego, asigna fechaSql a tu PreparedStatement
+//            stRS.setDate(1, fechaSql);
+//            System.out.println("fecha: " + fechaSql);
+
+
+            //Supongamos que horario.getFecha() devuelve un java.util.Date
+            java.util.Date fechaUtil = solicitud.getHorario().getFecha();
             java.sql.Date fechaSql = new java.sql.Date(fechaUtil.getTime());
 
             // Luego, asigna fechaSql a tu PreparedStatement
             stRS.setDate(1, fechaSql);
             System.out.println("fecha: " + fechaSql);
+            stRS.setBoolean(2, solicitud.getHorario().isJornada1()); // Asigna Jornada #1
+            stRS.setBoolean(3, solicitud.getHorario().isJornada2()); // Asigna Jornada #2
+            stRS.setBoolean(4, solicitud.getHorario().isJornada3()); // Asigna Jornada #3
+            stRS.setBoolean(5, solicitud.getHorario().isJornada4()); // Asigna Jornada #4
+            stRS.setBoolean(6, solicitud.getHorario().isJornada5()); // Asigna Jornada #5
+            stRS.setBoolean(7, solicitud.getHorario().isJornada6()); // Asigna Jornada #6
+            stRS.setBoolean(8, solicitud.getHorario().isJornada7()); // Asigna Jornada #7
+            stRS.setBoolean(9, solicitud.getHorario().isJornada7()); // Asigna Jornada #8
+            stRS.setInt(10, solicitud.getLaboratorio().getId());     // Asigna ID de laboratorio
 
-            stRS.setBoolean(2, horario.isJornada1()); // Asigna Jornada #1
-            stRS.setBoolean(3, horario.isJornada2()); // Asigna Jornada #2
-            stRS.setBoolean(4, horario.isJornada3()); // Asigna Jornada #3
-            stRS.setBoolean(5, horario.isJornada4()); // Asigna Jornada #4
-            stRS.setBoolean(6, horario.isJornada5()); // Asigna Jornada #5
-            stRS.setBoolean(7, horario.isJornada6()); // Asigna Jornada #6
-            stRS.setBoolean(8, horario.isJornada7()); // Asigna Jornada #7
-            stRS.setBoolean(9, horario.isJornada8()); // Asigna Jornada #8
-            stRS.setInt(10, idLaboratorio); // Asigna ID de laboratorio
             stRS.executeUpdate();
+
 
             stRS.close();
 
@@ -408,32 +418,34 @@ public class SolicitudDAO extends Conexion {
             ResultSet rsS = stMAX.executeQuery();
             if (rsS.next()) {
                 idHorario = rsS.getInt(1);
+                Horario horario = solicitud.getHorario();
                 horario.setId(idHorario);
-                // hacer algo con el valor de idHorario
+                solicitud.setHorario(horario);
             }
             stMAX.close();
 
 
             //   REGISTRA LA SOLICITUD
-           String sqlRegistrarSolicitud="insert into laboratorio.solicitud (codigo, \n" +
-                   "                                   tema, \n" +
-                   "                                   objetivo, \n" +
-                   "                                   fecha_registro, \n" +
-                   "                                   enabled, \n" +
-                   "                                   tipo, \n" +
-                   "                                   analisis, \n" +
-                   "                                   id_laboratorio,\n" +
-                   "                                   id_periodo,\n" +
-                   "                                   id_horarios, \n" +
-                   "                                   id_docente, \n" +
-                   "                                   pdf_resolucion, \n" +
-                   "                                   excel_estudiante, \n" +
-                   "                                   pdf_aprobacion)\n" +
-                   "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+            String sqlRegistrarSolicitud = "insert into laboratorio.solicitud (codigo, \n" +
+                    "                                   tema, \n" +
+                    "                                   objetivo, \n" +
+                    "                                   fecha_registro, \n" +
+                    "                                   enabled, \n" +
+                    "                                   tipo, \n" +
+                    "                                   analisis, \n" +
+                    "                                   id_laboratorio,\n" +
+                    "                                   id_periodo,\n" +
+                    "                                   id_horarios, \n" +
+                    "                                   id_docente, \n" +
+                    "                                   pdf_resolucion, \n" +
+                    "                                   excel_estudiante, \n" +
+                    "                                   pdf_aprobacion)\n" +
+                    "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
             PreparedStatement st4 = this.getConnection().prepareStatement(sqlRegistrarSolicitud);
             st4.setString(1, solicitud.getCodigo());  //Codigo
             st4.setString(2, solicitud.getTema());  //Tema
             st4.setString(3, solicitud.getObjetivo()); //Objetivo
+
             //Configuramos la fecha del sistema actual
             LocalDateTime fechaSistema = LocalDateTime.now();
             Date fechaRegistro = Date.from(fechaActual.atZone(ZoneId.systemDefault()).toInstant());
@@ -441,15 +453,15 @@ public class SolicitudDAO extends Conexion {
             java.util.Date fecha = fechaRegistro;
             java.sql.Date fechaActualSql = new java.sql.Date(fecha.getTime());
 
-            st4.setDate(4,fechaActualSql); //Fecha Registro
+            st4.setDate(4, fechaActualSql); //Fecha Registro
             st4.setBoolean(5, !solicitud.isEnabled()); //Enabled
-            st4.setString(6,tipoSolicitud); //Tipo
+            st4.setString(6, solicitud.getTipo()); //Tipo de Solicitud
             st4.setString(7, solicitud.getAnalisis()); //Analisis
-            st4.setInt(8, idLaboratorio); //laboratorio
-            st4.setInt(9, 1); //periodo
-            st4.setLong(10, horario.getId()); //horario
+            st4.setInt(8, solicitud.getLaboratorio().getId()); //laboratorio
+            st4.setInt(9, solicitud.getPeriodo().getId()); //periodo
+            st4.setLong(10, solicitud.getHorario().getId()); //horario
 //            st4.setInt(11, solicitud.getDocente().getId()); //docente
-            st4.setInt(11, 1); //docente
+            st4.setInt(11, solicitud.getDocente().getId()); //docente
             st4.setBinaryStream(12, pdfResolucion.getInputStream());
             st4.setBinaryStream(13, listaEstudiantes.getInputStream());
             st4.setBinaryStream(14, pdfResolucion.getInputStream());

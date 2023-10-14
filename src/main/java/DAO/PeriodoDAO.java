@@ -17,8 +17,6 @@ public class PeriodoDAO extends Conexion {
         String sql = "INSERT INTO laboratorio.periodo (name_periodo, inicio_periodo, fin_periodo, enabled,fecha_creacion) VALUES (?,?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, periodo.getNamePeriodo());
-            preparedStatement.setInt(2, periodo.getInicioPeriodo());
-            preparedStatement.setInt(3, periodo.getFinPeriodo());
             preparedStatement.setBoolean(4, periodo.isEnabled());
             preparedStatement.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
             preparedStatement.executeUpdate();
@@ -34,8 +32,6 @@ public class PeriodoDAO extends Conexion {
             String sql = "UPDATE laboratorio.periodo SET name_periodo = ?, inicio_periodo = ?, fin_periodo = ?, enabled = ? WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, periodo.getNamePeriodo());
-                preparedStatement.setInt(2, periodo.getInicioPeriodo());
-                preparedStatement.setInt(3, periodo.getFinPeriodo());
                 preparedStatement.setBoolean(4, periodo.isEnabled());
                 preparedStatement.setInt(5, periodo.getId());
                 preparedStatement.executeUpdate();
@@ -74,10 +70,36 @@ public class PeriodoDAO extends Conexion {
                         Periodo periodoObj = new Periodo();
                         periodoObj.setId(resultSet.getInt("id"));
                         periodoObj.setNamePeriodo(resultSet.getString("name_periodo"));
-                        periodoObj.setInicioPeriodo(resultSet.getInt("inicio_periodo"));
-                        periodoObj.setFinPeriodo(resultSet.getInt("fin_periodo"));
                         periodoObj.setEnabled(resultSet.getBoolean("enabled"));
                         periodoObj.setFechaCreacion(resultSet.getTimestamp("fecha_creacion"));
+                        periodos.add(periodoObj);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            this.desconectar();
+        }
+
+        return periodos;
+    }
+
+    public List<Periodo> listarPeriodosHabilitados() {
+        List<Periodo> periodos = new ArrayList<>();
+
+        try  {
+            this.conectar();
+            String sql = "SELECT * FROM laboratorio.periodo pe where pe.enabled=true";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        Periodo periodoObj = new Periodo();
+                        periodoObj.setId(resultSet.getInt("id"));
+                        periodoObj.setNamePeriodo(resultSet.getString("name_periodo"));
+                        periodoObj.setFechaCreacion(resultSet.getTimestamp("fecha_creacion"));
+                        periodoObj.setEnabled(resultSet.getBoolean("enabled"));
                         periodos.add(periodoObj);
                     }
                 }

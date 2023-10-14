@@ -11,13 +11,10 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.io.IOUtils;
 import org.primefaces.PrimeFaces;
-import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serial;
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -44,8 +41,11 @@ public class SolicitudBeann implements Serializable {
     HorarioDAO horarioDAO;
     EquipoDAO equipoDAO;
     DocenteDAO docenteDAO;
-
+    Docente docente;
+    PeriodoDAO periodoDAO;
     UsuarioDAO usuarioDAO;
+
+    Periodo  periodo;
 
     UsuarioBean usuarioBean;
 
@@ -56,16 +56,19 @@ public class SolicitudBeann implements Serializable {
 
     Solicitud solicitud = new Solicitud();
 
+    List<Periodo> periodos;
+
     int idLaboratorio = 0;
     int idLaboratorio2;
     int idHorario;
     int idUsuarioSession = 0;
+    int idPerido= 0;
     Date fecha;
     String tipoSolicitud;
     String fechaReserva2;
     Date fechaEspecifica;
     Date fechaReserva;
-    String docente;
+    String nombreDocente;
     String fechaString = "2023-05-01";
     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -116,6 +119,46 @@ public class SolicitudBeann implements Serializable {
 //        horario.setFecha(fechaReserva);
 //        solicitudDAO.save2(solicitud, horario, idLaboratorio, tipoSolicitud, fileResolucionPDF, fileListaEstudiantes);
 //    }
+
+
+    public void save() throws SQLException {
+        //Asignación de Laboratorio
+        Laboratorio laboratorio = new Laboratorio();
+        laboratorio.setId(idLaboratorio);
+        solicitud.setLaboratorio(laboratorio);
+
+        //Asignación de Horario
+        Horario horario1 = new Horario();
+        horario1 = asignarHoras();
+        solicitud.setHorario(horario1);
+
+        //Asignamos tipo de Solicitud
+        solicitud.setTipo(tipoSolicitud);
+
+        //Asignar la fecha en la que se desea reservar
+        solicitud.setFechaReserva(fechaReserva);
+
+        //Asignar los equipos requeridos en la solicitud
+        solicitud.setEquipos(equiposRequeridos);
+
+        //Asignamos el Docente que realzia la solicitud;
+        solicitud.setDocente(findByDocenteID());
+
+        //Asignamos Periodo
+        periodo.setId(idPerido);
+        solicitud.setPeriodo(periodo);
+
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+
+        System.out.println("Solicitud Empaquetada");
+        System.out.println(solicitud);
+
+        solicitudDAO.save2(solicitud, fileResolucionPDF, fileListaEstudiantes);
+
+    }
 
     public void FindAllEquipos() throws SQLException {
         equipoDAO = new EquipoDAO();
@@ -266,7 +309,7 @@ public class SolicitudBeann implements Serializable {
 //    }
 
 
-    public Horario asignarHoras() {
+    public Horario asignarHoras() throws SQLException {
         // Crear un objeto de Horario
         Horario myHorario = new Horario();
         System.out.println("LISTA DE ITEMS SELECCIONADOS");
@@ -342,10 +385,11 @@ public class SolicitudBeann implements Serializable {
                     break;
             }
         }
-
+        myHorario.setFecha(fechaReserva);
         System.out.println("Horario generado:");
         System.out.println(myHorario);
-        horario.setFecha(fechaReserva);
+
+        findByDocenteID();
         return myHorario;
     }
 
@@ -383,6 +427,44 @@ public class SolicitudBeann implements Serializable {
             PrimeFaces.current().dialog().showMessageDynamic(message);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(mensajeError));
         }
+    }
+
+    public boolean validarCantidadadHoras() {
+        String mensajeError = "";
+
+        if (itemsSelecionados != null && itemsSelecionados.size() > MAX_SELECCIONES) {
+            mensajeError = "No se pueden seleccionar más de " + MAX_SELECCIONES + " horas.";
+            elementosDeshabilitados.addAll(itemsSelecionados.subList(MAX_SELECCIONES, itemsSelecionados.size()));
+        } else if (itemsSelecionados != null && itemsSelecionados.size() > 1) {
+            List<Integer> indicesSeleccionados = new ArrayList<>();
+            for (Item item : itemsSelecionados) {
+                indicesSeleccionados.add(item.getId());
+            }
+
+            Collections.sort(indicesSeleccionados);
+
+            boolean sonConsecutivos = true;
+            for (int i = 0; i < indicesSeleccionados.size() - 1; i++) {
+                if (indicesSeleccionados.get(i + 1) != indicesSeleccionados.get(i) + 1) {
+                    sonConsecutivos = false;
+                    break;
+                }
+            }
+
+            if (!sonConsecutivos) {
+                mensajeError = "Solo puedes seleccionar horas consecutivas.";
+            }
+        }
+
+        if (!mensajeError.isEmpty()) {
+            System.out.println(mensajeError);
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Validación de horas", mensajeError);
+            PrimeFaces.current().dialog().showMessageDynamic(message);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(mensajeError));
+            return false; // Retorna false si hay un mensaje de error.
+        }
+
+        return true; // Retorna true si no hay errores.
     }
 
 
@@ -633,25 +715,62 @@ public class SolicitudBeann implements Serializable {
 //        return usuarioLogueado.getId();
 //    }
 
+    public Docente findByDocenteID() throws SQLException {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        Usuario usuarioLogueado = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
+        idUsuarioSession = usuarioLogueado.getId();
+        docente = docenteDAO.findByUsuarioID(idUsuarioSession).get(0);
+        System.out.println("Este es eo docente logueado");
+        System.out.println(docente);
+        return docente;
+    }
+
+    public void findAllPeridosEnabled(){
+        periodos = periodoDAO.listarPeriodosHabilitados();
+    }
+
 
     @PostConstruct
     public void init() {
         try {
             // Llama al método para cargar los laboratorios al iniciar el bean.
             finAllLaboratorio();
+
+//            findAllPeridosEnabled();
+
+            //Peridos
+            periodos = new ArrayList<>();
+            periodoDAO = new PeriodoDAO();
+            findAllPeridosEnabled();
+
+            //Docentes
+            docente = new Docente();
             docenteDAO = new DocenteDAO();
+
+            //Usaurios
             usuarioDAO = new UsuarioDAO();
             usuarioBean = new UsuarioBean();
+
+            //Solicitud
+
+            //Equipos
+
+            //Periodo
+            periodo = new Periodo();
+
             solicitud = new Solicitud();
             itemsSelecionados = new ArrayList<>();
 
+
+
             solicitudDAO = new SolicitudDAO();
+
             desactivarElementos = false;
 
             FacesContext facesContext = FacesContext.getCurrentInstance();
             Usuario usuarioLogueado = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
             idUsuarioSession = usuarioLogueado.getId();
-            docente = String.valueOf(docenteDAO.findByUsuarioID(getIdUsuarioSession()).get(0).getPersona().getApellido());
+            nombreDocente = String.valueOf(docenteDAO.findByUsuarioID(getIdUsuarioSession()).get(0).getPersona().getApellido());
 
 
 //            docenteDAO.findByUsuarioID(usuarioBean.getIdUsuarioSession());
