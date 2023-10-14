@@ -460,7 +460,7 @@ public class SolicitudDAO extends Conexion {
             st4.setInt(8, solicitud.getLaboratorio().getId()); //laboratorio
             st4.setInt(9, solicitud.getPeriodo().getId()); //periodo
             st4.setLong(10, solicitud.getHorario().getId()); //horario
-//            st4.setInt(11, solicitud.getDocente().getId()); //docente
+            //st4.setInt(11, solicitud.getDocente().getId()); //docente
             st4.setInt(11, solicitud.getDocente().getId()); //docente
             st4.setBinaryStream(12, pdfResolucion.getInputStream());
             st4.setBinaryStream(13, listaEstudiantes.getInputStream());
