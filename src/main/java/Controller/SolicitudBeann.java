@@ -348,13 +348,13 @@ public class SolicitudBeann implements Serializable {
         String contextPath = externalContext.getRequestContextPath();
 
         if ("SOLICITUD PRÁCTICAS ESTUDIANTES".equals(tipoSolicitud)) {
-            externalContext.redirect(contextPath + "/views/solicitudes/registroSolicitud.xhtml");
+            externalContext.redirect(contextPath + "/views/solicitudesDocente/registroSolicitud.xhtml");
             System.out.println("holaaaaaaaaaaaaa" + tipoSolicitud);
         } else if ("SOLICITUD PRÁCTICAS DE PROYECTO DE INVESTIGACÓN".equals(tipoSolicitud)) {
-            externalContext.redirect(contextPath + "/views/solicitudes/registroSolicitud.xhtml");
+            externalContext.redirect(contextPath + "/views/solicitudesDocente/registroSolicitud.xhtml");
             System.out.println("holaaaaaaaaaaaaa" + tipoSolicitud);
         } else if ("SOLICITUD PRÁCTICAS DE TESIS".equals(tipoSolicitud)) {
-            externalContext.redirect(contextPath + "/views/solicitudes/registroSolicitud.xhtml");
+            externalContext.redirect(contextPath + "/views/solicitudesDocente/registroSolicitud.xhtml");
         }
 
     }
