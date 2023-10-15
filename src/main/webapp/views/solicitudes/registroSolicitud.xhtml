@@ -3,9 +3,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:body>
    <ui:composition template="../../template/baseTemplate.xhtml">
@@ -18,35 +16,25 @@
 <!--         <f:event type="preRenderView" listener="#{generalMB.listarLaboratoriosByEncargadoId(loginMB.httpSession.getAttribute('idPersona'))}"/>-->
 <!--         <f:event type="preRenderView" listener="#{equipoMB.listarEquiposByEncargado(loginMB.httpSession.getAttribute('idPersona'))}"/>-->
 
-
-
-
-      <!--     TOOLBAR-->
+         <!--     TOOLBAR-->
          <ui:include src="/views/solicitudes/components/subNavbarSolicitudes.xhtml"/>
 
 
-         <!--REGISTRO FORM-->
-         <h:form id="formS" enctype="multipart/form-data" >
-            <!--VISTA REGISTRAR-->
+         <h:form id="formS" enctype="multipart/form-data">
+            <!-- Agrega tus elementos de formulario aquí -->
             <ui:include src="/views/solicitudes/components/nuevaSolicitud.xhtml"/>
          </h:form>
 
 
-<!--         &lt;!&ndash;DATATABLE GENERAL&ndash;&gt;-->
-<!--         <h:form id="formData">-->
-<!--            <ui:include src="./componentes/dataTable_equipos_general.xhtml"/>-->
-<!--         </h:form>-->
-
-
-<!--         <h:outputScript name="calendar_es.js" library="js"/>-->
-
-<!--                  <h:outputScript name="validarSeleccionHoras.js" library="js"/>-->
-<!--         <h:outputScript name="js/validarHoras.js" library="manhattan-layout"/>-->
 
          <h:outputScript name="prueba.js" library="js"/>
 
 
+
+
       </ui:define>
+
+
    </ui:composition>
 
 
