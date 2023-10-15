@@ -2,6 +2,7 @@
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
         xmlns:p="http://primefaces.org/ui"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
         xmlns:f="http://xmlns.jcp.org/jsf/core">
     <div class="card" align="center">
         <p:toolbarGroup id="tol">
@@ -19,7 +20,7 @@
                 <p:outputLabel value="Laboratorios"/>
                 <!--SELECT LABORATORIOS-->
                 <p:selectOneMenu id="selectLaboratorios"
-                                 value="#{solicitudBeann.idLaboratorio}">
+                                 value="#{solicitudBeann.idLaboratorio}"  required="true">
                     <f:selectItem itemLabel="Seleccione laboratorio" noSelectionOption="true"/>
                     <f:selectItems value="#{solicitudBeann.laboratorios}" var="lab"
                                    itemLabel="#{lab.nombre}" itemValue="#{lab.id}"/>
@@ -34,7 +35,8 @@
                 <p:calendar id="calendarReserva"
                             disabled="#{solicitudBeann.idLaboratorio == 0}"
                             locale="es"
-                            value="#{solicitudBeann.fechaReserva}">
+                            value="#{solicitudBeann.fechaReserva}"
+                            required="true">
                     <p:ajax event="dateSelect" listener="#{solicitudBeann.listHoras}" update="selectHoras :formS "/>
                 </p:calendar>
             </div>
@@ -42,14 +44,24 @@
 
             <!--HORAS-->
             <div class="p-field p-col-12 p-md-6">
-                <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.itemsSelecionados}"
-                                      layout="responsive" columns="3"
+<!--                <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.itemsSelecionados}"-->
+<!--                                      layout="responsive" columns="3"-->
 
-                                      onchange="#{solicitudBeann.imprimir()}" styleClass="text-danger" >
+<!--                                      onchange="#{solicitudBeann.imprimir()}" styleClass="text-danger" >-->
+<!--                    <f:selectItems value="#{solicitudBeann.items}" var="item" itemLabel="#{item.fecha}"-->
+<!--                                   itemDisabled="#{not item.dato or solicitudBeann.desactivarElementos }" itemValue="#{item}" />-->
+<!--                    <p:ajax event="change" listener="#{solicitudBeann.imprimir()}" update="selectHoras"/>-->
+<!--                </p:selectManyCheckbox>-->
+
+                <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.itemsSelecionados}"
+                                      layout="responsive" columns="3" onchange="#{solicitudBeann.imprimir()}">
                     <f:selectItems value="#{solicitudBeann.items}" var="item" itemLabel="#{item.fecha}"
-                                   itemDisabled="#{not item.dato or solicitudBeann.desactivarElementos }" itemValue="#{item}" />
-                    <p:ajax event="change" listener="#{solicitudBeann.imprimir()}" update="selectHoras"/>
+                                   itemDisabled="#{not item.dato or solicitudBeann.desactivarElementos}"
+                                   itemValue="#{item}" style="color: #{item.dato ? 'black' : 'red'};" />
+<!--                    <p:ajax event="change" listener="#{solicitudBeann.imprimir()}" update="selectHoras" />-->
                 </p:selectManyCheckbox>
+
+
                 <p:message id="mensajeError" for="selectHoras" display="text" />
             </div>
         </div>
@@ -59,31 +71,31 @@
             <!--TEMA  -->
             <div class="field p-col-12 p-md-6">
                 <p:outputLabel for="tema" value="Tema"/>
-                <p:inputText id="tema" value="#{solicitudBeann.solicitud.tema}" maxlength="35"/>
+                <p:inputText id="tema" value="#{solicitudBeann.solicitud.tema}" maxlength="35"  required="true"/>
             </div>
             <!--OBJETIVO  -->
             <div class="field p-col-12 p-md-6">
                 <p:outputLabel for="objetivo" value="Objetivo"/>
-                <p:inputText id="objetivo" value="#{solicitudBeann.solicitud.objetivo}" maxlength="35"/>
+                <p:inputText id="objetivo" value="#{solicitudBeann.solicitud.objetivo}" maxlength="35"  required="true"/>
             </div>
             <!--ANALISIS  -->
             <div class="field p-col-12 p-md-5">
                 <p:outputLabel for="analisis" value="Análisis"/>
-                <p:inputText id="analisis" value="#{solicitudBeann.solicitud.analisis}" maxlength="35"/>
+                <p:inputText id="analisis" value="#{solicitudBeann.solicitud.analisis}" maxlength="35"  required="true"/>
             </div>
 
 
             <!--CODIGO-->
             <div class="field p-col-12 p-md-2">
                 <p:outputLabel for="codigo" value="Código"/>
-                <p:inputText id="codigo" value="#{solicitudBeann.solicitud.codigo}" maxlength="35"/>
+                <p:inputText id="codigo" value="#{solicitudBeann.solicitud.codigo}" maxlength="35"  required="true"/>
             </div>
 
             <!--PERIODO-->
             <div class="field p-col-12 p-md-2">
                 <p:outputLabel for="periodo" value="Periodo"/>
                 <p:selectOneMenu id="periodo" value="#{solicitudBeann.idPerido}" editable="false">
-                    <f:selectItem itemLabel="Seleccione Periodo" noSelectionOption="true"/>
+                    <f:selectItem itemLabel="Seleccione Periodo" noSelectionOption="true"  required="true"/>
                     <f:selectItems value="#{solicitudBeann.periodos}" var="periodo"
                                    itemLabel="#{periodo.namePeriodo}" itemValue="#{periodo.id}"/>
                 </p:selectOneMenu>
@@ -105,7 +117,7 @@
                         <p:selectCheckboxMenu id="comboEquipos" label="Cities" style="min-width: 15rem"
                                               value="#{solicitudBeann.equiposRequeridos}"
                                               multiple="true" filter="true" filterMatchMode="startsWith"
-                                              panelStyle="width: 30rem" scrollHeight="250">
+                                              panelStyle="width: 30rem" scrollHeight="250"  required="true">
                             <f:selectItems value="#{solicitudBeann.equipos}"
                                            var="equipo"
                                            itemLabel="#{equipo.descripcion}"
@@ -123,7 +135,9 @@
                                       value="#{solicitudBeann.fileResolucionPDF}"
                                       label="Subir resolución"
                                       sizeLimit="10485760"
-                                      allowTypes="/(\.|\/)(pdf)$/"/>
+                                      allowTypes="/(\.|\/)(pdf)$/"
+                                      required="true"
+                        />
                     </p:fieldset>
                 </div>
 
@@ -135,7 +149,9 @@
                                       label="Subir lista de estudiantes"
                                       skinSimple="true"
                                       sizeLimit="10485760"
-                                      allowTypes="/(\.|\/)(xlsx)$/"/>
+                                      allowTypes="/(\.|\/)(xlsx)$/"
+                                      required="true"
+                        />
                     </p:fieldset>
                 </div>
             </div>
@@ -159,5 +175,7 @@
             </div>
         </div>
     </div>
+
+    <h:outputStylesheet library="css" name="myCss.css"/>
 
 </ui:composition>
