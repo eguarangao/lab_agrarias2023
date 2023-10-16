@@ -30,6 +30,16 @@ function mostrarMensaje() {
     alert('¡Hola, mundo! 😃');
 }
 
+function refreshForm() {
+    var form = document.getElementById('formS');
+    if (form) {
+        form.reset(); // Para restablecer los valores del formulario
+    }
+}
+
+function resetForm() {
+    document.getElementById('formS').reset();
+}
 
 // miScript.js
 function validarSeleccion() {

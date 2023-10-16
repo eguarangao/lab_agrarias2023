@@ -26,7 +26,7 @@
                     <f:selectItems value="#{solicitudBeann.laboratorios}" var="lab"
                                    itemLabel="#{lab.nombre}" itemValue="#{lab.id}"/>
                     <p:ajax event="change" listener="#{solicitudBeann.FindAllEquipos()}"
-                            update="calendarReserva selectHoras"/>
+                            update="calendarReserva selectHoras formS:comboEquipos"/>
                 </p:selectOneMenu>
             </div>
 
@@ -172,6 +172,8 @@
         </div>
     </div>
 
+
+    <h:outputScript name="prueba.js" library="js"/>
     <h:outputStylesheet library="css" name="myCss.css"/>
 
 </ui:composition>

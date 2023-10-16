@@ -34,7 +34,11 @@
          <h:outputScript name="prueba.js" library="js"/>
 
 
-
+         <h:outputScript>
+            function resetForm() {
+               document.getElementById('formS').reset();
+            }
+         </h:outputScript>
 
       </ui:define>
 

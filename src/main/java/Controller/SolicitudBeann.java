@@ -8,6 +8,7 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 @Named
-@SessionScoped
+@ViewScoped
 public class SolicitudBeann implements Serializable {
 
     @Serial
@@ -105,44 +106,50 @@ public class SolicitudBeann implements Serializable {
     }
 
 
-    public void save() throws SQLException {
-        //Asignación de Laboratorio
-        Laboratorio laboratorio = new Laboratorio();
-        laboratorio.setId(idLaboratorio);
-        solicitud.setLaboratorio(laboratorio);
+    public void save() {
+        try {
+            //Asignación de Laboratorio
+            Laboratorio laboratorio = new Laboratorio();
+            laboratorio.setId(idLaboratorio);
+            solicitud.setLaboratorio(laboratorio);
 
-        //Asignación de Horario
-        Horario horario1 = new Horario();
-        horario1 = asignarHoras();
-        solicitud.setHorario(horario1);
+            //Asignación de Horario
+            Horario horario1 = new Horario();
+            horario1 = asignarHoras();
+            solicitud.setHorario(horario1);
 
-        //Asignamos tipo de Solicitud
-        solicitud.setTipo(tipoSolicitud);
+            //Asignamos tipo de Solicitud
+            solicitud.setTipo(tipoSolicitud);
 
-        //Asignar la fecha en la que se desea reservar
-        solicitud.setFechaReserva(fechaReserva);
+            //Asignar la fecha en la que se desea reservar
+            solicitud.setFechaReserva(fechaReserva);
 
-        //Asignar los equipos requeridos en la solicitud
-        solicitud.setEquipos(equiposRequeridos);
+            //Asignar los equipos requeridos en la solicitud
+            solicitud.setEquipos(equiposRequeridos);
 
-        //Asignamos el Docente que realzia la solicitud;
-        solicitud.setDocente(findByDocenteID());
+            //Asignamos el Docente que realiza la solicitud
+            solicitud.setDocente(findByDocenteID());
 
-        //Asignamos Periodo
-        periodo.setId(idPerido);
-        solicitud.setPeriodo(periodo);
+            //Asignamos Periodo
+            periodo.setId(idPerido);
+            solicitud.setPeriodo(periodo);
 
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
+            System.out.println("Solicitud Empaquetada");
+            System.out.println(solicitud);
 
-        System.out.println("Solicitud Empaquetada");
-        System.out.println(solicitud);
+            solicitudDAO.save2(solicitud, fileResolucionPDF, fileListaEstudiantes);
 
-        solicitudDAO.save2(solicitud, fileResolucionPDF, fileListaEstudiantes);
-
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso", "Se registró correctamente"));
+            // Llama a la función JavaScript para restablecer el formulario
+//            PrimeFaces.current().executeScript("resetForm();");
+            PrimeFaces.current().executeScript("refreshForm();");
+            PrimeFaces.current().executeScript("resetForm()");
+        } catch (SQLException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Ocurrió un error en el registro, vuelva a intentarlo"));
+            e.printStackTrace(); // Puedes imprimir el stack trace para depuración
+        }
     }
+
 
     public void FindAllEquipos() throws SQLException {
         equipoDAO = new EquipoDAO();
@@ -259,7 +266,7 @@ public class SolicitudBeann implements Serializable {
         List<Item> seleccionAnterior = new ArrayList<>(itemsSelecionados);
 
         if (itemsSelecionados != null && itemsSelecionados.size() > MAX_SELECCIONES) {
-            mensajeError = "No se pueden seleccionar más de " + MAX_SELECCIONES + " horas.";
+            mensajeError = "No se puede seleccionar más de " + MAX_SELECCIONES + " horas.";
             elementosDeshabilitados.addAll(itemsSelecionados.subList(MAX_SELECCIONES, itemsSelecionados.size()));
             // Eliminar los elementos seleccionados en exceso
             itemsSelecionados.subList(MAX_SELECCIONES, itemsSelecionados.size()).clear();
@@ -280,7 +287,7 @@ public class SolicitudBeann implements Serializable {
             }
 
             if (!sonConsecutivos) {
-                mensajeError = "Solo puedes seleccionar horas consecutivas.";
+                mensajeError = "Solo se permite seleccionar horas consecutivas.";
                 // Eliminar solo el último elemento no consecutivo
                 itemsSelecionados.remove(seleccionAnterior.get(seleccionAnterior.size() - 1));
             }
@@ -288,11 +295,9 @@ public class SolicitudBeann implements Serializable {
 
         if (!mensajeError.isEmpty()) {
             // Mostrar mensaje de error
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error en selección de horas: ", mensajeError));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Aviso: ", mensajeError));
         }
     }
-
-
 
 
     public boolean validarCantidadadHoras() {
