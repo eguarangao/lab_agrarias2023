@@ -1,0 +1,174 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="../../../template/baseTemplate.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <ui:include src="formEquipos.xhtml"/>
+    <div class="p-grid ui-fluid">
+        <div class="p-col-12">
+            <h:form id="form-Mante">
+                <p:growl id="messages" showDetail="true"/>
+                <div class="card crud-demo">
+                    <p:toolbar>
+                        <p:toolbarGroup>
+                            <p:commandButton id="botonNewMante" value="Nuevo mantenimiento" icon="pi pi-plus"
+                                             actionListener="#{mantenimientoBean.nuevoMantenimiento()}"
+                                             update=":dialogMante:manage-Mante-content"
+                                             oncomplete="PF('manageManteDialog').show()"
+                                             styleClass="ui-button-success" style="margin-right: .5rem"
+                                             disabled="#{mantenimientoBean.botonManteDisabled}">
+                                <p:resetInput target=":dialogMante:manage-Mante-content"/>
+                            </p:commandButton>
+                        </p:toolbarGroup>
+
+                        <p:toolbarGroup style="float: right;">
+                            <p:selectOneMenu id="laboratoriosDelTecnico"
+                                             value="#{mantenimientoBean.idlaboratorioSession}"
+                                             style="width: 200px;">
+                                <f:selectItem itemLabel="Seleccione laboratorio" noSelectionOption="true"
+                                              itemValue="0"/>
+                                <f:selectItems value="#{equipoBean.listlaboratorios}" var="labo"
+                                               itemLabel="#{labo.nombre}" itemValue="#{labo.id}"/>
+                                <p:ajax event="change"
+                                        listener="#{mantenimientoBean.SelectLaboratorioTecnico()}"
+                                        update="dt-Mante"/>
+                            </p:selectOneMenu>
+                        </p:toolbarGroup>
+
+                    </p:toolbar>
+                    <p:outputPanel id="tablaMante">
+                        <p:dataTable id="dt-Mante" widgetVar="dtMante" var="dtmante"
+                                     value="#{mantenimientoBean.listMante}" reflow="true" styleClass="products-table"
+                                     lazy="true" rowKey="#{dtmante.id}" paginator="true" rows="10" rowSelectMode="add"
+                                     paginatorPosition="bottom" rendered="#{mantenimientoBean.mostrarTablaMante}">
+                            <p:column headerText="id">
+                                <h:outputText value="#{dtmante.id_mant_equipo}"/>
+                            </p:column>
+
+                            <p:column headerText="Equipo">
+                                <h:outputText value="#{dtmante.equipo.descripcion}"/>
+                            </p:column>
+
+                            <p:column headerText="Fecha del mantenimiento">
+                                <h:outputText value="#{dtmante.mantenimiento.fechaRegistro}"/>
+                            </p:column>
+
+                            <p:column headerText="Fecha del mantenimiento realizado">
+                                <h:outputText value="#{dtmante.mantenimiento.fechaRetorno}"/>
+                            </p:column>
+
+                            <p:column headerText="Tipo de Mantenimiento">
+                                <h:outputText value="#{dtmante.tipoMantenimiento.tipo}"/>
+                            </p:column>
+
+                            <p:column headerText="Estado">
+                                <p:tag severity="success" value="Activado" rendered="#{dtmante.estado}"/>
+                                <p:tag severity="warning" value="Desactivado" rendered="#{not dtmante.estado}"/>
+                            </p:column>
+                            <p:column headerText="Acciones" exportable="false">
+                                <p:commandButton icon="pi pi-pencil"
+                                                 update=":dialogMante:manage-Mante-content"
+                                                 oncomplete="PF('manageManteDialog').show()"
+                                                 styleClass="edit-button rounded-button ui-button-success"
+                                                 process="@this">
+                                    <f:setPropertyActionListener value="#{dtmante}"
+                                                                 target="#{mantenimientoBean.newMante}"/>
+                                    <p:resetInput target=":dialogMante:manage-Mante-content"/>
+
+                                </p:commandButton>
+                                <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                                 process="@this"
+                                                 oncomplete="PF('deleteManteDialog').show()">
+                                    <f:setPropertyActionListener value="#{dtmante}"
+                                                                 target="#{mantenimientoBean.newMante}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </div>
+            </h:form>
+
+
+            <h:form id="dialogMante">
+                <p:dialog header="Agregar nuevo Mantenimiento" showEffect="fade" modal="true" widgetVar="manageManteDialog"
+                          responsive="true" style="max-width: 980px;">
+                    <p:outputPanel id="manage-Mante-content" class="ui-fluid">
+                        <p:outputPanel rendered="#{not empty mantenimientoBean.newMante}">
+
+
+                            <div class="p-formgrid p-grid">
+                                <div class="field p-col-12 p-md-3">
+                                    <p:outputLabel for="equipoMante">Equipo</p:outputLabel>
+                                    <p:inputText id="equipoMante" value="#{dtmante.equipo.descripcion}"
+                                                 required="true"/>
+                                </div>
+
+                                <div class="field p-col-12 p-md-3">
+                                    <p:outputLabel for="fecharegistroMante">Fecha Registro</p:outputLabel>
+                                    <p:inputText id="fecharegistroMante" value="#{dtmante.mantenimiento.fechaRegistro}"
+                                                 required="true"/>
+
+                                </div>
+
+                                <div class="field p-col-12 p-md-3">
+                                    <p:outputLabel for="fecharetornoMante">Fecha retorno</p:outputLabel>
+                                    <p:inputText id="fecharetornoMante" value="#{dtmante.mantenimiento.fechaRetorno}"
+                                                 required="true"/>
+
+                                </div>
+                                <div class="field p-col-12 p-md-3">
+                                    <p:outputLabel for="tipoMante">Tipo Mantenimiento</p:outputLabel>
+                                    <p:inputText id="tipoMante" value="#{dtmante.mantenimiento.fechaRetorno}"
+                                                 required="true"/>
+
+                                </div>
+
+                                <div class="field p-col-12 p-md-3 " style="margin-top: 3px;">
+                                    <h:outputLabel for="estadoMante" value="Estado:" />
+                                    <div style="display: block">
+                                        <p:selectBooleanButton id="estadoMante" onLabel="Activado" offLabel="Desactivado"
+                                                               value="#{dtmante.estado}"/>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         actionListener="#{mantenimientoBean.addManteninimiento()}"
+                                         update="manage-Mante-content, form-Mante:dt-Mante"
+                                         process="manage-Mante-content @this"/>
+                        <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageManteDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+
+                    </f:facet>
+
+
+
+                </p:dialog>
+                <p:confirmDialog widgetVar="deleteManteDialog" showEffect="fade" width="300"
+                                 message="Deseas eliminar mantenimiento?" header="Confirmar" severity="warn">
+                    <p:commandButton value="Yes" icon="pi pi-check"
+                                     process="@this"
+                                     oncomplete="PF('deleteManteDialog').hide()"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                     onclick="PF('deleteManteDialog').hide()"/>
+                </p:confirmDialog>
+
+
+            </h:form>
+
+
+
+        </div>
+    </div>
+    </ui:define>
+</ui:composition>

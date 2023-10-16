@@ -3,20 +3,23 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
+
    <div class="p-grid ui-fluid">
       <div class="p-col-12">
          <h:form>
             <p:menubar>
-               <p:menuitem value="Mantenimientos"  outcome="/views/administracion/administracion">
+               <p:menuitem value="Equipos"  outcome="/views/equipos/components/dataTableEquipos">
                </p:menuitem>
 
-               <p:menuitem value="Reporte averias" outcome="/views/administracion/components/formFacultades">
+               <p:menuitem value="Mantenimientos"  outcome="/views/equipos/components/mantenimientosEquipos">
+               </p:menuitem>
+
+               <p:menuitem value="Reporte averias" outcome="/views/equipos/components/reportesAveriasEquipo">
                </p:menuitem>
 
             </p:menubar>
          </h:form>
       </div>
    </div>
-
 </ui:composition>
 
