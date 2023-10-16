@@ -62,7 +62,7 @@ public class UsuarioBean implements Serializable {
             this.listFullDocente = new ArrayList<>();
             listFullDocente = DAO.listarUsuariosDocentes();
             isCreateUser = false;
-            deshabilitado=true;
+            deshabilitado = true;
 
 
         } catch (Exception e) {
@@ -77,7 +77,7 @@ public class UsuarioBean implements Serializable {
 
     public void EditCreateUser(boolean createUser) {
         this.isCreateUser = createUser;
-        deshabilitado  = !createUser;
+        deshabilitado = !createUser;
     }
 
     //    public String login() {
@@ -348,7 +348,7 @@ public class UsuarioBean implements Serializable {
         this.compararClave = compararClave;
     }
 
-    public void cambiarClave(){
+    public void cambiarClave() {
         System.out.println("SOPECHOSO");
 
     }

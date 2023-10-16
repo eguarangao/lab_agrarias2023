@@ -45,7 +45,7 @@ public class SolicitudBeann implements Serializable {
     PeriodoDAO periodoDAO;
     UsuarioDAO usuarioDAO;
 
-    Periodo  periodo;
+    Periodo periodo;
 
     UsuarioBean usuarioBean;
 
@@ -62,7 +62,7 @@ public class SolicitudBeann implements Serializable {
     int idLaboratorio2;
     int idHorario;
     int idUsuarioSession = 0;
-    int idPerido= 0;
+    int idPerido = 0;
     Date fecha;
     String tipoSolicitud;
     String fechaReserva2;
@@ -83,6 +83,8 @@ public class SolicitudBeann implements Serializable {
     List<Laboratorio> laboratorios;
     List<Horario> horarios;
     List<Equipo> equipos;
+
+    List<Solicitud> solicitudes;
 
     List<Equipo> equiposRequeridos;
 
@@ -150,11 +152,6 @@ public class SolicitudBeann implements Serializable {
 
     int seleccionCount = 0;
     int MAX_SELECCIONES = 3;
-
-
-
-
-
 
 
     public Horario asignarHoras() throws SQLException {
@@ -291,8 +288,6 @@ public class SolicitudBeann implements Serializable {
     }
 
 
-
-
     private List<Boolean> selectedItems;
 
     // Inicializar la lista de elementos y la lista de selecciones
@@ -376,9 +371,6 @@ public class SolicitudBeann implements Serializable {
     }
 
 
-
-
-
     public void listHoras() {
         horarios = new ArrayList<>();
         items = new ArrayList<>();
@@ -447,7 +439,6 @@ public class SolicitudBeann implements Serializable {
     }
 
 
-
     public Docente findByDocenteID() throws SQLException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         Usuario usuarioLogueado = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
@@ -458,14 +449,25 @@ public class SolicitudBeann implements Serializable {
         return docente;
     }
 
-    public void findAllPeridosEnabled(){
+    public void findAllPeridosEnabled() {
         periodos = periodoDAO.listarPeriodosHabilitados();
+    }
+
+    public void findAllSolicitudes() throws SQLException {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        Usuario usuarioLogueado = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
+        idUsuarioSession = usuarioLogueado.getId();
+        solicitudes = solicitudDAO.findAll(idUsuarioSession);
+        System.out.println("## SOLICITUD ");
+        System.out.println(solicitudes);
+
     }
 
 
     @PostConstruct
     public void init() {
         try {
+
             // Llama al método para cargar los laboratorios al iniciar el bean.
             finAllLaboratorio();
 
@@ -486,7 +488,7 @@ public class SolicitudBeann implements Serializable {
             usuarioBean = new UsuarioBean();
 
             //Solicitud
-
+            solicitudes = new ArrayList<>();
             //Equipos
 
             //Periodo
@@ -494,7 +496,6 @@ public class SolicitudBeann implements Serializable {
 
             solicitud = new Solicitud();
             itemsSelecionados = new ArrayList<>();
-
 
 
             solicitudDAO = new SolicitudDAO();
@@ -513,6 +514,8 @@ public class SolicitudBeann implements Serializable {
             itemsSelecionados = new ArrayList<>();
             //horarios = horarioDAO.findByLaboratorioIdAndFecha(idLaboratorio, fechaReserva.toString());
 //            solicitud = new Solicitud();
+
+
         } catch (SQLException e) {
             // Maneja cualquier excepción que pueda ocurrir durante la carga de los laboratorios.
             e.printStackTrace();
@@ -521,7 +524,6 @@ public class SolicitudBeann implements Serializable {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al cargar los laboratorios", null));
         }
     }
-
 
 
 }

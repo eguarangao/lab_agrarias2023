@@ -579,7 +579,9 @@ public class SolicitudDAO extends Conexion {
                     "         inner join laboratorio.equipo_solicitud es on solicitud.id = es.id_solicitud\n" +
                     "         inner join laboratorio.equipo e on e.id = es.id_equipo\n" +
                     "         inner join laboratorio.laboratorio l on h.id_laboratorio = l.id\n" +
-                    "where d.id =?";
+                    "         inner join laboratorio.persona p on d.id_persona = p.id\n" +
+                    "         inner join laboratorio.usuario u on p.id = u.id_persona\n" +
+                    "where u.id = ?";
             PreparedStatement st = this.getConnection().prepareStatement(sql);
             st.setInt(1, idDocente);
             rs = st.executeQuery();
