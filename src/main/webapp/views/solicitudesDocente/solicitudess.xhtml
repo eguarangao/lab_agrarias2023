@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:body>
+    <ui:composition template="../../template/baseTemplate.xhtml">
+        <ui:define name="title">Registrar Solicitud</ui:define>
+        <ui:define name="content">
+
+
+            <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true"/>
+
+
+
+            <!--REGISTRO FORM-->
+            <h:form id="formRegistro" >
+
+                <!--MODAL REGISTRAR-->
+                <ui:include src="/views/solicitudesDocente/components/modalSolicitud.xhtml"/>
+            </h:form>
+
+
+            <!--DATATABLE GENERAL-->
+            <h:form id="formData">
+                <ui:include src="/views/solicitudesDocente/components/dataTableSolicitudes.xhtml"/>
+            </h:form>
+
+
+
+
+
+
+            <h:outputScript name="prueba.js" library="js"/>
+
+
+            <h:outputScript>
+                function resetForm() {
+                document.getElementById('formS').reset();
+                }
+            </h:outputScript>
+
+        </ui:define>
+
+
+    </ui:composition>
+
+
+
+    <!-- Incluir los scripts aquí -->
+    <h:outputStylesheet library="css" name="bootstrap.min.css"/>
+    <h:outputScript name="bootstrap.min.js" library="js"/>
+
+
+</h:body>
+</html>
