@@ -25,7 +25,7 @@ public class SolicitudDAO extends Conexion {
     public void save(Solicitud solicitud, Horario horario, List<Equipo> equipos, String fecha, List<Item> items) throws SQLException {
         itemsSeleccionados = items;
 
-        int idSolicitudMax=0;
+        int idSolicitudMax = 0;
         System.out.println(solicitud + "DAO");
         try {
             this.conectar();
@@ -402,7 +402,7 @@ public class SolicitudDAO extends Conexion {
 
     public void save2(Solicitud solicitud, UploadedFile pdfResolucion, UploadedFile listaEstudiantes) throws SQLException {
         int idHorario = 0;
-        int idSolicitudMax=0;
+        int idSolicitudMax = 0;
         try {
             this.conectar();
             this.getConnection().setAutoCommit(false);
@@ -521,17 +521,17 @@ public class SolicitudDAO extends Conexion {
                 st5.close();
 
                 //REGISTRAR LOS EQUIPOS DE LABORATORIO
-            for (int i = 0; i < solicitud.getEquipos().size(); i++) {
-                System.out.println(idSolicitudMax);
-                int idEquipo = solicitud.getEquipos().get(i).getId();
-                PreparedStatement st6 = this.getConnection().prepareStatement("insert into laboratorio.equipo_solicitud  (id_equipo, id_solicitud) values (?,?);");
-                st6.setInt(1, idEquipo);  //idEquipo
-                st6.setInt(2, idSolicitudMax );  //idSolicitud
-                st6.executeUpdate();
-                st6.close();
+                for (int i = 0; i < solicitud.getEquipos().size(); i++) {
+                    System.out.println(idSolicitudMax);
+                    int idEquipo = solicitud.getEquipos().get(i).getId();
+                    PreparedStatement st6 = this.getConnection().prepareStatement("insert into laboratorio.equipo_solicitud  (id_equipo, id_solicitud) values (?,?);");
+                    st6.setInt(1, idEquipo);  //idEquipo
+                    st6.setInt(2, idSolicitudMax);  //idSolicitud
+                    st6.executeUpdate();
+                    st6.close();
 
-                // Hacer algo con el objeto "equipo" en cada iteración
-            }
+                    // Hacer algo con el objeto "equipo" en cada iteración
+                }
                 System.out.println("SE GUARDO CORRECTAMENTE");
                 this.getConnection().commit(); // Commit de la transacción si todo sale bien
             }
@@ -551,6 +551,70 @@ public class SolicitudDAO extends Conexion {
                 System.err.println("Error al cerrar la conexión: " + closeEx.getMessage());
             }
         }
+    }
+
+    public List<Solicitud> findAll(int idDocente) throws SQLException {
+        Solicitud solicitud = new Solicitud();
+        List<Solicitud> listaSolicitudes = new ArrayList<>();
+        List<Equipo> listaEquipos = new ArrayList<>();
+        ResultSet rs;
+        try {
+            this.conectar();
+            String sql = "select solicitud.id               as id,\n" +
+                    "       solicitud.tipo             as tipo_solicitud,\n" +
+                    "       solicitud.analisis         as analisi,\n" +
+                    "       solicitud.codigo           as codigo,\n" +
+                    "       solicitud.excel_estudiante as list_estudiantes,\n" +
+                    "       solicitud.pdf_resolucion   as pdf_resolucion,\n" +
+                    "       solicitud.fecha_registro   as fecha_registro,\n" +
+                    "       solicitud.tema             as tema,\n" +
+                    "       e.codigo                   as codigo_equipo,\n" +
+                    "       e.id                       as id_equipo,\n" +
+                    "       e.descripcion              as nombre_equipo,\n" +
+                    "       l.id                       as id_laboratorio,\n" +
+                    "       l.nom_laboratorio          as nombre_laboratorio\n" +
+                    "from laboratorio.solicitud\n" +
+                    "         inner join laboratorio.docente d on d.id = solicitud.id_docente\n" +
+                    "         inner join laboratorio.horario h on h.id = solicitud.id_horarios\n" +
+                    "         inner join laboratorio.equipo_solicitud es on solicitud.id = es.id_solicitud\n" +
+                    "         inner join laboratorio.equipo e on e.id = es.id_equipo\n" +
+                    "         inner join laboratorio.laboratorio l on h.id_laboratorio = l.id\n" +
+                    "where d.id =?";
+            PreparedStatement st = this.getConnection().prepareStatement(sql);
+            st.setInt(1, idDocente);
+            rs = st.executeQuery();
+            while (rs.next()) {
+
+                Equipo equipo= new Equipo();
+                Docente docente = new Docente();
+                Laboratorio laboratorio = new Laboratorio();
+
+                //Lleno solicitud
+                solicitud.setId(rs.getInt("id"));
+                solicitud.setTipo(rs.getString("tipo_solicitud"));
+                solicitud.setCodigo(rs.getString("codigo"));
+                solicitud.setAnalisis(rs.getString("analisis"));
+                solicitud.setTema(rs.getString("tema"));
+                solicitud.setFechaReserva(rs.getDate("fecha_registro"));
+
+                //Lleno docente
+
+                //Lleno laboratorio
+                laboratorio.setId(rs.getInt("id_laboratorio"));
+                laboratorio.setDescripcion(rs.getString("nombre_laboratorio"));
+
+                //Asigna laboratorio
+                listaEquipos.add(equipo);
+                listaSolicitudes.add(solicitud);
+
+            }
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this.desconectar();
+        }
+        solicitud.setEquipos(listaEquipos);
+        return listaSolicitudes;
     }
 
 
