@@ -43,7 +43,7 @@
                             <f:selectItems value="#{solicitudBeann.laboratorios}" var="lab"
                                            itemLabel="#{lab.nombre}" itemValue="#{lab.id}"/>
                             <p:ajax event="change" listener="#{solicitudBeann.FindAllEquipos()}"
-                                    update="calendarReserva selectHoras formRegistro:comboEquipos"/>
+                                    update="calendarReserva formRegistro:selectHoras formRegistro:comboEquipos"/>
                         </p:selectOneMenu>
                     </div>
 

@@ -14,7 +14,10 @@
                                 styleClass="rounded-button"
                                 icon="pi pi-plus"
                                 process="@this"
-                                oncomplete="PF('modalNuevaSolicitud').show()"/>
+                                resetValues=""
+                                oncomplete="PF('modalNuevaSolicitud').show()">
+                            <p:resetInput target=":formRegistro :manage-user-content"/>
+                        </p:commandButton>
                     </p:toolbarGroup>
                 </p:toolbar>
                 <p:toolbar>
