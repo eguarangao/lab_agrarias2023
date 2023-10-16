@@ -98,7 +98,10 @@ public class SolicitudBeann implements Serializable {
         System.out.println("Items seleccionados tamaño lista");
         System.out.println(itemsSelecionados.size());
 
+
         validarSeleccionHoras();
+
+
     }
 
 
@@ -214,12 +217,52 @@ public class SolicitudBeann implements Serializable {
     }
 
 
+//    public void validarSeleccionHoras() {
+//        String mensajeError = "";
+//
+//        if (itemsSelecionados != null && itemsSelecionados.size() > MAX_SELECCIONES) {
+//            mensajeError = "No se pueden seleccionar más de " + MAX_SELECCIONES + " horas.";
+//            elementosDeshabilitados.addAll(itemsSelecionados.subList(MAX_SELECCIONES, itemsSelecionados.size()));
+//        } else if (itemsSelecionados != null && itemsSelecionados.size() > 1) {
+//            List<Integer> indicesSeleccionados = new ArrayList<>();
+//            for (Item item : itemsSelecionados) {
+//                indicesSeleccionados.add(item.getId());
+//            }
+//
+//            Collections.sort(indicesSeleccionados);
+//
+//            boolean sonConsecutivos = true;
+//            for (int i = 0; i < indicesSeleccionados.size() - 1; i++) {
+//                if (indicesSeleccionados.get(i + 1) != indicesSeleccionados.get(i) + 1) {
+//                    sonConsecutivos = false;
+//                    break;
+//                }
+//            }
+//
+//            if (!sonConsecutivos) {
+//                mensajeError = "Solo puedes seleccionar horas consecutivas.";
+//            }
+//        }
+//
+//        if (!mensajeError.isEmpty()) {
+//            System.out.println(mensajeError);
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error en selección de horas: ", mensajeError));
+//
+////
+//        }
+//    }
+
     public void validarSeleccionHoras() {
         String mensajeError = "";
+
+        // Hacer una copia de la selección anterior
+        List<Item> seleccionAnterior = new ArrayList<>(itemsSelecionados);
 
         if (itemsSelecionados != null && itemsSelecionados.size() > MAX_SELECCIONES) {
             mensajeError = "No se pueden seleccionar más de " + MAX_SELECCIONES + " horas.";
             elementosDeshabilitados.addAll(itemsSelecionados.subList(MAX_SELECCIONES, itemsSelecionados.size()));
+            // Eliminar los elementos seleccionados en exceso
+            itemsSelecionados.subList(MAX_SELECCIONES, itemsSelecionados.size()).clear();
         } else if (itemsSelecionados != null && itemsSelecionados.size() > 1) {
             List<Integer> indicesSeleccionados = new ArrayList<>();
             for (Item item : itemsSelecionados) {
@@ -238,16 +281,19 @@ public class SolicitudBeann implements Serializable {
 
             if (!sonConsecutivos) {
                 mensajeError = "Solo puedes seleccionar horas consecutivas.";
+                // Eliminar solo el último elemento no consecutivo
+                itemsSelecionados.remove(seleccionAnterior.get(seleccionAnterior.size() - 1));
             }
         }
 
         if (!mensajeError.isEmpty()) {
-            System.out.println(mensajeError);
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Validación de horas", mensajeError);
-            PrimeFaces.current().dialog().showMessageDynamic(message);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(mensajeError));
+            // Mostrar mensaje de error
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error en selección de horas: ", mensajeError));
         }
     }
+
+
+
 
     public boolean validarCantidadadHoras() {
         String mensajeError = "";

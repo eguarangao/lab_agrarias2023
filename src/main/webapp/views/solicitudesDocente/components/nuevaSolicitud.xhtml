@@ -10,9 +10,10 @@
         </p:toolbarGroup>
     </div>
     <div class="card ui-fluid">
+
+<!--        <p:growl id="mesa" showDetail="true" skipDetailIfEqualsSummary="true"/>-->
+<!--        <p:messages id="messages" showDetail="true" autoUpdate="true" />-->
         <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true"/>
-        <p:growl id="mesa" showDetail="true" skipDetailIfEqualsSummary="true"/>
-        <p:messages id="messages" showDetail="true" autoUpdate="true" />
         <div class="p-formgrid p-grid">
 
             <!--LABORATORIO  -->
@@ -37,30 +38,21 @@
                             locale="es"
                             value="#{solicitudBeann.fechaReserva}"
                             required="true">
-                    <p:ajax event="dateSelect" listener="#{solicitudBeann.listHoras}" update="selectHoras :formS "/>
+                    <p:ajax event="dateSelect" listener="#{solicitudBeann.listHoras}" update="selectHoras "/>
                 </p:calendar>
             </div>
 
 
             <!--HORAS-->
             <div class="p-field p-col-12 p-md-6">
-<!--                <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.itemsSelecionados}"-->
-<!--                                      layout="responsive" columns="3"-->
-
-<!--                                      onchange="#{solicitudBeann.imprimir()}" styleClass="text-danger" >-->
-<!--                    <f:selectItems value="#{solicitudBeann.items}" var="item" itemLabel="#{item.fecha}"-->
-<!--                                   itemDisabled="#{not item.dato or solicitudBeann.desactivarElementos }" itemValue="#{item}" />-->
-<!--                    <p:ajax event="change" listener="#{solicitudBeann.imprimir()}" update="selectHoras"/>-->
-<!--                </p:selectManyCheckbox>-->
-
                 <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.itemsSelecionados}"
-                                      layout="responsive" columns="3" onchange="#{solicitudBeann.imprimir()}">
-                    <f:selectItems value="#{solicitudBeann.items}" var="item" itemLabel="#{item.fecha}"
-                                   itemDisabled="#{not item.dato or solicitudBeann.desactivarElementos}"
-                                   itemValue="#{item}" style="color: #{item.dato ? 'black' : 'red'};" />
-<!--                    <p:ajax event="change" listener="#{solicitudBeann.imprimir()}" update="selectHoras" />-->
-                </p:selectManyCheckbox>
+                                      layout="responsive" columns="3"
 
+                                      onchange="#{solicitudBeann.imprimir()}" styleClass="text-danger" >
+                    <f:selectItems value="#{solicitudBeann.items}" var="item" itemLabel="#{item.fecha}"
+                                   itemDisabled="#{not item.dato or solicitudBeann.desactivarElementos }" itemValue="#{item}" />
+                    <p:ajax event="change" listener="#{solicitudBeann.imprimir()}" update="formS:selectHoras formS:msgs"/>
+                </p:selectManyCheckbox>
 
                 <p:message id="mensajeError" for="selectHoras" display="text" />
             </div>
