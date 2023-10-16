@@ -224,40 +224,7 @@ public class SolicitudBeann implements Serializable {
     }
 
 
-//    public void validarSeleccionHoras() {
-//        String mensajeError = "";
-//
-//        if (itemsSelecionados != null && itemsSelecionados.size() > MAX_SELECCIONES) {
-//            mensajeError = "No se pueden seleccionar más de " + MAX_SELECCIONES + " horas.";
-//            elementosDeshabilitados.addAll(itemsSelecionados.subList(MAX_SELECCIONES, itemsSelecionados.size()));
-//        } else if (itemsSelecionados != null && itemsSelecionados.size() > 1) {
-//            List<Integer> indicesSeleccionados = new ArrayList<>();
-//            for (Item item : itemsSelecionados) {
-//                indicesSeleccionados.add(item.getId());
-//            }
-//
-//            Collections.sort(indicesSeleccionados);
-//
-//            boolean sonConsecutivos = true;
-//            for (int i = 0; i < indicesSeleccionados.size() - 1; i++) {
-//                if (indicesSeleccionados.get(i + 1) != indicesSeleccionados.get(i) + 1) {
-//                    sonConsecutivos = false;
-//                    break;
-//                }
-//            }
-//
-//            if (!sonConsecutivos) {
-//                mensajeError = "Solo puedes seleccionar horas consecutivas.";
-//            }
-//        }
-//
-//        if (!mensajeError.isEmpty()) {
-//            System.out.println(mensajeError);
-//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error en selección de horas: ", mensajeError));
-//
-////
-//        }
-//    }
+
 
     public void validarSeleccionHoras() {
         String mensajeError = "";
@@ -300,46 +267,7 @@ public class SolicitudBeann implements Serializable {
     }
 
 
-    public boolean validarCantidadadHoras() {
-        String mensajeError = "";
 
-        if (itemsSelecionados != null && itemsSelecionados.size() > MAX_SELECCIONES) {
-            mensajeError = "No se pueden seleccionar más de " + MAX_SELECCIONES + " horas.";
-            elementosDeshabilitados.addAll(itemsSelecionados.subList(MAX_SELECCIONES, itemsSelecionados.size()));
-        } else if (itemsSelecionados != null && itemsSelecionados.size() > 1) {
-            List<Integer> indicesSeleccionados = new ArrayList<>();
-            for (Item item : itemsSelecionados) {
-                indicesSeleccionados.add(item.getId());
-            }
-
-            Collections.sort(indicesSeleccionados);
-
-            boolean sonConsecutivos = true;
-            for (int i = 0; i < indicesSeleccionados.size() - 1; i++) {
-                if (indicesSeleccionados.get(i + 1) != indicesSeleccionados.get(i) + 1) {
-                    sonConsecutivos = false;
-                    break;
-                }
-            }
-
-            if (!sonConsecutivos) {
-                mensajeError = "Solo puedes seleccionar horas consecutivas.";
-            }
-        }
-
-        if (!mensajeError.isEmpty()) {
-            System.out.println(mensajeError);
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Validación de horas", mensajeError);
-            PrimeFaces.current().dialog().showMessageDynamic(message);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(mensajeError));
-            return false; // Retorna false si hay un mensaje de error.
-        }
-
-        return true; // Retorna true si no hay errores.
-    }
-
-
-    private List<Boolean> selectedItems;
 
     // Inicializar la lista de elementos y la lista de selecciones
 
@@ -368,20 +296,7 @@ public class SolicitudBeann implements Serializable {
         }
     }
 
-    public void validarSeleccion() {
-        int seleccionados = 0;
-        for (Boolean item : selectedItems) {
-            if (item != null && item) {
-                seleccionados++;
-            }
-        }
 
-        if (seleccionados > 3) {
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Solo se permiten un máximo de 3 selecciones.");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-            // Puedes reiniciar la selección aquí o tomar alguna otra acción
-        }
-    }
 
 
     // Crear un objeto DateTimeFormatter con el formato deseado
@@ -489,7 +404,6 @@ public class SolicitudBeann implements Serializable {
 
     }
 
-
     public Docente findByDocenteID() throws SQLException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         Usuario usuarioLogueado = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
@@ -522,7 +436,6 @@ public class SolicitudBeann implements Serializable {
             // Llama al método para cargar los laboratorios al iniciar el bean.
             finAllLaboratorio();
 
-//            findAllPeridosEnabled();
 
             //Periodos
             periodo = new Periodo();
