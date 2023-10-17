@@ -15,7 +15,7 @@
                       height="500">
 
                 <!--SUB NAVBAR-->
-                <ui:include src="/views/solicitudesDocente/components/subNavbarSolicitudes.xhtml"/>
+                <ui:include src="/views/solicitudesDocente/components/subNavbar.xhtml"/>
 
                 <!--MENSAJES-->
                 <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true"/>
@@ -49,7 +49,6 @@
                         </p:calendar>
                     </div>
 
-
                     <!--HORAS-->
                     <div class="p-field p-col-12 p-md-6">
 <!--                        <p:selectManyCheckbox id="selectHoras" value="#{solicitudBeann.itemsSelecionados}"-->
@@ -74,7 +73,6 @@
                     </div>
                 </div>
 
-
                 <div class="p-formgrid p-grid">
                     <!--TEMA  -->
                     <div class="field p-col-12 p-md-6">
@@ -91,7 +89,6 @@
                         <p:outputLabel for="analisis" value="Análisis"/>
                         <p:inputText id="analisis" value="#{solicitudBean.solicitud.analisis}" maxlength="35" required="true"/>
                     </div>
-
 
                     <!--CODIGO-->
                     <div class="field p-col-12 p-md-2">
@@ -114,7 +111,6 @@
                         <p:outputLabel for="docente" value="Docente"/>
                         <p:inputText id="docente" value="#{solicitudBean.nombreDocente}" maxlength="35" disabled=""/>
                     </div>
-
                 </div>
 
                 <!-- EQUIPOS -->
@@ -170,8 +166,6 @@
                         </div>
                     </div>
                 </div>
-
-
 
                 <!-- BOTONES FORM-->
                 <f:facet name="footer">

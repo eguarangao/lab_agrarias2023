@@ -11,22 +11,18 @@
         <ui:define name="title">Registrar Solicitud</ui:define>
         <ui:define name="content">
 
-
+            <!--MENSAJES-->
             <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true"/>
-
-
 
             <!--REGISTRO FORM-->
             <h:form id="formRegistro" >
-
                 <!--MODAL REGISTRAR-->
-                <ui:include src="/views/solicitudesDocente/components/modalSolicitud.xhtml"/>
+                <ui:include src="/views/solicitudesDocente/components/modal.xhtml"/>
             </h:form>
-
 
             <!--DATATABLE GENERAL-->
             <h:form id="formData">
-                <ui:include src="/views/solicitudesDocente/components/dataTableSolicitudes.xhtml"/>
+                <ui:include src="/views/solicitudesDocente/components/dataTable.xhtml"/>
             </h:form>
 
         </ui:define>
