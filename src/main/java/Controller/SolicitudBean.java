@@ -76,8 +76,8 @@ public class SolicitudBean implements Serializable {
     String fechaString = "2023-05-01";
     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 
-    private UploadedFile fileResolucionPDF;
-    private UploadedFile fileListaEstudiantes;
+    private UploadedFile fileResolucionPDF=null;
+    private UploadedFile fileListaEstudiantes=null;
     boolean desactivarElementos = false;
     String value;
 

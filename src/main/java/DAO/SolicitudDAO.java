@@ -20,6 +20,8 @@ public class SolicitudDAO extends Conexion {
     List<Item> itemsSeleccionados = new ArrayList<>();
 
 
+
+
     public void save(Solicitud solicitud, UploadedFile pdfResolucion, UploadedFile listaEstudiantes) throws SQLException {
         int idHorario = 0;
         int idSolicitudMax = 0;
@@ -42,8 +44,53 @@ public class SolicitudDAO extends Conexion {
 
             if (horarioDAO.existeHorario(solicitud.getLaboratorio().getId(), fechaSql.toString())) {
                 System.out.println("Se hace update");
-                PreparedStatement st1 = this.getConnection().prepareStatement("update laboratorio.horario set jornada1=?, jornada2=?, jornada3=?, jornada4=?, jornada5=? , jornada6=? , jornada7=? ,  jornada8=? where fecha= '" + fechaSql + "'");
 
+                int idHor = horarioDAO.gerIdHorario(solicitud.getLaboratorio().getId(), fechaSql.toString());
+                //   REGISTRA LA SOLICITUD
+                String sqlRegistrarSolicitud = "insert into laboratorio.solicitud (codigo, \n" +
+                        "                                   tema, \n" +
+                        "                                   objetivo, \n" +
+                        "                                   fecha_registro, \n" +
+                        "                                   enabled, \n" +
+                        "                                   tipo, \n" +
+                        "                                   analisis, \n" +
+                        "                                   id_laboratorio,\n" +
+                        "                                   id_periodo,\n" +
+                        "                                   id_horarios, \n" +
+                        "                                   id_docente, \n" +
+                        "                                   pdf_resolucion, \n" +
+                        "                                   excel_estudiante, \n" +
+                        "                                   pdf_aprobacion)\n" +
+                        "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+                PreparedStatement st0 = this.getConnection().prepareStatement(sqlRegistrarSolicitud);
+                st0.setString(1, solicitud.getCodigo());  //Codigo
+                st0.setString(2, solicitud.getTema());  //Tema
+                st0.setString(3, solicitud.getObjetivo()); //Objetivo
+
+                //Configuramos la fecha del sistema actual
+                LocalDateTime fechaSistema = LocalDateTime.now();
+                Date fechaRegistro = Date.from(fechaActual.atZone(ZoneId.systemDefault()).toInstant());
+
+                java.util.Date fecha = fechaRegistro;
+                java.sql.Date fechaActualSql = new java.sql.Date(fecha.getTime());
+
+                st0.setDate(4, fechaActualSql); //Fecha Registro
+                st0.setBoolean(5, !solicitud.isEnabled()); //Enabled
+                st0.setString(6, solicitud.getTipo()); //Tipo de Solicitud
+                st0.setString(7, solicitud.getAnalisis()); //Analisis
+                st0.setInt(8, solicitud.getLaboratorio().getId()); //laboratorio
+                st0.setInt(9, solicitud.getPeriodo().getId()); //periodo
+                st0.setLong(10, idHor); //horario
+                //st0.setInt(11, solicitud.getDocente().getId()); //docente
+                st0.setInt(11, solicitud.getDocente().getId()); //docente
+                st0.setBinaryStream(12, pdfResolucion.getInputStream());
+                st0.setBinaryStream(13, listaEstudiantes.getInputStream());
+                st0.setBinaryStream(14, pdfResolucion.getInputStream());
+                st0.executeUpdate();
+                st0.close();
+
+
+                PreparedStatement st1 = this.getConnection().prepareStatement("update laboratorio.horario set jornada1=?, jornada2=?, jornada3=?, jornada4=?, jornada5=? , jornada6=? , jornada7=? ,  jornada8=? where fecha= '" + fechaSql + "'");
                 st1.setBoolean(1, solicitud.getHorario().isJornada1()); //Jornada1
                 st1.setBoolean(2, solicitud.getHorario().isJornada2()); //Jornada2
                 st1.setBoolean(3, solicitud.getHorario().isJornada3()); //Jornada3
