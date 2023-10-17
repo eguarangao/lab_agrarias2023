@@ -4,7 +4,6 @@ import DAO.*;
 import Model.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
@@ -13,11 +12,9 @@ import lombok.NoArgsConstructor;
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.file.UploadedFile;
 
-import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -135,7 +132,7 @@ public class SolicitudBean implements Serializable {
             System.out.println("Solicitud Empaquetada");
             System.out.println(solicitud);
 
-            solicitudDAO.save2(solicitud, fileResolucionPDF, fileListaEstudiantes);
+            solicitudDAO.save(solicitud, fileResolucionPDF, fileListaEstudiantes);
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso", "Se registró correctamente"));
             // Llama a la función JavaScript para restablecer el formulario
@@ -222,8 +219,6 @@ public class SolicitudBean implements Serializable {
     }
 
 
-
-
     public void validarSeleccionHoras() {
         String mensajeError = "";
 
@@ -267,65 +262,22 @@ public class SolicitudBean implements Serializable {
 
 
 
-    // Inicializar la lista de elementos y la lista de selecciones
-
-
-    public void cargarHorarios() {
-        if (idLaboratorio > 0) {  // Asegúrate de tener una fecha y un laboratorio seleccionados
-            // Convertir Date a String con el formato deseado
-            String fechaFormateada = formatoFecha.format(fechaReserva.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
-            horarios = horarioDAO.findByLaboratorioIdAndFecha(idLaboratorio, fechaFormateada);
-        } else {
-            horarios = new ArrayList<>();  // Si no hay fecha o laboratorio seleccionados, limpia la lista
-        }
-    }
-
-    public void getTipoSolicitudes(int opcion) {
-
-        if (opcion == 1) {
-            tipoSolicitud = "SOLICITUD PRACTICA DE ESTUDIANTE";
-            solicitud.setTipo(tipoSolicitud);
-        } else if (opcion == 2) {
-            tipoSolicitud = "SOLICITUD PRACTICAS DE TESIS";
-            solicitud.setTipo(tipoSolicitud);
-        } else {
-            tipoSolicitud = "SOLICITUD DE INVESTIGACIÓN";
-            solicitud.setTipo(tipoSolicitud);
-        }
-    }
-
-
-
-
-    // Crear un objeto DateTimeFormatter con el formato deseado
-    DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-
-    public void redireccionar() throws IOException {
-        FacesContext context = FacesContext.getCurrentInstance();
-        ExternalContext externalContext = context.getExternalContext();
-        String contextPath = externalContext.getRequestContextPath();
-
-        if ("SOLICITUD PRÁCTICAS ESTUDIANTES".equals(tipoSolicitud)) {
-            externalContext.redirect(contextPath + "/views/solicitudesDocente/registroSolicitud.xhtml");
-            System.out.println("holaaaaaaaaaaaaa" + tipoSolicitud);
-        } else if ("SOLICITUD PRÁCTICAS DE PROYECTO DE INVESTIGACÓN".equals(tipoSolicitud)) {
-            externalContext.redirect(contextPath + "/views/solicitudesDocente/registroSolicitud.xhtml");
-            System.out.println("holaaaaaaaaaaaaa" + tipoSolicitud);
-        } else if ("SOLICITUD PRÁCTICAS DE TESIS".equals(tipoSolicitud)) {
-            externalContext.redirect(contextPath + "/views/solicitudesDocente/registroSolicitud.xhtml");
-        }
-
-    }
-
-
-    {
-        try {
-            fechaEspecifica = formato.parse(fechaString);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public void redireccionar() throws IOException {
+//        FacesContext context = FacesContext.getCurrentInstance();
+//        ExternalContext externalContext = context.getExternalContext();
+//        String contextPath = externalContext.getRequestContextPath();
+//
+//        if ("SOLICITUD PRÁCTICAS ESTUDIANTES".equals(tipoSolicitud)) {
+//            externalContext.redirect(contextPath + "/views/solicitudesDocente/registroSolicitud.xhtml");
+//            System.out.println("holaaaaaaaaaaaaa" + tipoSolicitud);
+//        } else if ("SOLICITUD PRÁCTICAS DE PROYECTO DE INVESTIGACÓN".equals(tipoSolicitud)) {
+//            externalContext.redirect(contextPath + "/views/solicitudesDocente/registroSolicitud.xhtml");
+//            System.out.println("holaaaaaaaaaaaaa" + tipoSolicitud);
+//        } else if ("SOLICITUD PRÁCTICAS DE TESIS".equals(tipoSolicitud)) {
+//            externalContext.redirect(contextPath + "/views/solicitudesDocente/registroSolicitud.xhtml");
+//        }
+//
+//    }
 
 
     public void finAllLaboratorio() throws SQLException {
@@ -333,7 +285,6 @@ public class SolicitudBean implements Serializable {
         LaboratorioDAO laboratorioDAO = new LaboratorioDAO();
         laboratorios = laboratorioDAO.findAll();
     }
-
 
     public void listHoras() {
         horarios = new ArrayList<>();
@@ -425,7 +376,6 @@ public class SolicitudBean implements Serializable {
         System.out.println(solicitudes);
 
     }
-
 
     @PostConstruct
     public void init() {
