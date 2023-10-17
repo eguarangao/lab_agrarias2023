@@ -31,32 +31,40 @@ public class SolicitudBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     //DAO
-    LaboratorioDAO laboratorioDAO;
-    SolicitudDAO solicitudDAO;
-    HorarioDAO horarioDAO;
-    EquipoDAO equipoDAO;
-    DocenteDAO docenteDAO;
-    Docente docente;
-    PeriodoDAO periodoDAO;
-    UsuarioDAO usuarioDAO;
+    LaboratorioDAO laboratorioDAO = new LaboratorioDAO();
+    SolicitudDAO solicitudDAO = new SolicitudDAO();
+    HorarioDAO horarioDAO = new HorarioDAO();
+    EquipoDAO equipoDAO = new EquipoDAO();
+    DocenteDAO docenteDAO = new DocenteDAO();
+    PeriodoDAO periodoDAO = new PeriodoDAO();
+    UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-    Periodo periodo;
+    //Bean
+    UsuarioBean usuarioBean = new UsuarioBean();
 
-    UsuarioBean usuarioBean;
-
+    //Modelos
+    Docente docente= new Docente();
+    Periodo periodo = new Periodo();
     Horario horario = new Horario();
-
     Horario horarioBD = new Horario();
-
-
     Solicitud solicitud = new Solicitud();
 
-    List<Periodo> periodos;
-    private Date fechaMinima; // La fecha mínima permitida
+    //Listas de modelos
+    List<Periodo> periodos = new ArrayList<>();
+    private List<Item> items = new ArrayList<>();
+    List<Laboratorio> laboratorios = new ArrayList<>();
+    List<Horario> horarios = new ArrayList<>();
+    List<Equipo> equipos = new ArrayList<>();
+    List<Solicitud> solicitudes = new ArrayList<>();
+    List<Equipo> equiposRequeridos = new ArrayList<>();
+    private List<Item> itemsSelecionados = new ArrayList<>();
+    private List<Item> elementosDeshabilitados = new ArrayList<>();
 
+    //Otras variables
+    private Date fechaMinima; // La fecha mínima permitida
     int idLaboratorio = 0;
     int idLaboratorio2;
-    int idHorario;
+    int idHorario =0;
     int idUsuarioSession = 0;
     int idPerido = 0;
     Date fecha;
@@ -70,34 +78,11 @@ public class SolicitudBean implements Serializable {
 
     private UploadedFile fileResolucionPDF;
     private UploadedFile fileListaEstudiantes;
-
-
-    boolean desactivarElementos;
-
-
-    private List<Item> items;
-    List<Laboratorio> laboratorios;
-    List<Horario> horarios;
-    List<Equipo> equipos;
-
-    List<Solicitud> solicitudes;
-
-    List<Equipo> equiposRequeridos;
-
-    private List<Item> itemsSelecionados;
-    private List<Item> elementosDeshabilitados = new ArrayList<>();
+    boolean desactivarElementos = false;
     String value;
 
     public void imprimir() {
-        System.out.println("Items seleccionados");
-        System.out.println(itemsSelecionados);
-        System.out.println("Items seleccionados tamaño lista");
-        System.out.println(itemsSelecionados.size());
-
-
         validarSeleccionHoras();
-
-
     }
 
 
@@ -128,17 +113,11 @@ public class SolicitudBean implements Serializable {
             //Asignamos Periodo
             periodo.setId(idPerido);
             solicitud.setPeriodo(periodo);
-
-            System.out.println("Solicitud Empaquetada");
+            System.out.println("Solciitud Empaquetada");
             System.out.println(solicitud);
-
+            //Llamamos al método para guadar
             solicitudDAO.save(solicitud, fileResolucionPDF, fileListaEstudiantes);
-
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso", "Se registró correctamente"));
-            // Llama a la función JavaScript para restablecer el formulario
-//            PrimeFaces.current().executeScript("resetForm();");
-            PrimeFaces.current().executeScript("refreshForm();");
-            PrimeFaces.current().executeScript("resetForm()");
         } catch (SQLException e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Ocurrió un error en el registro, vuelva a intentarlo"));
             e.printStackTrace(); // Puedes imprimir el stack trace para depuración
@@ -215,6 +194,8 @@ public class SolicitudBean implements Serializable {
         System.out.println(myHorario);
 
         findByDocenteID();
+        System.out.println("horariooo33333333");
+        System.out.println(myHorario);
         return myHorario;
     }
 
@@ -344,13 +325,6 @@ public class SolicitudBean implements Serializable {
         items.add(item6);
         items.add(item7);
         items.add(item8);
-
-        // Hacer algo con el objeto "equipo" en cada iteración
-
-        System.out.println("ITEMS LISTAAAAAAAAAAAAAAAAAAAAAAAA");
-        System.out.println(items.size());
-        System.out.println(items);
-
     }
 
     public Docente findByDocenteID() throws SQLException {
@@ -385,57 +359,20 @@ public class SolicitudBean implements Serializable {
 
             // Llama al método para cargar los laboratorios al iniciar el bean.
             finAllLaboratorio();
-
-
-            //Periodos
-            periodo = new Periodo();
-            periodos = new ArrayList<>();
-            periodoDAO = new PeriodoDAO();
+            //Llama al metodo que carga los periodos habilitados
             findAllPeridosEnabled();
-
-            //Docentes
-            docente = new Docente();
-            docenteDAO = new DocenteDAO();
-
-            //Usaurios
-            usuarioDAO = new UsuarioDAO();
-            usuarioBean = new UsuarioBean();
-
-            //Solicitud
-            solicitudes = new ArrayList<>();
-            //Equipos
-
-            //Periodo
-            periodo = new Periodo();
-
-            solicitud = new Solicitud();
-            itemsSelecionados = new ArrayList<>();
-
-
-            solicitudDAO = new SolicitudDAO();
-
-            desactivarElementos = false;
-
+            //Obtenemos el nombre del docente mediante el ID de usuario
             FacesContext facesContext = FacesContext.getCurrentInstance();
             Usuario usuarioLogueado = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
             idUsuarioSession = usuarioLogueado.getId();
             nombreDocente = String.valueOf(docenteDAO.findByUsuarioID(getIdUsuarioSession()).get(0).getPersona().getApellido());
-
-
-//            docenteDAO.findByUsuarioID(usuarioBean.getIdUsuarioSession());
-
-            equiposRequeridos = new ArrayList<>();
-            itemsSelecionados = new ArrayList<>();
-            //horarios = horarioDAO.findByLaboratorioIdAndFecha(idLaboratorio, fechaReserva.toString());
-//            solicitud = new Solicitud();
-
 
         } catch (SQLException e) {
             // Maneja cualquier excepción que pueda ocurrir durante la carga de los laboratorios.
             e.printStackTrace();
             // También puedes agregar un mensaje de error para mostrar en la vista.
             FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al cargar los laboratorios", null));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al cargar los datos", null));
         }
     }
 
