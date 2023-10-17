@@ -5,33 +5,20 @@
                 xmlns:p="http://primefaces.org/ui">
     <div class="p-grid ui-fluid">
         <div class="p-col-12">
-            <h:form>
-                <p:menubar>
-                    <p:menuitem>
-                        <p:commandButton value="Solicitudes realizadas"/>
-                    </p:menuitem>
-                    <p:menuitem>
-                        <p:selectOneMenu value="#{solicitudBeann.tipoSolicitud}">
-                            <f:selectItem itemLabel="Nueva solicitud" noSelectionOption="true" />
-                            <f:selectItem itemLabel="Solicitud Practicas" itemValue="SOLICITUD PRÁCTICAS ESTUDIANTES"/>
-                            <f:selectItem itemLabel="Solicitud de Investigacion"
-                                          itemValue="SOLICITUD PRÁCTICAS DE PROYECTO DE INVESTIGACÓN"/>
-                            <f:selectItem itemLabel="Solicitud de Tesis" itemValue="SOLICITUD PRÁCTICAS DE TESIS"/>
-                            <p:ajax event="change"
-                                    listener="#{solicitudBeann.redireccionar()}"
-
-                            />
-                        </p:selectOneMenu>
-
-
-                    </p:menuitem>
-                    <p:menuitem>
-                        <p:commandButton value="Aprobacion de solicitudes"/>
-                    </p:menuitem>
-
-                </p:menubar>
-
-            </h:form>
+            <p:menubar>
+                <p:menuitem >
+                    <p:selectOneMenu value="#{solicitudBean.tipoSolicitud}" required="true" style="width: 200px;">
+                        <f:selectItem itemLabel="Tipo de Solicitud" noSelectionOption="true" style="color: blue;"/>
+                        <f:selectItem itemLabel="Solicitud Practicas" itemValue="SOLICITUD PRÁCTICAS ESTUDIANTES"/>
+                        <f:selectItem itemLabel="Solicitud de Investigacion" itemValue="SOLICITUD PRÁCTICAS DE PROYECTO DE INVESTIGACÓN"/>
+                        <f:selectItem itemLabel="Solicitud de Tesis" itemValue="SOLICITUD PRÁCTICAS DE TESIS"/>
+                        <p:ajax event="change" update="tipoSolicitud" />
+                    </p:selectOneMenu>
+                </p:menuitem>
+                <p:menuitem>
+                    <p:outputLabel id="tipoSolicitud" value="#{solicitudBean.tipoSolicitud}"/>
+                </p:menuitem>
+            </p:menubar>
         </div>
     </div>
 
