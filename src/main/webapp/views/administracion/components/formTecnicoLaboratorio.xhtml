@@ -9,11 +9,11 @@
         <ui:include src="subNavBarAdministracion.xhtml"/>
         <div class="p-grid ui-fluid">
             <div class="p-col-12">
+
                 <h:form id="form">
                     <p:growl id="messages" showDetail="true"/>
                     <div class="card crud-demo">
                         <p:toolbar>
-
                             <p:toolbarGroup>
                                 <h:outputLabel for="facd" value="Facultad:"/>
                                 <p:selectOneMenu id="facd" value="#{tecnicoLaboratorioBean.idFacultad}"
@@ -29,7 +29,6 @@
                                     />
                                 </p:selectOneMenu>
                             </p:toolbarGroup>
-
                             <p:toolbarGroup>
                                 <h:outputLabel for="lab" value="Laboratorio:"/>
                                 <p:selectOneMenu id="lab" value="#{tecnicoLaboratorioBean.idLaboratorio}">
@@ -39,10 +38,18 @@
                                 </p:selectOneMenu>
                             </p:toolbarGroup>
                             <p:toolbarGroup>
+                                 <p:commandButton value="Nuevo" icon="pi pi-sitemap"
+                                                 update=":dialogs-lab:manage-lab-content"
+                                                 oncomplete="PF('manageLabDialog').show()"
+                                                 styleClass="ui-button-success" style="margin-right: .5rem">
+                                     <p:resetInput target=":dialogs-lab:manage-lab-content"/>
+                                </p:commandButton>
+                            </p:toolbarGroup>
+                            <p:toolbarGroup>
                                 <p:commandButton value="Buscar" icon="pi pi-search"
                                                  actionListener="#{tecnicoLaboratorioBean.listAulaByLab()}"
                                                  update="form:dt-facd"
-                                                 styleClass="ui-button-success" style="margin-right: .5rem">
+                                                 style="margin-right: .5rem">
                                 </p:commandButton>
                             </p:toolbarGroup>
                         </p:toolbar>
@@ -62,13 +69,15 @@
                                                                  actionListener="#{tecnicoLaboratorioBean.openNew()}"
                                                                  update=":dialogs:manage-facd-content"
                                                                  oncomplete="PF('manageFacdDialog').show()"
-                                                                 styleClass="ui-button-success" style="margin-right: .5rem">
+                                                                 styleClass="ui-button-success"
+                                                                 style="margin-right: .5rem">
                                                     <p:resetInput target=":dialogs:manage-facd-content"/>
                                                 </p:commandButton>
                                                 <p:commandButton value="Asignar" icon="pi pi-users"
                                                                  oncomplete="PF('manageFacd2Dialog').show()"
                                                                  update=":dialogs2:manage-facd2-content"
-                                                                 styleClass="ui-button-secondary" style="margin-right: .5rem">
+                                                                 styleClass="ui-button-secondary"
+                                                                 style="margin-right: .5rem">
                                                     <p:resetInput target=":dialogs2:manage-facd2-content"/>
                                                 </p:commandButton>
                                             </div>
@@ -108,8 +117,27 @@
                         </p:dataTable>
                     </div>
                 </h:form>
-
-
+                <h:form id="dialogs-lab">
+                    <p:dialog header="Laboratorio" showEffect="fade" modal="true" widgetVar="manageLabDialog"
+                              responsive="true">
+                        <p:outputPanel id="manage-lab-content" class="ui-fluid">
+                            <div class="field">
+                                <p:outputLabel for="nlab">Nombre laboratorio</p:outputLabel>
+                                <p:inputText maxlength="30" id="nlab" value="#{tecnicoLaboratorioBean.nombreLaboratorio}"
+                                             required="true"/>
+                            </div>
+                        </p:outputPanel>
+                        <f:facet name="footer">
+                            <p:commandButton value="Guardar" icon="pi pi-check"
+                                             actionListener="#{tecnicoLaboratorioBean.saveLabByFacultad()}"
+                                             styleClass="ui-button-success"
+                                             update="manage-lab-content, form:lab"
+                                             process="manage-lab-content @this"/>
+                            <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageLabDialog').hide()"
+                                             class="ui-button-secondary" type="button"/>
+                        </f:facet>
+                    </p:dialog>
+                </h:form>
                 <h:form id="dialogs">
                     <p:dialog header="Aula" showEffect="fade" modal="true" widgetVar="manageFacdDialog"
                               responsive="true">
@@ -154,7 +182,7 @@
                     <p:dialog header="Asignación" showEffect="fade" modal="true" widgetVar="manageFacd2Dialog"
                               responsive="true">
                         <p:outputPanel id="manage-facd2-content" class="ui-fluid">
-                            <p:outputPanel >
+                            <p:outputPanel>
                                 <div class="field">
                                     <p:outputLabel for="per">Periodo</p:outputLabel>
                                     <p:selectOneMenu id="per" value="#{tecnicoLaboratorioBean.idPeriodo}"
@@ -199,14 +227,16 @@
                                                                          actionListener="#{tecnicoLaboratorioBean.openNew()}"
                                                                          update=":dialogs2:manage-facd2-content"
                                                                          oncomplete="PF('manageFacd2Dialog').show()"
-                                                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                                                                         styleClass="ui-button-success"
+                                                                         style="margin-right: .5rem">
                                                             <p:resetInput target=":dialogs2:manage-facd2-content"/>
                                                         </p:commandButton>
                                                         <p:commandButton value="Asignar" icon="pi pi-users"
 
 
                                                                          oncomplete="PF('manageFacd2Dialog').show()"
-                                                                         styleClass="ui-button-secondary" style="margin-right: .5rem">
+                                                                         styleClass="ui-button-secondary"
+                                                                         style="margin-right: .5rem">
 
                                                         </p:commandButton>
 
@@ -245,8 +275,6 @@
                                         </p:commandButton>
                                     </p:column>
                                 </p:dataTable>
-
-
 
 
                             </p:outputPanel>

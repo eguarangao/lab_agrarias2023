@@ -58,4 +58,18 @@ public class LaboratorioDAO extends Conexion {
         }
         return listaLaboratorio;
     }
+
+    public void saveLaboratoriobyFacultad(int idFacultad, String nomLaboratorio) throws SQLException {
+        String sql = "INSERT INTO laboratorio.laboratorio (id_facultad, nom_laboratorio) VALUES (?, ?)";
+             this.conectar();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, idFacultad);
+            preparedStatement.setString(2, nomLaboratorio);
+            preparedStatement.executeUpdate();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            desconectar();
+        }
+    }
 }

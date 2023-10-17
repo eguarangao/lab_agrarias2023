@@ -1,9 +1,11 @@
 package Controller;
 
+import DAO.LaboratorioDAO;
 import DAO.TecnicoLaboratorioDAO;
 import Model.Aula;
 import Model.Laboratorio;
 import Model.ListFullUser;
+import Model.Persona;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
@@ -25,11 +27,15 @@ public class TecnicoLaboratorioBean implements Serializable {
     private TecnicoLaboratorioDAO tecnicoDAO;
     private List<Laboratorio> listLab;
     private List<Aula> listAula;
+    private List<Persona> listPersona;
     private int idLaboratorio;
     private int idFacultad;
     private int idPeriodo;
+    private String nombreLaboratorio;
     private boolean rendered;
     private Aula nuevaAula;
+    private LaboratorioDAO laboratorioDAO;
+
 
     @PostConstruct
     public void main() {
@@ -45,7 +51,10 @@ public class TecnicoLaboratorioBean implements Serializable {
         tecnicoDAO = new TecnicoLaboratorioDAO();
         listLab = tecnicoDAO.listarPorFacultad(this.idFacultad);
     }
-
+    public void listLabByTecnico() throws SQLException {
+        tecnicoDAO = new TecnicoLaboratorioDAO();
+        listPersona = tecnicoDAO.listarTecnicobyLab(this.idLaboratorio, this.idPeriodo);
+    }
     public void listAulaByLab() {
 
         tecnicoDAO = new TecnicoLaboratorioDAO();
@@ -89,5 +98,12 @@ public class TecnicoLaboratorioBean implements Serializable {
         }
 
     }
-
+    public void saveLabByFacultad() throws SQLException {
+        laboratorioDAO = new LaboratorioDAO();
+        laboratorioDAO.saveLaboratoriobyFacultad(idFacultad, nombreLaboratorio);
+        PrimeFaces.current().ajax().update("form:messages", "form:lab");
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Laboratorio agregado"));
+        listLabByFacultad();
+        PrimeFaces.current().executeScript("PF('manageLabDialog').hide()");
+    }
 }

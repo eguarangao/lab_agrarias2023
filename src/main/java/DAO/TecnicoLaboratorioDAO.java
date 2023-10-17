@@ -2,6 +2,7 @@ package DAO;
 
 import Model.Aula;
 import Model.Laboratorio;
+import Model.Persona;
 import global.Conexion;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -186,7 +187,39 @@ public class TecnicoLaboratorioDAO extends Conexion {
         }
     }
 
+    public List<Persona> listarTecnicobyLab(int idLaboratorio, int idPeriodo) throws SQLException {
+        List<Persona> resultados = new ArrayList<>();
 
+        String sql = "SELECT tl.id, per.nombre, per.apellido, per.dni, tl.enable\n" +
+                "\tFROM laboratorio.tecnico_laboratorio tl \n" +
+                "\tinner join laboratorio.laboratorio l on tl.id_laboratorio = l.id\n" +
+                "\tinner join laboratorio.tecnico t ON t.id = tl.id_tecnico\n" +
+                "\tinner join laboratorio.periodo p on p.id=tl.id_periodo\n" +
+                "\tinner join laboratorio.usuario u on u.id = t.id_usuario\n" +
+                "\tinner join laboratorio.persona per on per.id = u.id_persona\n" +
+                "\twhere tl.id_laboratorio=? and tl.id_periodo=?;";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, idLaboratorio);
+            preparedStatement.setInt(2, idPeriodo);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                // Mapea los resultados a objetos de tu clase personalizada
+                Persona objeto = new Persona();
+                // Llena el objeto con los valores del ResultSet
+                objeto.setId(resultSet.getInt("id"));
+                objeto.setNombre(resultSet.getString("nombre"));
+                objeto.setApellido(resultSet.getString("apellido"));
+                objeto.setDni(resultSet.getString("dni"));
+                objeto.setEnable(resultSet.getBoolean("enable"));
+                // Agrega el objeto a la lista de resultados
+                resultados.add(objeto);
+            }
+        }
+
+        return resultados;
+    }
 
 
 }

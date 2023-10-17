@@ -11,4 +11,5 @@ public class Persona {
     private String email;
     private String genero;
     private String dni;
+    boolean enable;
 }
