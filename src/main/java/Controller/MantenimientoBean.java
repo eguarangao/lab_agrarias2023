@@ -17,6 +17,7 @@ import org.primefaces.PrimeFaces;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -25,14 +26,18 @@ import java.util.List;
 public class MantenimientoBean implements Serializable {
 
     private EquipoDAO DaoEquipo = new EquipoDAO();
+    private List<Equipo> Listequipos;
     private EquipoBean BeanEquipo = new EquipoBean();
     private MantenimientoDAO DAOmantenimiento = new MantenimientoDAO();
     private List<MantenimientoEquipo> ListMante;
     private MantenimientoEquipo newMante;
+    private List<MantenimientoEquipo> equiposRequeridosMantenimiento;
     private boolean botonManteDisabled = true;
     private boolean mostrarTablaMante = false;
     private int idUsuarioSession;
     private int idlaboratorioSession;
+    private Date fechaActual = new Date();
+    List<TipoMantenimiento> ListTipoMantenimiento;
 
     @PostConstruct
     public void main() {
@@ -55,10 +60,30 @@ public class MantenimientoBean implements Serializable {
 
     }
 
+    public Date getFechaActual() {
+        return fechaActual;
+    }
+
+    public void listEquiposPorLaboratorio() throws SQLException {
+        try {
+            this.Listequipos = new ArrayList<>();
+            Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
+            System.out.println(Listequipos);
+            System.out.println(equiposRequeridosMantenimiento);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void SelectLaboratorioTecnico() throws SQLException {
         try {
             TablaMantePorLaboratorio();
+            listEquiposPorLaboratorio();
+            equiposRequeridosMantenimiento = new ArrayList<>();
+            getFechaActual();
+            ListarTiposMantenimientos();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -79,6 +104,8 @@ public class MantenimientoBean implements Serializable {
     public void nuevoMantenimiento() throws SQLException {
         this.newMante = new MantenimientoEquipo();
         this.newMante.setAula(new Aula());
+        this.newMante.setEquipo(new Equipo());
+        this.newMante.setTipoMantenimiento(new TipoMantenimiento());
 
     }
 
@@ -102,6 +129,12 @@ public class MantenimientoBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar el Mantenimiento"));
             e.printStackTrace();
         }
+    }
+
+    public  void ListarTiposMantenimientos() throws  SQLException{
+        this.ListTipoMantenimiento = new ArrayList<>();
+        ListTipoMantenimiento = DAOmantenimiento.listartipomantenimientos();
+        System.out.println(ListTipoMantenimiento);
     }
 
 

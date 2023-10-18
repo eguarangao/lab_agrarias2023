@@ -26,7 +26,7 @@ import java.util.List;
 public class EquipoBean implements Serializable {
 
     private EquipoDAO DaoEquipo = new EquipoDAO();
-    private List<Equipo> Listequipos;
+    List<Equipo> Listequipos;
     List<Laboratorio> listlaboratorios;
     List<CategoriaEquipo> listCatergoria;
     List<Aula> listaula;

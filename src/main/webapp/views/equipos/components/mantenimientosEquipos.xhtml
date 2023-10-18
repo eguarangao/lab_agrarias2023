@@ -60,13 +60,13 @@
                                 <h:outputText value="#{dtmante.mantenimiento.fechaRetorno}"/>
                             </p:column>
 
-                            <p:column headerText="Tipo de Mantenimiento">
+                            <p:column headerText="Tipo de mantenimiento">
                                 <h:outputText value="#{dtmante.tipoMantenimiento.tipo}"/>
                             </p:column>
 
                             <p:column headerText="Estado">
-                                <p:tag severity="success" value="Activado" rendered="#{dtmante.estado}"/>
-                                <p:tag severity="warning" value="Desactivado" rendered="#{not dtmante.estado}"/>
+                                <p:tag severity="success" value="Mantenimiento realizado" rendered="#{dtmante.estado}"/>
+                                <p:tag severity="warning" value="En mantenimiento" rendered="#{not dtmante.estado}"/>
                             </p:column>
                             <p:column headerText="Acciones" exportable="false">
                                 <p:commandButton icon="pi pi-pencil"
@@ -94,46 +94,55 @@
 
             <h:form id="dialogMante">
                 <p:dialog header="Agregar nuevo Mantenimiento" showEffect="fade" modal="true" widgetVar="manageManteDialog"
-                          responsive="true" style="max-width: 980px;">
+                          responsive="true" style="max-width: 680px;">
                     <p:outputPanel id="manage-Mante-content" class="ui-fluid">
                         <p:outputPanel rendered="#{not empty mantenimientoBean.newMante}">
 
 
                             <div class="p-formgrid p-grid">
-                                <div class="field p-col-12 p-md-3">
-                                    <p:outputLabel for="equipoMante">Equipo</p:outputLabel>
-                                    <p:inputText id="equipoMante" value="#{dtmante.equipo.descripcion}"
-                                                 required="true"/>
-                                </div>
 
                                 <div class="field p-col-12 p-md-3">
-                                    <p:outputLabel for="fecharegistroMante">Fecha Registro</p:outputLabel>
-                                    <p:inputText id="fecharegistroMante" value="#{dtmante.mantenimiento.fechaRegistro}"
-                                                 required="true"/>
+                                    <p:outputLabel for="fecharegistroMante">Fecha registro</p:outputLabel>
+                                    <p:inputText id="fecharegistroMante" value="#{mantenimientoBean.fechaActual}"
+                                                 required="true" disabled="true"
+                                                 rendered="#{not empty mantenimientoBean.fechaActual}">
+                                 <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:inputText>
+                                </div>
+                                <div class="field p-col-12 p-md-6">
+                                    <p:outputLabel for="SelecttipoMante">Tipo mantenimiento</p:outputLabel>
+                                    <p:selectOneMenu id="SelecttipoMante"
+                                                     value="#{mantenimientoBean.newMante.tipoMantenimiento.id}">
+                                        <f:selectItem itemLabel="Seleccione tipo mantenimiento" noSelectionOption="true"
+                                                      itemValue="0"/>
+                                        <f:selectItems value="#{mantenimientoBean.listTipoMantenimiento}" var="tm"
+                                                       itemLabel="#{tm.tipo}" itemValue="#{tm.id}"/>
+                                    </p:selectOneMenu>
 
                                 </div>
 
-                                <div class="field p-col-12 p-md-3">
-                                    <p:outputLabel for="fecharetornoMante">Fecha retorno</p:outputLabel>
-                                    <p:inputText id="fecharetornoMante" value="#{dtmante.mantenimiento.fechaRetorno}"
-                                                 required="true"/>
-
-                                </div>
-                                <div class="field p-col-12 p-md-3">
-                                    <p:outputLabel for="tipoMante">Tipo Mantenimiento</p:outputLabel>
-                                    <p:inputText id="tipoMante" value="#{dtmante.mantenimiento.fechaRetorno}"
-                                                 required="true"/>
-
-                                </div>
 
                                 <div class="field p-col-12 p-md-3 " style="margin-top: 3px;">
                                     <h:outputLabel for="estadoMante" value="Estado:" />
                                     <div style="display: block">
-                                        <p:selectBooleanButton id="estadoMante" onLabel="Activado" offLabel="Desactivado"
-                                                               value="#{dtmante.estado}"/>
+                                        <p:selectBooleanButton id="estadoMante" offLabel="En mantenimiento"
+                                                               disabled="true" value="#{dtmante.estado}"/>
                                     </div>
                                 </div>
 
+                                <div class="p-field p-col-12 p-md-12">
+                                    <p:outputLabel for="comboEquiposMante">Seleccinar equipos para Mantenimiento:</p:outputLabel>
+                                    <p:selectCheckboxMenu id="comboEquiposMante" label="MantenimientoCombo" style="min-width: 15rem"
+                                                          value="#{mantenimientoBean.equiposRequeridosMantenimiento}"
+                                                          multiple="true" filter="true" filterMatchMode="startsWith"
+                                                          panelStyle="width: 30rem" scrollHeight="250"  required="true">
+                                        <f:selectItems value="#{mantenimientoBean.listequipos}"
+                                                       var="equiporequeridos"
+                                                       itemLabel="#{equiporequeridos.descripcion}"
+                                                       itemValue="#{equiporequeridos}"/>
+                                    </p:selectCheckboxMenu>
+
+                                </div>
 
 
                             </div>

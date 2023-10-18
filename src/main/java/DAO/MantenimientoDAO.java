@@ -30,8 +30,6 @@ public class MantenimientoDAO extends Conexion {
                     Equipo equipo = new Equipo();
                     Aula aula = new Aula();
 
-
-
                     mantenimientoEquipo.setId_mant_equipo(resultSet.getInt("id_mantenimientoequipo"));
 
                     mantenimiento.setId(resultSet.getInt("mantenimiento_id"));
@@ -65,6 +63,29 @@ public class MantenimientoDAO extends Conexion {
             this.desconectar();
         }
         return ListMantenimientos;
+    }
+
+    public List<TipoMantenimiento> listartipomantenimientos() throws SQLException {
+        List<TipoMantenimiento> ListTiposMantenimientos = new ArrayList<>();
+        this.conectar();
+        String query = "select * from laboratorio.listatipomantenimientos()";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    TipoMantenimiento tipoMantenimiento = new TipoMantenimiento();
+
+                    tipoMantenimiento.setId(resultSet.getInt("id"));
+                    tipoMantenimiento.setTipo(resultSet.getString("tipo"));
+
+                    ListTiposMantenimientos.add(tipoMantenimiento);
+                }
+            }
+        } finally {
+            this.desconectar();
+        }
+        return ListTiposMantenimientos;
     }
 
     public void agregarMantenimiento(MantenimientoEquipo mantenimientoEquipo){
