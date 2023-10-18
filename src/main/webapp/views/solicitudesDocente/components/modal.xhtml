@@ -66,23 +66,23 @@
                     <!--TEMA  -->
                     <div class="field p-col-12 p-md-6">
                         <p:outputLabel for="tema" value="Tema"/>
-                        <p:inputText id="tema" value="#{solicitudBean.solicitud.tema}" maxlength="35" required="true"/>
+                        <p:inputText id="tema" value="#{solicitudBean.solicitud.tema}" maxlength="150" required="true"/>
                     </div>
                     <!--OBJETIVO  -->
                     <div class="field p-col-12 p-md-6">
                         <p:outputLabel for="objetivo" value="Objetivo"/>
-                        <p:inputText id="objetivo" value="#{solicitudBean.solicitud.objetivo}" maxlength="35" required="true"/>
+                        <p:inputText id="objetivo" value="#{solicitudBean.solicitud.objetivo}" maxlength="200" required="true"/>
                     </div>
                     <!--ANALISIS  -->
                     <div class="field p-col-12 p-md-5">
                         <p:outputLabel for="analisis" value="Análisis"/>
-                        <p:inputText id="analisis" value="#{solicitudBean.solicitud.analisis}" maxlength="35" required="true"/>
+                        <p:inputText id="analisis" value="#{solicitudBean.solicitud.analisis}" maxlength="200" required="true"/>
                     </div>
 
                     <!--CODIGO-->
                     <div class="field p-col-12 p-md-2">
                         <p:outputLabel for="codigo" value="Código"/>
-                        <p:inputText id="codigo" value="#{solicitudBean.solicitud.codigo}" maxlength="35" required="true"/>
+                        <p:inputText id="codigo" value="#{solicitudBean.solicitud.codigo}" maxlength="10" required="true"/>
                     </div>
 
                     <!--PERIODO-->
@@ -164,7 +164,7 @@
                             actionListener="#{solicitudBean.save()}"
                             icon="pi pi-save"
                             styleClass="ui-button-success"
-                            update=":formData :msj"
+                            update=":formData formData:dataSolicitudes :msj"
                             oncomplete="PF('modalNuevaSolicitud').hide()">
                         <p:resetInput target=""/>
                     </p:commandButton>

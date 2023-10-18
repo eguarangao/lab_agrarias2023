@@ -3,6 +3,7 @@ package Controller;
 import DAO.*;
 import Model.*;
 import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -117,6 +118,8 @@ public class SolicitudBean implements Serializable {
             System.out.println(solicitud);
             //Llamamos al método para guadar
             solicitudDAO.save(solicitud, fileResolucionPDF, fileListaEstudiantes);
+            //lISTAMOS NUEVAMENTE KAS SOLICITUDES
+            findAllSolicitudes();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso", "Se registró correctamente"));
         } catch (SQLException e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Ocurrió un error en el registro, vuelva a intentarlo"));
