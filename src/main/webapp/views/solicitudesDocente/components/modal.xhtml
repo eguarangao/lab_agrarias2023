@@ -52,13 +52,12 @@
                     <!--HORAS-->
                     <div class="p-field p-col-12 p-md-6">
                         <p:selectManyCheckbox id="selectHoras" value="#{solicitudBean.itemsSelecionados}"
-                                              layout="responsive" columns="3"
-
-                                              onchange="#{solicitudBean.imprimir()}" styleClass="text-danger" >
+                                              layout="responsive" columns="3" onchange="#{solicitudBean.imprimir()}">
                             <f:selectItems value="#{solicitudBean.items}" var="item" itemLabel="#{item.fecha}"
-                                           itemDisabled="#{not item.dato or solicitudBean.desactivarElementos }" itemValue="#{item}" />
+                                           itemDisabled="#{not item.dato}" itemValue="#{item}" />
                             <p:ajax event="change" listener="#{solicitudBean.imprimir()}" update="formRegistro:selectHoras formRegistro:msgs"/>
                         </p:selectManyCheckbox>
+
                         <p:message id="mensajeError" for="selectHoras" display="text" />
                     </div>
                 </div>
