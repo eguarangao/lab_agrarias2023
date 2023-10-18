@@ -351,6 +351,28 @@ public class SolicitudBean implements Serializable {
 
     }
 
+
+
+
+//    public List<List<String>> getData() {
+//        List<List<String>> data = new ArrayList<>();
+//
+//        for (int i = 1; i <= 5; i++) {
+//            List<String> country = new ArrayList<>();
+//            country.add(Integer.toString(i));  // ID
+//            country.add("País " + i);         // Nombre del país
+//            List<String> cities = new ArrayList<>();
+//            for (int j = 1; j <= 6; j++) {
+//                cities.add("Ciudad " + j);
+//            }
+//            country.add(cities); // Lista de ciudades
+//            data.add(country);
+//        }
+//
+//        return data;
+//    }
+
+
     @PostConstruct
     public void init() {
         try {
@@ -361,6 +383,8 @@ public class SolicitudBean implements Serializable {
             finAllLaboratorio();
             //Llama al metodo que carga los periodos habilitados
             findAllPeridosEnabled();
+            //Cargamos las solicitudes del docente
+            findAllSolicitudes();
             //Obtenemos el nombre del docente mediante el ID de usuario
             FacesContext facesContext = FacesContext.getCurrentInstance();
             Usuario usuarioLogueado = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");

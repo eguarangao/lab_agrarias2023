@@ -1,3 +1,9 @@
 .texto-rojo {
     color: red;
 }
+
+.primary-header {
+    background-color: #007bff; /* Color primario (por ejemplo, azul) */
+    color: #ffffff; /* Texto blanco */
+    font-weight: bold; /* Opcional: texto en negrita */
+}

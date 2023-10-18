@@ -31,36 +31,59 @@
                                     paginator="true"
                                     widgetVar="dataSolicitudesWV"
                                     paginatorPosition="bottom"
+                                    rowHover="true"
+                                    rows="5"
+                                    rowKey="#{s.id}"
+                                    rowTogglerSelect="true"
                                     stripedRows="true">
+
+                                <f:facet name="header">
+                                    <p:outputLabel value="Solicitudes activas" style="color: #007bff; font-weight: bold;"/>
+                                </f:facet>
+
                                 <!--HEADER - DATATABLE-->
+
+                                <p:column style="width:16px">
+                                    <p:rowToggler />
+                                </p:column>
+
+                                <!--                                <p:column headerText="Equipos">-->
+                                <!--                                    <p:dataTable value="#{s.equipos}" var="equipo">-->
+                                <!--                                        <p:column headerText="ID Equipo">-->
+                                <!--                                            #{equipo.id}-->
+                                <!--                                        </p:column>-->
+                                <!--                                        <p:column headerText="Descripción">-->
+                                <!--                                            #{equipo.descripcion}-->
+                                <!--                                        </p:column>-->
+                                <!--                                    </p:dataTable>-->
+                                <!--                                </p:column>-->
+
 
                                 <!--CODIGO-->
                                 <p:column headerText="Código">
-                                    <p:outputLabel value="#{s.codigo}"/>
+                                    <p:outputLabel value="#{s.codigo}" />
                                 </p:column>
+
                                 <!--FECHA RESERVA-->
                                 <p:column headerText="Fecha de reserva">
-                                    <p:outputLabel value="#{s.fechaReserva}"/>
+                                    <p:outputLabel value="#{s.fechaReserva}" />
                                 </p:column>
                                 <!--TIPO SOLICITUD-->
                                 <p:column colspan="2" headerText="Tipo Solicitud">
-                                    <p:outputLabel value="#{s.tipo}"/>
+                                    <p:outputLabel value="#{s.tipo}" />
+                                </p:column>
+                                <!--TEMA SOLICITUD-->
+                                <p:column colspan="2" headerText="Tema">
+                                    <p:outputLabel value="#{s.tema}" />
+                                </p:column>
+                                <!--ANALISIS SOLICITUD-->
+                                <p:column colspan="2" headerText="Analisis">
+                                    <p:outputLabel value="#{s.analisis}" />
                                 </p:column>
                                 <!--LABORATORIRO-->
                                 <p:column headerText="Laboratorio">
-                                    <p:outputLabel value="#{s.laboratorio.nombre}"/>
+                                    <p:outputLabel value="#{s.laboratorio.nombre}" />
                                 </p:column>
-
-
-                                <!--ESTADO-->
-<!--                                <p:column colspan="1" headerText="Estado" sortBy="#{equipo.estado}" filterBy="#{equipo.estado}" filterMatchMode="contains">-->
-<!--                                    <p:tag severity="success" value="BUENO"-->
-<!--                                           style="font-size:12px;"-->
-<!--                                           rendered="#{equipo.estado.trim() eq 'BUENO'}"/>-->
-<!--                                    <p:tag severity="danger" value="DAÑADO"-->
-<!--                                           style="font-size:12px;"-->
-<!--                                           rendered="#{equipo.estado.trim() eq 'DAÑADO'}"/>-->
-<!--                                </p:column>-->
 
                                 <!--ACCIONES-->
                                 <p:column  headerText="Acciones">
@@ -75,8 +98,26 @@
                                 </p:column>
 
 
+                                <p:rowExpansion>
+                                    <p:dataTable value="#{s.equipos}" var="equipo" rowHover="true" tableStyle="animation-direction: alternate ">
+                                        <f:facet name="header">
+                                            <h:outputText value="Equipos Solicitados" style="color: #007bff; font-weight: bold;" />
+                                        </f:facet>
 
+                                        <p:column headerText="Código">
+                                            #{equipo.codigo}
+                                        </p:column>
+                                        <p:column headerText="Equipo" >
+                                            #{equipo.descripcion}
+                                        </p:column>
+                                        <p:column headerText="Categoría">
+                                            #{equipo.categoriaEquipo.nombre}
+                                        </p:column>
+                                    </p:dataTable>
+
+                                </p:rowExpansion>
                             </p:dataTable>
+
                         </div>
                     </p:toolbarGroup>
                 </p:toolbar>
