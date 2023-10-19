@@ -190,6 +190,7 @@ public class TecnicoLaboratorioDAO extends Conexion {
     public List<Persona> listarTecnicobyLab(int idLaboratorio, int idPeriodo) throws SQLException {
         List<Persona> resultados = new ArrayList<>();
 
+
         String sql = "SELECT tl.id, per.nombre, per.apellido, per.dni, tl.enable\n" +
                 "\tFROM laboratorio.tecnico_laboratorio tl \n" +
                 "\tinner join laboratorio.laboratorio l on tl.id_laboratorio = l.id\n" +
@@ -198,8 +199,9 @@ public class TecnicoLaboratorioDAO extends Conexion {
                 "\tinner join laboratorio.usuario u on u.id = t.id_usuario\n" +
                 "\tinner join laboratorio.persona per on per.id = u.id_persona\n" +
                 "\twhere tl.id_laboratorio=? and tl.id_periodo=?;";
-
+        this.conectar();
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
             preparedStatement.setInt(1, idLaboratorio);
             preparedStatement.setInt(2, idPeriodo);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -216,6 +218,11 @@ public class TecnicoLaboratorioDAO extends Conexion {
                 // Agrega el objeto a la lista de resultados
                 resultados.add(objeto);
             }
+        }
+        catch (SQLException  e){
+            e.printStackTrace();
+        }finally {
+            desconectar();
         }
 
         return resultados;

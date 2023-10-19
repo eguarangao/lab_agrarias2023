@@ -14,11 +14,11 @@ import java.util.List;
 public class PeriodoDAO extends Conexion {
     public void insertPeriodo(Periodo periodo) {
         this.conectar();
-        String sql = "INSERT INTO laboratorio.periodo (name_periodo, inicio_periodo, fin_periodo, enabled,fecha_creacion) VALUES (?,?, ?, ?, ?)";
+        String sql = "INSERT INTO laboratorio.periodo (name_periodo,enabled,fecha_creacion) VALUES (?,?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, periodo.getNamePeriodo());
-            preparedStatement.setBoolean(4, periodo.isEnabled());
-            preparedStatement.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
+            preparedStatement.setBoolean(2, periodo.isEnabled());
+            preparedStatement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -29,11 +29,11 @@ public class PeriodoDAO extends Conexion {
     public void updatePeriodo(Periodo periodo) {
         try  {
             this.conectar();
-            String sql = "UPDATE laboratorio.periodo SET name_periodo = ?, inicio_periodo = ?, fin_periodo = ?, enabled = ? WHERE id = ?";
+            String sql = "UPDATE laboratorio.periodo SET name_periodo = ?, enabled = ? WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, periodo.getNamePeriodo());
-                preparedStatement.setBoolean(4, periodo.isEnabled());
-                preparedStatement.setInt(5, periodo.getId());
+                preparedStatement.setBoolean(2, periodo.isEnabled());
+                preparedStatement.setInt(3, periodo.getId());
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {

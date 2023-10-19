@@ -2,6 +2,7 @@ package Controller;
 
 import DAO.FacultadDAO;
 import DAO.PeriodoDAO;
+import DAO.SolicitudDAO;
 import Model.Facultad;
 import Model.Periodo;
 import jakarta.annotation.PostConstruct;
@@ -22,13 +23,12 @@ import java.util.List;
 public class PeriodoBean implements Serializable {
     private PeriodoDAO periodoDAO = new PeriodoDAO();
     private Periodo nuevoPeriodo = new Periodo();
-
     private List<Periodo> periodos;
     @PostConstruct
     public void main() {
         try {
             this.periodos = new ArrayList<>();
-            periodos = periodoDAO.listarPeriodos();
+            periodos = periodoDAO.listarPeriodosHabilitados();
         } catch (Exception e) {
             e.printStackTrace();
         }

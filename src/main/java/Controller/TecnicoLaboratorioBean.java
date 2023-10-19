@@ -42,6 +42,8 @@ public class TecnicoLaboratorioBean implements Serializable {
         try {
             rendered = true;
             listAula = new ArrayList<>();
+            listPersona = new ArrayList<>();
+            listLabByTecnico();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -52,8 +54,12 @@ public class TecnicoLaboratorioBean implements Serializable {
         listLab = tecnicoDAO.listarPorFacultad(this.idFacultad);
     }
     public void listLabByTecnico() throws SQLException {
-        tecnicoDAO = new TecnicoLaboratorioDAO();
-        listPersona = tecnicoDAO.listarTecnicobyLab(this.idLaboratorio, this.idPeriodo);
+
+           tecnicoDAO = new TecnicoLaboratorioDAO();
+           listPersona = tecnicoDAO.listarTecnicobyLab(idLaboratorio, idPeriodo);
+           PrimeFaces.current().ajax().update("form:messages", "dialogs2:dt-facd2");
+
+
     }
     public void listAulaByLab() {
 

@@ -27,21 +27,19 @@
                                      reflow="true" styleClass="products-table" lazy="true"
                                      rowKey="#{facd.id}" paginator="true" rows="10" rowSelectMode="add"
                                      paginatorPosition="bottom">
-                            <p:column headerText="Code" >
+                            <p:column headerText="Código" >
                                 <h:outputText value="#{facd.id}"/>
                             </p:column>
                             <p:column headerText="Periodo" >
                                 <h:outputText value="#{facd.namePeriodo}"/>
                             </p:column>
-                            <p:column headerText="Fecha Inicio" >
-                                <h:outputText value="#{facd.inicioPeriodo}"/>
-                            </p:column>
-                            <p:column headerText="Fecha Fin " >
-                                <h:outputText value="#{facd.finPeriodo}"/>
-                            </p:column>
                             <p:column headerText="Estado" >
-                                <h:outputText value="#{facd.enabled}"/>
+                                <p:tag severity="success" value="Activado" rendered="#{facd.enabled}"/>
+                                <p:tag severity="warning" value="Desactivado" rendered="#{not facd.enabled}"/>
                             </p:column>
+
+
+
                             <p:column headerText="Acciones" exportable="false">
                                 <p:commandButton icon="pi pi-pencil"
                                                  update=":dialogs:manage-facd-content"
@@ -69,21 +67,13 @@
                         <p:outputPanel id="manage-facd-content" class="ui-fluid">
                             <p:outputPanel rendered="#{not empty periodoBean.nuevoPeriodo}">
                                 <div class="field">
-                                    <p:outputLabel for="name">Nombre periodo</p:outputLabel>
+                                    <p:outputLabel for="name">Nombre periodo: </p:outputLabel>
                                     <p:inputText id="name" value="#{periodoBean.nuevoPeriodo.namePeriodo}"
                                                  required="true"/>
                                 </div>
                                 <div class="field">
-                                    <p:outputLabel for="inicio">Inicio</p:outputLabel>
-                                    <p:inputTextarea id="inicio"
-                                                     value="#{periodoBean.nuevoPeriodo.inicioPeriodo}"/>
-                                </div>
-                                <div class="field">
-                                    <p:outputLabel for="fin">Fin</p:outputLabel>
-                                    <p:inputTextarea id="fin" value="#{periodoBean.nuevoPeriodo.finPeriodo}"/>
-                                </div>
-                                <div class="field">
-                                    <p:selectBooleanButton onLabel="Yes" offLabel="No" style="width:6rem" value="#{periodoBean.nuevoPeriodo.enabled}"/>
+                                    <p:outputLabel for="fin">Habilitado: </p:outputLabel>
+                                    <p:selectBooleanButton id="fin" onLabel="Yes" offLabel="No" style="width:6rem" value="#{periodoBean.nuevoPeriodo.enabled}"/>
                                 </div>
 
                             </p:outputPanel>

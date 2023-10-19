@@ -74,11 +74,12 @@
                                                     <p:resetInput target=":dialogs:manage-facd-content"/>
                                                 </p:commandButton>
                                                 <p:commandButton value="Asignar" icon="pi pi-users"
-                                                                 oncomplete="PF('manageFacd2Dialog').show()"
                                                                  update=":dialogs2:manage-facd2-content"
                                                                  styleClass="ui-button-secondary"
+                                                                 oncomplete="PF('manageFacd2Dialog').show()"
                                                                  style="margin-right: .5rem">
                                                     <p:resetInput target=":dialogs2:manage-facd2-content"/>
+
                                                 </p:commandButton>
                                             </div>
                                         </div>
@@ -88,7 +89,7 @@
                             <p:column headerText="id_aula" rendered="false">
                                 <h:outputText value="#{facd.id_aula}"/>
                             </p:column>
-                            <p:column headerText="Code">
+                            <p:column headerText="Código">
                                 <h:outputText value="#{facd.id}"/>
                             </p:column>
                             <p:column headerText="Nombre aula">
@@ -184,16 +185,18 @@
                         <p:outputPanel id="manage-facd2-content" class="ui-fluid">
                             <p:outputPanel>
                                 <div class="field">
-                                    <p:outputLabel for="per">Periodo</p:outputLabel>
+                                    <p:outputLabel for="per">Periodo: </p:outputLabel>
                                     <p:selectOneMenu id="per" value="#{tecnicoLaboratorioBean.idPeriodo}"
                                                      styleClass="form-control">
                                         <f:selectItem itemLabel="Seleccione un periodo"/>
                                         <f:selectItems value="#{periodoBean.periodos}" var="per"
                                                        itemLabel="#{per.namePeriodo}" itemValue="#{per.id}"/>
                                         <p:ajax event="change"
-                                                listener="#{periodoBean.main()}"
+                                                listener="#{periodoBean.periodoDAO.listarPeriodosHabilitados()}"
                                                 update="form:lab"
                                         />
+                                        <p:ajax event="change" listener="#{tecnicoLaboratorioBean.listLabByTecnico()}" render="dt-facd2"
+                                                update=":dialogs2:manage-facd2-content" />
                                     </p:selectOneMenu>
                                     <p:outputLabel for="tec">Tecnico</p:outputLabel>
                                     <p:selectOneMenu id="tec" value="#{tecnicoLaboratorioBean.idPeriodo}"
@@ -205,76 +208,53 @@
                                                 listener="#{periodoBean.main()}"
                                                 update="form:lab"
                                         />
+
                                     </p:selectOneMenu>
                                     <p:commandButton value="Buscar" icon="pi pi-search"
                                                      update="form:dt-facd"
                                                      styleClass="ui-button-success" style="margin-right: .5rem">
                                     </p:commandButton>
                                 </div>
-                                <p:dataTable
-                                        id="dt-facd2" widgetVar="dtFacd2" var="facd"
-                                        value="#{tecnicoLaboratorioBean.listAula}"
-                                        rowKey="#{facd.id}"
-                                        reflow="true" styleClass="products-table" lazy="true"
-                                        paginator="true" rows="10" rowSelectMode="add"
-                                        paginatorPosition="bottom">
-                                    <f:facet name="header">
-                                        <div class="card">
-                                            <div class="grid ui-fluid">
-                                                <div class="col-12 md:col-4">
-                                                    <div class="ui-inputgroup">
-                                                        <p:commandButton value="New" icon="pi pi-plus"
-                                                                         actionListener="#{tecnicoLaboratorioBean.openNew()}"
-                                                                         update=":dialogs2:manage-facd2-content"
-                                                                         oncomplete="PF('manageFacd2Dialog').show()"
-                                                                         styleClass="ui-button-success"
-                                                                         style="margin-right: .5rem">
-                                                            <p:resetInput target=":dialogs2:manage-facd2-content"/>
-                                                        </p:commandButton>
-                                                        <p:commandButton value="Asignar" icon="pi pi-users"
+
+                                    <p:dataTable
+                                            id="dt-facd2" widgetVar="dtFacd2" var="asig"
+                                            value="#{tecnicoLaboratorioBean.listPersona}"
+                                            rowKey="#{asig.id}"
+                                            reflow="true" styleClass="products-table" lazy="true"
+                                            paginator="true" rows="10" rowSelectMode="add"
+                                            paginatorPosition="bottom">
+                                        <p:column headerText="id_aula" rendered="false">
+                                            <h:outputText value="#{asig.id_aula}"/>
+                                        </p:column>
+                                        <p:column headerText="Código">
+                                            <h:outputText value="#{asig.id}"/>
+                                        </p:column>
+                                        <p:column headerText="Nombre tecnico">
+                                            <h:outputText value="#{asig.nombre}"/>
+                                        </p:column>
+                                        <p:column headerText="Estado">
+                                            <h:outputText value="#{asig.enable}"/>
+                                        </p:column>
+                                        <p:column headerText="Acciones" exportable="false">
+                                            <p:commandButton icon="pi pi-pencil"
+                                                             update=":dialogs2:manage-facd2-content"
+                                                             oncomplete="PF('manageFacd2Dialog').show()"
+                                                             styleClass="edit-button rounded-button ui-button-success"
+                                                             process="@this">
+                                                <f:setPropertyActionListener value="#{asig}"
+                                                                             target="#{tecnicoLaboratorioBean.nuevaAula}"/>
+                                                <p:resetInput target=":dialogs2:manage-facd2-content"/>
+                                            </p:commandButton>
+                                            <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                                             process="@this"
+                                                             oncomplete="PF('deleteFacd2Dialog').show()"
+                                            > <f:setPropertyActionListener value="#{asig}"
+                                                                           target="#{tecnicoLaboratorioBean.nuevaAula}"/>
+                                            </p:commandButton>
+                                        </p:column>
+                                    </p:dataTable>
 
 
-                                                                         oncomplete="PF('manageFacd2Dialog').show()"
-                                                                         styleClass="ui-button-secondary"
-                                                                         style="margin-right: .5rem">
-
-                                                        </p:commandButton>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </f:facet>
-                                    <p:column headerText="id_aula" rendered="false">
-                                        <h:outputText value="#{facd.id_aula}"/>
-                                    </p:column>
-                                    <p:column headerText="Code">
-                                        <h:outputText value="#{facd.id}"/>
-                                    </p:column>
-                                    <p:column headerText="Nombre tecnico">
-                                        <h:outputText value="#{facd.nombre}"/>
-                                    </p:column>
-                                    <p:column headerText="Estado">
-                                        <h:outputText value="#{facd.capacidad}"/>
-                                    </p:column>
-                                    <p:column headerText="Acciones" exportable="false">
-                                        <p:commandButton icon="pi pi-pencil"
-                                                         update=":dialogs:manage-facd2-content"
-                                                         oncomplete="PF('manageFacd2Dialog').show()"
-                                                         styleClass="edit-button rounded-button ui-button-success"
-                                                         process="@this">
-                                            <f:setPropertyActionListener value="#{facd}"
-                                                                         target="#{tecnicoLaboratorioBean.nuevaAula}"/>
-                                            <p:resetInput target=":dialogs:manage-facd2-content"/>
-                                        </p:commandButton>
-                                        <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
-                                                         process="@this"
-                                                         oncomplete="PF('deleteFacd2Dialog').show()"
-                                        > <f:setPropertyActionListener value="#{facd}"
-                                                                       target="#{tecnicoLaboratorioBean.nuevaAula}"/>
-                                        </p:commandButton>
-                                    </p:column>
-                                </p:dataTable>
 
 
                             </p:outputPanel>
