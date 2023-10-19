@@ -2,6 +2,7 @@ package Controller;
 
 import DAO.AveriaDAO;
 import DAO.EquipoDAO;
+import DAO.MantenimientoDAO;
 import Model.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
@@ -24,6 +25,7 @@ public class AveriaBean implements Serializable {
 
     private AveriaDAO DAOaveria = new AveriaDAO();
     private EquipoDAO DaoEquipo = new EquipoDAO();
+    private MantenimientoDAO DAOmantenimiento = new MantenimientoDAO();
     private List<Averia> ListAveria;
     private List<Equipo> Listequipos;
     private EquipoBean BeanEquipo = new EquipoBean();
@@ -33,7 +35,7 @@ public class AveriaBean implements Serializable {
     private int idUsuarioSession;
     private int idlaboratorioSession;
     private Date fechaActual = new Date();
-    private List<MantenimientoEquipo> equiposAveriados;
+    private List<Equipo> equiposAveriados = new ArrayList<>();
 
     @PostConstruct
     public void main() {
@@ -64,6 +66,8 @@ public class AveriaBean implements Serializable {
         try {
             TablaAveriaPorLaboratorio();
             listEquiposPorLaboratorio();
+            equiposAveriados = new ArrayList<>();
+            getFechaActual();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -84,7 +88,7 @@ public class AveriaBean implements Serializable {
     public void listEquiposPorLaboratorio() throws SQLException {
         try {
             this.Listequipos = new ArrayList<>();
-            Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
+            Listequipos = DAOmantenimiento.listarEquiposPorLaboratorioActivos(idlaboratorioSession);
             System.out.println(Listequipos);
 
         } catch (SQLException e) {
@@ -101,16 +105,25 @@ public class AveriaBean implements Serializable {
 
     public void addAveria() {
         try {
-            if(this.newAveria.getFecha_registro()==null){
-                DAOaveria.agregarAveria(newAveria);
+                DAOaveria.agregarAveria(newAveria,equiposAveriados);
+                mostrarTablaAveria = ListAveria.isEmpty();
                 ListAveria = DAOaveria.listarAveriasPorLaboratorio(idlaboratorioSession);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Averia agregada"));
-            } else {
+            PrimeFaces.current().executeScript("PF('manageAveriaDialog').hide()");
+            PrimeFaces.current().ajax().update("form-Averia:messages");
+
+        } catch (Exception e){
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar la averia"));
+            e.printStackTrace();
+        }
+    }
+
+    public void updateAveria() {
+        try {
                 System.out.println("voy a editar averia");
                 DAOaveria.editarAveria(newAveria);
                 ListAveria = DAOaveria.listarAveriasPorLaboratorio(idlaboratorioSession);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Averia actualizada"));
-            }
             PrimeFaces.current().executeScript("PF('manageAveriaDialog').hide()");
             PrimeFaces.current().ajax().update("form-Averia:messages");
 

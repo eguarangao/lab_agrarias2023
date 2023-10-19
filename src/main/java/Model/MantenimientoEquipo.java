@@ -3,6 +3,8 @@ package Model;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
+
 @Data
 public class MantenimientoEquipo {
     private int id_mant_equipo;

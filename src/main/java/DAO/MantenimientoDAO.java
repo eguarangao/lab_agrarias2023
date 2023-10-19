@@ -2,10 +2,8 @@ package DAO;
 
 import Model.*;
 import global.Conexion;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +63,54 @@ public class MantenimientoDAO extends Conexion {
         return ListMantenimientos;
     }
 
+    public List<Equipo> listarEquiposPorLaboratorioActivos(int LaboID) throws SQLException {
+        List<Equipo> Listequipos = new ArrayList<>();
+        this.conectar();
+        String query = "select * from laboratorio.listarequiposporlaboratorioactivos(?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            preparedStatement.setInt(1, LaboID);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    Equipo equipo = new Equipo();
+                    Aula aula = new Aula();
+                    CategoriaEquipo categoriaEquipo = new CategoriaEquipo();
+                    Laboratorio laboratorio = new Laboratorio();
+
+                    equipo.setId(resultSet.getInt("id"));
+
+                    laboratorio.setId(resultSet.getInt("id"));
+                    laboratorio.setNombre(resultSet.getString("nom_laboratorio"));
+
+                    aula.setId(resultSet.getInt("id_aula_equipo"));
+                    aula.setNombre(resultSet.getString("aula"));
+
+                    categoriaEquipo.setId(resultSet.getInt("id_categoria_equipo"));
+                    categoriaEquipo.setNombre(resultSet.getString("categoria"));
+
+                    equipo.setCodigo(resultSet.getString("codigo"));
+                    equipo.setDescripcion(resultSet.getString("descripcion"));
+                    equipo.setMarca(resultSet.getString("marca"));
+                    equipo.setModelo(resultSet.getString("modelo"));
+                    equipo.setNumeroSerie(resultSet.getString("num_serie"));
+                    equipo.setFechaAdquisicion(resultSet.getDate("fecha_adquisicion"));
+                    equipo.setEstado(resultSet.getBoolean("estado"));
+
+                    equipo.setAula(aula);
+                    equipo.setCategoriaEquipo(categoriaEquipo);
+                    equipo.setLaboratorio(laboratorio);
+
+                    Listequipos.add(equipo);
+                }
+                System.out.println("Ya liste equipos");
+            }
+        } finally {
+            this.desconectar();
+        }
+        return Listequipos;
+    }
+
     public List<TipoMantenimiento> listartipomantenimientos() throws SQLException {
         List<TipoMantenimiento> ListTiposMantenimientos = new ArrayList<>();
         this.conectar();
@@ -88,8 +134,29 @@ public class MantenimientoDAO extends Conexion {
         return ListTiposMantenimientos;
     }
 
-    public void agregarMantenimiento(MantenimientoEquipo mantenimientoEquipo){
+    public void agregarMantenimiento(MantenimientoEquipo mantenimientoEquipo, List<Equipo> equipoIDS){
+
         this.conectar();
+
+        String query = "select * from laboratorio.agregarmantenimientoequipo(?, ?, ?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+
+            Object[] equipoIdsArray = equipoIDS.toArray();
+
+            Array array = connection.createArrayOf("integer", equipoIdsArray);
+                preparedStatement.setArray(2,array);
+                preparedStatement.setInt(3, mantenimientoEquipo.getTipoMantenimiento().getId());
+                preparedStatement.executeQuery();
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            this.desconectar();
+        }
 
     }
 

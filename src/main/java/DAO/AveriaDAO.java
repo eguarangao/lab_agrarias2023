@@ -3,9 +3,8 @@ package DAO;
 import Model.*;
 import global.Conexion;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,9 +50,24 @@ public class AveriaDAO extends Conexion {
         return ListAveria;
     }
 
-    public void agregarAveria(Averia averia){
+    public void agregarAveria(Averia averia, List<Equipo> equiposIDS){
         this.conectar();
+        String query = "select * from laboratorio.agregaraveriaequipo(?, ?, ?)";
 
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+            preparedStatement.setBoolean(2, averia.getEnabled());
+            preparedStatement.setString(3, averia.getDescripcion());
+
+            preparedStatement.executeQuery();
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            this.desconectar();
+        }
     }
 
     public void editarAveria(Averia averia){

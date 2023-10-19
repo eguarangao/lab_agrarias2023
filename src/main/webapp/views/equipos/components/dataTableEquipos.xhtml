@@ -14,8 +14,7 @@
                      <p:commandButton id="botonNewEquipo" value="Nuevo equipo" icon="pi pi-plus"
                                       actionListener="#{equipoBean.nuevoEquipo()}"
                                       update=":dialogEquipo:manage-equipo-content"
-                                      oncomplete="PF('manageEquipoDialog').show()"
-                                      styleClass="ui-button-success" style="margin-right: .5rem"
+                                      oncomplete="PF('manageEquipoDialog').show()" style="margin-right: .5rem"
                                       disabled="#{equipoBean.botonEquipoDisabled}">
                         <p:resetInput target=":dialogEquipo:manage-equipo-content"/>
                      </p:commandButton>
@@ -90,14 +89,14 @@
                      <p:commandButton icon="pi pi-pencil"
                                       update=":dialogEquipo:manage-equipo-content"
                                       oncomplete="PF('manageEquipoDialog').show()"
-                                      styleClass="edit-button rounded-button ui-button-success"
+                                      styleClass="edit-button rounded-button ui-button-warning"
                                       process="@this">
                         <f:setPropertyActionListener value="#{dtequipos}"
                                                      target="#{equipoBean.newEquipo}"/>
                         <p:resetInput target=":dialogEquipo:manage-equipo-content"/>
 
                      </p:commandButton>
-                     <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                     <p:commandButton class="ui-button-danger rounded-button" icon="pi pi-trash"
                                       process="@this"
                                       oncomplete="PF('deleteEquipoDialog').show()">
                         <f:setPropertyActionListener value="#{dtequipos}"
@@ -188,6 +187,7 @@
 
                <f:facet name="footer">
                   <p:commandButton value="Guardar" icon="pi pi-check"
+                                   class="ui-button-success"
                                    actionListener="#{equipoBean.addEquipo()}"
                                    update="manage-equipo-content, form-equipo:dt-equipos"
                                    process="manage-equipo-content @this"/>

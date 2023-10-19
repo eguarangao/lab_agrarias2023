@@ -31,7 +31,7 @@ public class MantenimientoBean implements Serializable {
     private MantenimientoDAO DAOmantenimiento = new MantenimientoDAO();
     private List<MantenimientoEquipo> ListMante;
     private MantenimientoEquipo newMante;
-    private List<MantenimientoEquipo> equiposRequeridosMantenimiento;
+    private List<Equipo> equiposRequeridosMantenimiento = new ArrayList<>();
     private boolean botonManteDisabled = true;
     private boolean mostrarTablaMante = false;
     private int idUsuarioSession;
@@ -67,9 +67,7 @@ public class MantenimientoBean implements Serializable {
     public void listEquiposPorLaboratorio() throws SQLException {
         try {
             this.Listequipos = new ArrayList<>();
-            Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
-            System.out.println(Listequipos);
-            System.out.println(equiposRequeridosMantenimiento);
+            Listequipos = DAOmantenimiento.listarEquiposPorLaboratorioActivos(idlaboratorioSession);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -94,7 +92,7 @@ public class MantenimientoBean implements Serializable {
             this.ListMante = new ArrayList<>();
             ListMante = DAOmantenimiento.listarMantenimientoPorLaboratorio(idlaboratorioSession);
             mostrarTablaMante = !ListMante.isEmpty();
-            botonManteDisabled = ListMante.isEmpty();
+            botonManteDisabled = false;
             PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante","form-Mante:botonNewMante" );
         } catch (SQLException e) {
             e.printStackTrace();
@@ -111,17 +109,26 @@ public class MantenimientoBean implements Serializable {
 
 
     public void addManteninimiento() {
+
         try {
-            if(this.newMante.getMantenimiento().getFechaRegistro()==null){
-                DAOmantenimiento.agregarMantenimiento(newMante);
+                DAOmantenimiento.agregarMantenimiento(newMante,equiposRequeridosMantenimiento);
+                mostrarTablaMante = !ListMante.isEmpty();
                 ListMante = DAOmantenimiento.listarMantenimientoPorLaboratorio(idlaboratorioSession);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Mantenimiento agregado"));
-            } else {
+            PrimeFaces.current().executeScript("PF('manageManteDialog').hide()");
+            PrimeFaces.current().ajax().update("form-Mante:messages");
+        } catch (Exception e){
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar el Mantenimiento"));
+            e.printStackTrace();
+        }
+    }
+
+    public void updateManteninimiento() {
+        try {
                 System.out.println("voy a editar mantenimiento");
                 DAOmantenimiento.editarMantenimiento(newMante);
                 ListMante = DAOmantenimiento.listarMantenimientoPorLaboratorio(idlaboratorioSession);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Mantenimiento actualizado"));
-            }
             PrimeFaces.current().executeScript("PF('manageManteDialog').hide()");
             PrimeFaces.current().ajax().update("form-Mante:messages");
 

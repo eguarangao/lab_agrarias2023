@@ -17,8 +17,7 @@
                                 <p:commandButton id="botonNewAveria" value="Nueva Averia" icon="pi pi-plus"
                                                  actionListener="#{averiaBean.nuevaAveria()}"
                                                  update=":dialogAveria:manage-Averia-content"
-                                                 oncomplete="PF('manageAveriaDialog').show()"
-                                                 styleClass="ui-button-success" style="margin-right: .5rem"
+                                                 oncomplete="PF('manageAveriaDialog').show()" style="margin-right: .5rem"
                                                  disabled="#{averiaBean.botonAveriaDisabled}">
                                     <p:resetInput target=":dialogAveria:manage-Averia-content"/>
                                 </p:commandButton>
@@ -72,14 +71,14 @@
                                     <p:commandButton icon="pi pi-pencil"
                                                      update=":dialogAveria:manage-Averia-content"
                                                      oncomplete="PF('manageAveriaDialog').show()"
-                                                     styleClass="edit-button rounded-button ui-button-success"
+                                                     styleClass="edit-button rounded-button ui-button-warning"
                                                      process="@this">
                                         <f:setPropertyActionListener value="#{dtaveria}"
                                                                      target="#{averiaBean.newAveria}"/>
                                         <p:resetInput target=":dialogAveria:manage-Averia-content"/>
 
                                     </p:commandButton>
-                                    <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                    <p:commandButton class="ui-button-danger rounded-button" icon="pi pi-trash"
                                                      process="@this"
                                                      oncomplete="PF('deleteAveriaDialog').show()">
                                         <f:setPropertyActionListener value="#{dtaveria}"
@@ -101,7 +100,7 @@
 
                                 <div class="p-formgrid p-grid">
 
-                                    <div class="field p-col-12 p-md-3">
+                                    <div class="field p-col-12 p-md-4">
                                         <p:outputLabel for="fecharegistroMante">Fecha registro</p:outputLabel>
                                         <p:inputText id="fecharegistroMante" value="#{averiaBean.fechaActual}"
                                                      required="true" disabled="true"
@@ -109,24 +108,22 @@
                                             <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
                                         </p:inputText>
                                     </div>
+                                    <div class="field p-col-12 p-md-4" style="margin-top: 3px;">
+                                        <h:outputLabel for="estadoMante" value="Estado:" />
+                                        <div style="display: block">
+                                            <p:selectBooleanButton id="estadoMante" offLabel="Averiado" onLabel="Dañado"
+                                                                   value="#{dtaveria.enabled}"/>
+                                        </div>
+                                    </div>
 
-                                    <div class="field p-col-12 p-md-6">
+                                    <div class="field p-col-12 p-md-12">
                                         <p:outputLabel for="descriptionAveria">Descripción averia</p:outputLabel>
                                         <p:inputText id="descriptionAveria"
                                                      value="#{averiaBean.newAveria.descripcion}" required="true"/>
                                     </div>
 
-
-                                    <div class="field p-col-12 p-md-3 " style="margin-top: 3px;">
-                                        <h:outputLabel for="estadoMante" value="Estado:" />
-                                        <div style="display: block">
-                                            <p:selectBooleanButton id="estadoMante" offLabel="Averiado"
-                                                                   disabled="true" value="#{dtaveria.enabled}"/>
-                                        </div>
-                                    </div>
-
                                     <div class="p-field p-col-12 p-md-12">
-                                        <p:outputLabel for="comboEquiposAveria">Seleccinar equipos Averiados:</p:outputLabel>
+                                        <p:outputLabel for="comboEquiposAveria">Seleccionar equipos averiados:</p:outputLabel>
                                         <p:selectCheckboxMenu id="comboEquiposAveria" label="AveriaCombo" style="min-width: 15rem"
                                                               value="#{averiaBean.equiposAveriados}"
                                                               multiple="true" filter="true" filterMatchMode="startsWith"
@@ -134,7 +131,7 @@
                                             <f:selectItems value="#{averiaBean.listequipos}"
                                                            var="equiposAveria"
                                                            itemLabel="#{equiposAveria.descripcion}"
-                                                           itemValue="#{equiposAveria}"/>
+                                                           itemValue="#{equiposAveria.id}"/>
                                         </p:selectCheckboxMenu>
 
                                     </div>
@@ -147,6 +144,7 @@
 
                         <f:facet name="footer">
                             <p:commandButton value="Guardar" icon="pi pi-check"
+                                             class="ui-button-success"
                                              actionListener="#{averiaBean.addAveria()}"
                                              update="manage-Averia-content, form-Averia:dt-Averia"
                                              process="manage-Averia-content @this"/>
