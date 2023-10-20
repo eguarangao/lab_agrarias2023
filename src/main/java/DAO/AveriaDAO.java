@@ -2,15 +2,12 @@ package DAO;
 
 import Model.*;
 import global.Conexion;
-
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AveriaDAO extends Conexion {
-
-
     public List<Averia> listarAveriasPorLaboratorio(int LaboID) throws SQLException {
         List<Averia> ListAveria = new ArrayList<>();
         this.conectar();
@@ -61,7 +58,6 @@ public class AveriaDAO extends Conexion {
             preparedStatement.setString(3, averia.getDescripcion());
 
             preparedStatement.executeQuery();
-
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

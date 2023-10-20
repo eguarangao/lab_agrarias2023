@@ -7,17 +7,20 @@ import Model.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.primefaces.PrimeFaces;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
+import java.io.*;
+import java.sql.SQLException;
+import java.util.*;
 @Data
 @Named
 @SessionScoped
@@ -31,12 +34,12 @@ public class AveriaBean implements Serializable {
     private EquipoBean BeanEquipo = new EquipoBean();
     private Averia newAveria;
     private boolean botonAveriaDisabled = true;
+    private boolean botonReporteDisabled = true;
     private boolean mostrarTablaAveria = false;
     private int idUsuarioSession;
     private int idlaboratorioSession;
     private Date fechaActual = new Date();
     private List<Equipo> equiposAveriados = new ArrayList<>();
-
     @PostConstruct
     public void main() {
         try {
@@ -55,7 +58,6 @@ public class AveriaBean implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public Date getFechaActual() {
@@ -64,6 +66,8 @@ public class AveriaBean implements Serializable {
 
     public void SelectLaboratorioTecnico() throws SQLException {
         try {
+            nuevaAveria();
+            ListAveria = DAOaveria.listarAveriasPorLaboratorio(idlaboratorioSession);
             TablaAveriaPorLaboratorio();
             listEquiposPorLaboratorio();
             equiposAveriados = new ArrayList<>();
@@ -72,14 +76,14 @@ public class AveriaBean implements Serializable {
             e.printStackTrace();
         }
     }
-
     public void TablaAveriaPorLaboratorio() throws SQLException {
         try {
             this.ListAveria = new ArrayList<>();
             ListAveria = DAOaveria.listarAveriasPorLaboratorio(idlaboratorioSession);
             mostrarTablaAveria = !ListAveria.isEmpty();
             botonAveriaDisabled = ListAveria.isEmpty();
-            PrimeFaces.current().ajax().update("form-Averia:tablaAveria", "form-Averia:dt-Averia","form-Averia:botonNewAveria" );
+            botonReporteDisabled = ListAveria.isEmpty();
+            PrimeFaces.current().ajax().update("form-Averia:tablaAveria", "form-Averia:dt-Averia","form-Averia:botonNewAveria", "form-Averia:btnReporteAveria");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -100,9 +104,7 @@ public class AveriaBean implements Serializable {
         this.newAveria = new Averia();
         this.newAveria.setAula(new Aula());
         this.newAveria.setEquipo(new Equipo());
-
     }
-
     public void addAveria() {
         try {
                 DAOaveria.agregarAveria(newAveria,equiposAveriados);
@@ -132,6 +134,50 @@ public class AveriaBean implements Serializable {
             e.printStackTrace();
         }
     }
+    
+    public void ReporteAveria() throws IOException, JRException {
+        // es una peticion para descargar
+        FacesContext fc = FacesContext.getCurrentInstance();
+        ExternalContext ec = fc.getExternalContext();
 
+        // Cabecera de la respuesta.
+        ec.responseReset();
+        // formato PDF
+        ec.setResponseContentType("application/pdf");
+        // Nombre para descargar el Archivo
+        ec.setResponseHeader("Content-disposition", String.format("attachment; filename=ReporteAverias.pdf"));
+
+
+        // tomamos el stream para llenarlo con el pdf.
+        try (OutputStream stream = ec.getResponseOutputStream()) {
+
+            // Parametros para el reporte.
+            Map<String, Object> parametros = new HashMap<String, Object>();
+
+            //parametros.put("fecha_registro", newAveria.getFecha_registro());
+            //parametros.put("descripcion", newAveria.getEquipo().getDescripcion());
+
+
+            // leemos la plantilla para el reporte.
+            File filetext = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("/resources/reportes/ReporteAverias.jasper"));
+
+
+            // llenamos la plantilla con los datos.
+            JasperPrint jasperPrint = JasperFillManager.fillReport(filetext.getPath(), parametros, new JRBeanCollectionDataSource(this.ListAveria));
+
+            // exportamos a pdf.
+            JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
+            //JasperExportManager.exportReportToXmlStream(jasperPrint, outputStream);
+
+            stream.flush();
+            stream.close();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            // enviamos la respuesta.
+            fc.responseComplete();
+        }
+
+    }
 
 }

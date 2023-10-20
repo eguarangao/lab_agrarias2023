@@ -38,6 +38,8 @@
                             </p:toolbarGroup>
 
                         </p:toolbar>
+
+
                         <p:outputPanel id="tablaAveria">
                             <p:dataTable id="dt-Averia" widgetVar="dtAveria" var="dtaveria"
                                          value="#{averiaBean.listAveria}" reflow="true" styleClass="products-table"
@@ -83,6 +85,11 @@
                                                      oncomplete="PF('deleteAveriaDialog').show()">
                                         <f:setPropertyActionListener value="#{dtaveria}"
                                                                      target="#{averiaBean.newAveria}"/>
+                                    </p:commandButton>
+
+                                    <p:commandButton id="btnReporteAveria" value="Generar Reporte" class="ui-button-secondary rounded-button" icon="pi pi-file-pdf" style="margin-right: .5rem"
+                                                     actionListener="#{averiaBean.ReporteAveria()}" ajax="false"
+                                                     disabled="#{averiaBean.botonReporteDisabled}">
                                     </p:commandButton>
                                 </p:column>
                             </p:dataTable>
