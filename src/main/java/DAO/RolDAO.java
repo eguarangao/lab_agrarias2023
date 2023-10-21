@@ -1,6 +1,5 @@
 package DAO;
 
-import Model.Persona;
 import Model.Rol;
 import global.Conexion;
 

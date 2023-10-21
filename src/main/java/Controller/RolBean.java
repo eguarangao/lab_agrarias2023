@@ -1,8 +1,6 @@
 package Controller;
 
-import DAO.PersonaDAO;
 import DAO.RolDAO;
-import Model.Persona;
 import Model.Rol;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;

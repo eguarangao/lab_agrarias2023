@@ -1,9 +1,6 @@
 package Controller;
 
-import DAO.FacultadDAO;
 import DAO.PeriodoDAO;
-import DAO.SolicitudDAO;
-import Model.Facultad;
 import Model.Periodo;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;

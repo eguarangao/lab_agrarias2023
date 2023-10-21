@@ -4,7 +4,6 @@ import DAO.LaboratorioDAO;
 import DAO.TecnicoLaboratorioDAO;
 import Model.Aula;
 import Model.Laboratorio;
-import Model.ListFullUser;
 import Model.Persona;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
@@ -18,7 +17,6 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Named
 @SessionScoped
