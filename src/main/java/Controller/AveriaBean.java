@@ -134,8 +134,10 @@ public class AveriaBean implements Serializable {
             e.printStackTrace();
         }
     }
-    
-    public void ReporteAveria() throws IOException, JRException {
+
+    public void ReportPDF() throws IOException, JRException {
+
+
         // es una peticion para descargar
         FacesContext fc = FacesContext.getCurrentInstance();
         ExternalContext ec = fc.getExternalContext();
@@ -145,7 +147,7 @@ public class AveriaBean implements Serializable {
         // formato PDF
         ec.setResponseContentType("application/pdf");
         // Nombre para descargar el Archivo
-        ec.setResponseHeader("Content-disposition", String.format("attachment; filename=ReporteAverias.pdf"));
+        ec.setResponseHeader("Content-disposition", String.format("attachment; filename=Repor.pdf"));
 
 
         // tomamos el stream para llenarlo con el pdf.
@@ -159,7 +161,7 @@ public class AveriaBean implements Serializable {
 
 
             // leemos la plantilla para el reporte.
-            File filetext = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("/resources/reportes/ReporteAverias.jasper"));
+            File filetext = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("/reportes/ReporteAverias.jasper"));
 
 
             // llenamos la plantilla con los datos.
