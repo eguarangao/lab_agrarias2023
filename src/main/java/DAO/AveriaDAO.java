@@ -70,4 +70,40 @@ public class AveriaDAO extends Conexion {
         this.conectar();
     }
 
+
+    public List<ReporteAverias> listarAveriasPorLaboratorioString(int LaboID) throws SQLException {
+        List<ReporteAverias> ListAveria = new ArrayList<>();
+        this.conectar();
+        String query = "select * from laboratorio.listaraveriasquiposporlaboratorio(?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            preparedStatement.setInt(1, LaboID);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                while (resultSet.next()) {
+
+                    ReporteAverias reporteAverias = new ReporteAverias();
+
+                    reporteAverias.setId_averia(resultSet.getInt("id_averia"));
+                    reporteAverias.setFecha_registro(resultSet.getDate("fecha_registro"));
+                    reporteAverias.setDescripcion(resultSet.getString("descripcion"));
+                    reporteAverias.setEstado_averia(resultSet.getString("estado_averia"));
+                    reporteAverias.setId_equipo(resultSet.getInt("id_equipo"));
+                    reporteAverias.setDescrip_equipo(resultSet.getString("descrip_equipo"));
+                    reporteAverias.setId_aula(resultSet.getInt("id_aula"));
+                    reporteAverias.setAula(resultSet.getString("aula"));
+
+                    ListAveria.add(reporteAverias);
+
+                }
+                System.out.println("Ya liste Averias STRING");
+            }
+        } finally {
+            this.desconectar();
+        }
+        return ListAveria;
+    }
+
+
+
 }

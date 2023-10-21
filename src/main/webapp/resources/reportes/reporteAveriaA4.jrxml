@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Averias_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f14ea119-5d74-478e-a642-ed2e4defbb79">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.jrdax"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<queryString>
+		<![CDATA[   SELECT
+	    av.id as id_averia,
+		av.fecha_registro,
+		av.descripcion,
+		av.enabled as estado_averia,
+		av.id_equipo,
+		e.descripcion as descrip_equipo,
+		au.id_aula,
+        au.aula
+	FROM laboratorio.averia as av	
+    INNER JOIN laboratorio.equipo AS e ON av.id_equipo = e.id
+    INNER JOIN laboratorio.laboratorio_aula AS la ON e.id_aula_equipo = la.id_aula
+	INNER JOIN laboratorio.aula as au ON la.id_aula = au.id_aula]]>
+	</queryString>
+	<field name="id_averia" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_averia"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_averia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="averia"/>
+	</field>
+	<field name="fecha_registro" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_registro"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_registro"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="averia"/>
+	</field>
+	<field name="descripcion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="descripcion"/>
+		<property name="com.jaspersoft.studio.field.label" value="descripcion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="averia"/>
+	</field>
+	<field name="estado_averia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="estado_averia"/>
+		<property name="com.jaspersoft.studio.field.label" value="estado_averia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="averia"/>
+	</field>
+	<field name="id_equipo" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_equipo"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_equipo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="averia"/>
+	</field>
+	<field name="descrip_equipo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="descrip_equipo"/>
+		<property name="com.jaspersoft.studio.field.label" value="descrip_equipo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="equipo"/>
+	</field>
+	<field name="id_aula" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_aula"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_aula"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="aula"/>
+	</field>
+	<field name="aula" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="aula"/>
+		<property name="com.jaspersoft.studio.field.label" value="aula"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="aula"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="685" splitType="Stretch">
+			<rectangle>
+				<reportElement x="27" y="5" width="514" height="70" uuid="5198afff-a96a-4f91-81b4-f879abd82131"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="75" width="514" height="40" uuid="8d16c7c9-5f84-428a-a805-580d422eea09"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="30" y="11" width="510" height="50" uuid="4f9708da-6238-4b4d-990a-dfd46e614833"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Black" size="14"/>
+				</textElement>
+				<text><![CDATA[UNIVERSIDAD TÉCNICA ESTATAL DE QUEVEDO
+UNIDAD DE INVESTIGACIÓN CIENCIA Y TECNOLOGÍA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="37" y="85" width="356" height="20" uuid="515ed7e3-0c31-4dc7-82b7-cf2d358dd735"/>
+				<textElement textAlignment="Left">
+					<font fontName="Arial Black" size="12"/>
+				</textElement>
+				<text><![CDATA[REPORTE DE AVERÍA EN EQUIPOS DE LABORATORIO]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="27" y="115" width="514" height="40" backcolor="#C7F2D1" uuid="a974ff9c-6368-42ed-8ead-b4cab7d7944c"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="40" y="120" width="64" height="16" uuid="ecda1e3f-542b-425f-acb1-e40aae60f9a7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE Nº]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="119" y="120" width="64" height="16" uuid="017af938-2d36-4ec3-890b-b5aed30a7460"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="214" y="120" width="64" height="16" uuid="c7a879a4-80be-49d7-901e-d3436e34ba28"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRIORIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="120" width="137" height="16" uuid="6055c90d-1305-4adc-beb8-6cf0501e4cb8"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRE DEL TÉCNICO]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="27" y="155" width="298" height="22" uuid="eedf7011-9004-45ef-b1c3-2217d022f92a"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="40" y="158" width="94" height="16" uuid="a973de93-e320-4235-b755-ddd29a19d19e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEPENDENCIA]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="27" y="177" width="298" height="22" uuid="44f0b05d-6b89-479b-9157-b611a0732b5f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="199" width="298" height="22" uuid="93f52ad3-36f7-4b4b-850f-c38d4b30ebb7"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="221" width="298" height="22" uuid="9053fcd0-4577-45ed-ac37-b3b953f7830d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="265" width="298" height="22" uuid="f59c7894-081f-4a38-8143-4cb079cd0bd8"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="243" width="298" height="22" uuid="2dcd149c-4971-4f0f-a0da-4ff413a6b970"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="287" width="298" height="22" uuid="ad0ee354-729d-4551-8742-4960a2ebf0a2"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="309" width="298" height="22" uuid="ebb0ecec-2728-40cc-8f96-e637db96ab89"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="40" y="202" width="104" height="16" uuid="cb6b1d4f-df5c-4edc-8acb-05d9fbf3e7d4"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATOS DEL EQUIPO]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="176" y="199" width="149" height="22" uuid="36837b77-eaa6-4fb3-8760-57f7f3f0ede8"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="214" y="202" width="76" height="16" uuid="3a8649c9-ecec-4269-9027-68cc0f42aba1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCIÓN]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="176" y="221" width="149" height="22" uuid="db01005d-2c24-45a4-ad19-c4e1779b4314"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="176" y="243" width="149" height="22" uuid="91b72da3-89fc-4782-8f3b-412dfa360cca"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="176" y="265" width="149" height="22" uuid="db9512db-1579-4bcc-987a-bbf4dd683239"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="176" y="287" width="149" height="22" uuid="84a8b994-3954-4ce1-b57d-924c190864ba"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="176" y="309" width="149" height="22" uuid="a8d812ca-6330-43bb-87cb-b7af8f9f9adb"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="331" width="298" height="22" uuid="d705b5ac-1623-44b5-9f4c-4abb2d909307"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="176" y="331" width="149" height="22" uuid="b83d3200-bf7a-4582-b437-c04b4090b0b4"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="353" width="298" height="22" uuid="92935cc8-06c6-416c-b393-aa80ba577088"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="176" y="353" width="149" height="22" uuid="77ef3a83-2eca-4066-85cb-b53a8948d525"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="375" width="514" height="40" uuid="fc3c2799-aa50-48f3-9100-e3ac1a501cc3"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="34" y="385" width="500" height="20" uuid="c8f84e59-a4e4-4941-b881-d9f0d2da2ecc"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Black" size="12"/>
+				</textElement>
+				<text><![CDATA[TIPO DE DAÑO]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="27" y="465" width="514" height="40" uuid="992078fc-4d08-4f81-8741-f3fddfefa9a5"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="34" y="475" width="500" height="20" uuid="ea6f93a5-d344-4d9b-a16b-74cd680ce55e"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Black" size="12"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCIÓN DE LA REVISIÓN PREVIA ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="27" y="415" width="514" height="50" uuid="64ab5b8b-273c-4fc9-b623-96c0d8c6a2ed"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="505" width="514" height="80" uuid="664b5f7b-1b80-4aeb-b673-143ae3310960"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="27" y="585" width="257" height="100" uuid="11cb45e3-28c5-4b2d-914b-4358ab191f2e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="284" y="585" width="257" height="100" uuid="84a7eb66-3945-4773-a6dd-00471709e7a0"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="35" y="661" width="240" height="20" uuid="0d85a0d5-ab5d-4cb8-b68c-98acb70efd8a"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Black" size="11"/>
+				</textElement>
+				<text><![CDATA[FIRMA DEL TÉCNICO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="292" y="661" width="240" height="20" uuid="38818bfd-1995-49c5-a184-0a53b6f5e1bd"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Black" size="11"/>
+				</textElement>
+				<text><![CDATA[SELLO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="224" width="120" height="16" uuid="9e70ca4b-e879-4fa0-9657-e1c3fdc42b3d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CÓDIGO DEL BIEN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="247" width="104" height="16" uuid="6c1c76f3-98e7-40f5-b94d-c3c792ca6a92"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CATEGORÍA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="268" width="104" height="16" uuid="ed24d0fc-93c5-4d0c-acc3-0f6b8884e42b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="290" width="104" height="16" uuid="88e7386d-f95e-4901-ac2c-7e961a3046b3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MARCA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="313" width="104" height="16" uuid="e68115ae-7185-44f0-98e2-7224f0bc96c0"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MODELO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="335" width="104" height="16" uuid="21e142bf-bcee-4ca9-8cbe-778546dc7c1d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[N° SERIE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="356" width="104" height="16" uuid="7be35b42-dd11-4e2b-9224-c978e25c7497"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="35" y="420" width="100" height="30" uuid="ab57c854-0773-442f-8eed-325249ac207e"/>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="268" width="100" height="30" uuid="5d0ff0e1-9244-429c-9b20-1f5f52900623"/>
+				<textFieldExpression><![CDATA[$F{descrip_equipo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

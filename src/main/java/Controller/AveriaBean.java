@@ -30,6 +30,7 @@ public class AveriaBean implements Serializable {
     private EquipoDAO DaoEquipo = new EquipoDAO();
     private MantenimientoDAO DAOmantenimiento = new MantenimientoDAO();
     private List<Averia> ListAveria;
+    private List<ReporteAverias> ListReporteAveria;
     private List<Equipo> Listequipos;
     private EquipoBean BeanEquipo = new EquipoBean();
     private Averia newAveria;
@@ -135,8 +136,9 @@ public class AveriaBean implements Serializable {
         }
     }
 
-    public void ReportPDF() throws IOException, JRException {
-
+    public void ReportPDF() throws IOException, JRException, SQLException {
+        this.ListReporteAveria = new ArrayList<>();
+        ListReporteAveria = DAOaveria.listarAveriasPorLaboratorioString(idlaboratorioSession);
 
         // es una peticion para descargar
         FacesContext fc = FacesContext.getCurrentInstance();
@@ -160,12 +162,13 @@ public class AveriaBean implements Serializable {
             //parametros.put("descripcion", newAveria.getEquipo().getDescripcion());
 
 
-            // leemos la plantilla para el reporte.
-            File filetext = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("/reportes/ReporteAverias.jasper"));
+            String reportePDF = "C:\\Users\\Equipo\\Documents\\GitHub\\lab_agrarias2023\\target\\jsfdemolab\\resources\\reportes\\reporteAveriaA4.jrxml";
+
+            JasperReport jasperReport = JasperCompileManager.compileReport(reportePDF);
 
 
             // llenamos la plantilla con los datos.
-            JasperPrint jasperPrint = JasperFillManager.fillReport(filetext.getPath(), parametros, new JRBeanCollectionDataSource(this.ListAveria));
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, new JRBeanCollectionDataSource(this.ListReporteAveria));
 
             // exportamos a pdf.
             JasperExportManager.exportReportToPdfStream(jasperPrint, stream);
