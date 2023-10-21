@@ -21,11 +21,13 @@ public class PeriodoBean implements Serializable {
     private PeriodoDAO periodoDAO = new PeriodoDAO();
     private Periodo nuevoPeriodo = new Periodo();
     private List<Periodo> periodos;
+    private List<Periodo> allPeriodos;
     @PostConstruct
     public void main() {
         try {
             this.periodos = new ArrayList<>();
             periodos = periodoDAO.listarPeriodosHabilitados();
+            allPeriodos = periodoDAO.listarPeriodos();
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -14,16 +14,16 @@
                     <div class="card crud-demo">
                         <p:toolbar>
                             <p:toolbarGroup>
-                                <p:commandButton value="New" icon="pi pi-plus"
+                                <p:commandButton value="Nuevo periodo" icon="pi pi-plus"
                                                  actionListener="#{periodoBean.openNew()}"
                                                  update=":dialogs:manage-facd-content"
                                                  oncomplete="PF('manageFacdDialog').show()"
-                                                 styleClass="ui-button-success" style="margin-right: .5rem">
+                                                style="margin-right: .5rem">
                                     <p:resetInput target=":dialogs:manage-facd-content"/>
                                 </p:commandButton>
                             </p:toolbarGroup>
                         </p:toolbar>
-                        <p:dataTable id="dt-facd" widgetVar="dtFacd" var="facd" value="#{periodoBean.periodos}"
+                        <p:dataTable id="dt-facd" widgetVar="dtFacd" var="facd" value="#{periodoBean.allPeriodos}"
                                      reflow="true" styleClass="products-table" lazy="true"
                                      rowKey="#{facd.id}" paginator="true" rows="10" rowSelectMode="add"
                                      paginatorPosition="bottom">
@@ -44,13 +44,13 @@
                                 <p:commandButton icon="pi pi-pencil"
                                                  update=":dialogs:manage-facd-content"
                                                  oncomplete="PF('manageFacdDialog').show()"
-                                                 styleClass="edit-button rounded-button ui-button-success"
+                                                 styleClass="edit-button rounded-button ui-button-warning"
                                                  process="@this">
                                     <f:setPropertyActionListener value="#{facd}"
                                                                  target="#{periodoBean.nuevoPeriodo}"/>
                                     <p:resetInput target=":dialogs:manage-facd-content"/>
                                 </p:commandButton>
-                                <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                <p:commandButton styleClass="rounded-button ui-button-danger ui-button-outlined"  icon="pi pi-trash"
                                                  process="@this"
                                                  oncomplete="PF('deleteFacdDialog').show()"
                                 >
@@ -79,7 +79,8 @@
                             </p:outputPanel>
                         </p:outputPanel>
                         <f:facet name="footer">
-                            <p:commandButton value="Save" icon="pi pi-check"
+                            <p:commandButton value="Guardar" icon="pi pi-check"
+                                             styleClass="ui-button-success"
                                              actionListener="#{periodoBean.addPeriodo()}"
                                              update="manage-facd-content, form:dt-facd"
                                              process="manage-facd-content @this"/>
@@ -89,7 +90,7 @@
                     </p:dialog>
                     <p:confirmDialog widgetVar="deleteFacdDialog" showEffect="fade" width="300"
                                      message="Delete the periodo?" header="Confirm" severity="warn">
-                        <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{periodoBean.delete()}"
+                        <p:commandButton value="Si" icon="pi pi-check" actionListener="#{periodoBean.delete()}"
                                          process="@this"
                                          oncomplete="PF('deleteFacdDialog').hide()"/>
                         <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
