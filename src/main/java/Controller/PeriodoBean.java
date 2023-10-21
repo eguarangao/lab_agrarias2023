@@ -29,6 +29,7 @@ public class PeriodoBean implements Serializable {
         try {
             this.periodos = new ArrayList<>();
             periodos = periodoDAO.listarPeriodosHabilitados();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

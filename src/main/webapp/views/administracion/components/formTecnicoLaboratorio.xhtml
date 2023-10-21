@@ -17,7 +17,7 @@
                             <p:toolbarGroup>
                                 <h:outputLabel for="facd" value="Facultad:"/>
                                 <p:selectOneMenu id="facd" value="#{tecnicoLaboratorioBean.idFacultad}"
-                                                 styleClass="form-control">
+                                                 styleClass="form-control"  filter="true" filterMatchMode="contains" filterNormalize="true">
                                     <f:selectItem itemLabel="Seleccione una facultad"/>
                                     <f:selectItems value="#{facultadBean.facultades}" var="fad"
                                                    itemLabel="#{fad.nombreFacd}" itemValue="#{fad.idFacd}"/>
@@ -31,7 +31,7 @@
                             </p:toolbarGroup>
                             <p:toolbarGroup>
                                 <h:outputLabel for="lab" value="Laboratorio:"/>
-                                <p:selectOneMenu id="lab" value="#{tecnicoLaboratorioBean.idLaboratorio}">
+                                <p:selectOneMenu id="lab" value="#{tecnicoLaboratorioBean.idLaboratorio}"  filter="true" filterMatchMode="contains" filterNormalize="true">
                                     <f:selectItem itemLabel="Seleccione un laboratorio"/>
                                     <f:selectItems value="#{tecnicoLaboratorioBean.listLab}" var="labr"
                                                    itemLabel="#{labr.nombre}" itemValue="#{labr.id}"/>
@@ -75,10 +75,11 @@
                                                 </p:commandButton>
                                                 <p:commandButton value="Asignar" icon="pi pi-users"
                                                                  update=":dialogs2:manage-facd2-content"
+                                                                 actionListener="#{tecnicoLaboratorioBean.clearListLabByTecnico()}"
                                                                  styleClass="ui-button-secondary"
                                                                  oncomplete="PF('manageFacd2Dialog').show()"
                                                                  style="margin-right: .5rem">
-                                                    <p:resetInput target=":dialogs2:manage-facd2-content"/>
+                                                    <p:resetInput clearModel="true" target="dialogs2:manage-facd2-content"/>
 
                                                 </p:commandButton>
                                             </div>
@@ -193,25 +194,24 @@
                                                        itemLabel="#{per.namePeriodo}" itemValue="#{per.id}"/>
                                         <p:ajax event="change"
                                                 listener="#{periodoBean.periodoDAO.listarPeriodosHabilitados()}"
-                                                update="form:lab"
                                         />
                                         <p:ajax event="change" listener="#{tecnicoLaboratorioBean.listLabByTecnico()}" render="dt-facd2"
                                                 update=":dialogs2:manage-facd2-content" />
                                     </p:selectOneMenu>
                                     <p:outputLabel for="tec">Tecnico</p:outputLabel>
-                                    <p:selectOneMenu id="tec" value="#{tecnicoLaboratorioBean.idPeriodo}"
+                                    <p:selectOneMenu id="tec" value="#{tecnicoLaboratorioBean.idTecnico}"
+                                                     filter="true" filterMatchMode="contains" filterNormalize="true"
                                                      styleClass="form-control">
                                         <f:selectItem itemLabel="Seleccione un tecnico"/>
-                                        <f:selectItems value="#{periodoBean.periodos}" var="per"
-                                                       itemLabel="#{per.namePeriodo}" itemValue="#{per.id}"/>
+                                        <f:selectItems value="#{tecnicoLaboratorioBean.listTecnico}" var="tecnico"
+                                                       itemLabel="(DNI: #{tecnico.dni}) #{tecnico.nombre} #{tecnico.apellido}" itemValue="#{tecnico.id}"/>
                                         <p:ajax event="change"
-                                                listener="#{periodoBean.main()}"
-                                                update="form:lab"
+                                                listener="#{tecnicoLaboratorioBean.listPersonaTecnico()}"
                                         />
-
                                     </p:selectOneMenu>
-                                    <p:commandButton value="Buscar" icon="pi pi-search"
+                                    <p:commandButton value="Agregar técnico" icon="pi pi-search"
                                                      update="form:dt-facd"
+                                                     actionListener="#{tecnicoLaboratorioBean.insertTecnicoByAsig()}"
                                                      styleClass="ui-button-success" style="margin-right: .5rem">
                                     </p:commandButton>
                                 </div>
@@ -226,11 +226,14 @@
                                         <p:column headerText="id_aula" rendered="false">
                                             <h:outputText value="#{asig.id_aula}"/>
                                         </p:column>
-                                        <p:column headerText="Código">
-                                            <h:outputText value="#{asig.id}"/>
+                                        <p:column headerText="DNI">
+                                            <h:outputText value="#{asig.dni}"/>
                                         </p:column>
                                         <p:column headerText="Nombre tecnico">
                                             <h:outputText value="#{asig.nombre}"/>
+                                        </p:column>
+                                        <p:column headerText="Nombre tecnico">
+                                            <h:outputText value="#{asig.apellido}"/>
                                         </p:column>
                                         <p:column headerText="Estado">
                                             <h:outputText value="#{asig.enable}"/>

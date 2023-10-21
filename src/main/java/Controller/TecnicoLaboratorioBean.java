@@ -25,16 +25,22 @@ import java.util.Objects;
 @Data
 public class TecnicoLaboratorioBean implements Serializable {
     private TecnicoLaboratorioDAO tecnicoDAO;
+    private LaboratorioDAO laboratorioDAO;
+    private Aula nuevaAula;
+
     private List<Laboratorio> listLab;
+    private List<Persona> listTecnico;
     private List<Aula> listAula;
     private List<Persona> listPersona;
     private int idLaboratorio;
     private int idFacultad;
     private int idPeriodo;
+    private int idTecnico;
+
     private String nombreLaboratorio;
     private boolean rendered;
-    private Aula nuevaAula;
-    private LaboratorioDAO laboratorioDAO;
+
+
 
 
     @PostConstruct
@@ -43,6 +49,8 @@ public class TecnicoLaboratorioBean implements Serializable {
             rendered = true;
             listAula = new ArrayList<>();
             listPersona = new ArrayList<>();
+            listTecnico = new ArrayList<>();
+            listPersonaTecnico();
             listLabByTecnico();
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,6 +68,10 @@ public class TecnicoLaboratorioBean implements Serializable {
            PrimeFaces.current().ajax().update("form:messages", "dialogs2:dt-facd2");
 
 
+    }
+    public void clearListLabByTecnico()
+    {
+        listPersona.clear();
     }
     public void listAulaByLab() {
 
@@ -111,5 +123,16 @@ public class TecnicoLaboratorioBean implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Laboratorio agregado"));
         listLabByFacultad();
         PrimeFaces.current().executeScript("PF('manageLabDialog').hide()");
+    }
+
+    public void  listPersonaTecnico() {
+        tecnicoDAO = new TecnicoLaboratorioDAO();
+        listTecnico = tecnicoDAO.listTecnico();
+
+    }
+    public void insertTecnicoByAsig() throws SQLException {
+        tecnicoDAO = new TecnicoLaboratorioDAO();
+        tecnicoDAO.insert(idLaboratorio,idTecnico,idPeriodo);
+        listLabByTecnico();
     }
 }

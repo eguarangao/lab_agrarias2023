@@ -3,6 +3,7 @@ package DAO;
 import Model.Aula;
 import Model.Laboratorio;
 import Model.Persona;
+import Model.Tecnico;
 import global.Conexion;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -117,6 +118,45 @@ public class TecnicoLaboratorioDAO extends Conexion {
 
     }
 
+    public void insert(int idLaboratorio, int idTecnico, int idPeriodo) throws SQLException {
+
+        this.conectar();
+        try {
+
+            connection.setAutoCommit(false);
+            String insertAulaQuery = "insert into laboratorio.tecnico_laboratorio (id_laboratorio, id_tecnico, id_periodo, enable)\n" +
+                    "values (?,?,?,true);";
+
+            try (PreparedStatement statementAula = connection.prepareStatement(insertAulaQuery, Statement.RETURN_GENERATED_KEYS)) {
+
+                statementAula.setInt(1, idLaboratorio);
+                statementAula.setInt(2, idTecnico);
+                statementAula.setInt(3, idPeriodo);
+                int affectedRowsAula = statementAula.executeUpdate();
+
+                if (affectedRowsAula <= 0) {
+                    throw new SQLException("La actualización en la tabla aula falló, no se modificó ninguna fila.");
+                }
+                try (ResultSet generateKeys = statementAula.getGeneratedKeys()) {
+                    if (generateKeys.next()) {
+                        connection.commit();
+                    } else {
+                        throw new SQLException("No se pudo obtener el ID del aula.");
+
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            this.desconectar();
+        }
+
+
+    }
+
     public void update(Aula aula) throws SQLException {
         try {
             // Establece la conexión a la base de datos (reemplaza con tu lógica).
@@ -149,7 +189,8 @@ public class TecnicoLaboratorioDAO extends Conexion {
             desconectar();
         }
     }
-    public void deleteLaboratorioAulaAndAula( Aula aula) throws SQLException {
+
+    public void deleteLaboratorioAulaAndAula(Aula aula) throws SQLException {
         try {
             // Establece la conexión a la base de datos (reemplaza con tu lógica).
             this.conectar();
@@ -218,15 +259,41 @@ public class TecnicoLaboratorioDAO extends Conexion {
                 // Agrega el objeto a la lista de resultados
                 resultados.add(objeto);
             }
-        }
-        catch (SQLException  e){
+        } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             desconectar();
         }
 
         return resultados;
     }
 
+    public List<Persona> listTecnico() {
+        List<Persona> personas = new ArrayList<>();
+        ResultSet rs;
+        String sql = "select t.id, p.nombre, p.apellido, p.dni from laboratorio.tecnico t\n" +
+                "    inner join laboratorio.usuario u\n" +
+                "        on u.id = t.id_usuario\n" +
+                "inner join laboratorio.persona p on u.id_persona = p.id\n" +
+                "inner join laboratorio.rol_usuario ru on u.id = ru.id_usuario\n" +
+                "where ru.id_rol = 2;";
+        conectar();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                Persona tecnico = new Persona();
+                tecnico.setId(rs.getInt("id"));
+                tecnico.setDni(rs.getString("dni"));
+                tecnico.setNombre(rs.getString("nombre"));
+                tecnico.setApellido(rs.getString("apellido"));
+                personas.add(tecnico);
+            }
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            desconectar();
+        }
+        return personas;
+    }
 }
