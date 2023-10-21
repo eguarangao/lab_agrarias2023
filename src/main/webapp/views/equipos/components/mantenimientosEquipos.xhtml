@@ -73,15 +73,15 @@
                                 <p:commandButton icon="pi pi-pencil"
                                                  update=":dialogMante:manage-ManteRealiz-content"
                                                  oncomplete="PF('manageManteRealizDialog').show()"
-                                                 styleClass="edit-button rounded-button ui-button-warning"
+                                                 styleClass="edit-button rounded-button ui-button-warning ui-button-outlined"
                                                  process="@this">
                                     <f:setPropertyActionListener value="#{dtmante}"
                                                                  target="#{mantenimientoBean.newMante}"/>
                                     <p:resetInput target=":dialogMante:manage-Mante-content"/>
 
                                 </p:commandButton>
-                                <p:commandButton class="ui-button-danger rounded-button" icon="pi pi-trash"
-                                                 process="@this"
+                                <p:commandButton class="ui-button-danger rounded-button ui-button-outlined"
+                                                 icon="pi pi-trash" process="@this"
                                                  oncomplete="PF('deleteManteDialog').show()">
                                     <f:setPropertyActionListener value="#{dtmante}"
                                                                  target="#{mantenimientoBean.newMante}"/>

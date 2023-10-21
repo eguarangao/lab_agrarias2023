@@ -73,21 +73,17 @@
                                     <p:commandButton icon="pi pi-pencil"
                                                      update=":dialogAveria:manage-Averia-content"
                                                      oncomplete="PF('manageAveriaDialog').show()"
-                                                     styleClass="edit-button rounded-button ui-button-warning"
+                                                     styleClass="edit-button rounded-button ui-button-warning ui-button-outlined"
                                                      process="@this">
                                         <f:setPropertyActionListener value="#{dtaveria}"
                                                                      target="#{averiaBean.newAveria}"/>
                                         <p:resetInput target=":dialogAveria:manage-Averia-content"/>
 
                                     </p:commandButton>
-                                    <p:commandButton class="ui-button-danger rounded-button" icon="pi pi-trash"
-                                                     process="@this"
-                                                     oncomplete="PF('deleteAveriaDialog').show()">
-                                        <f:setPropertyActionListener value="#{dtaveria}"
-                                                                     target="#{averiaBean.newAveria}"/>
-                                    </p:commandButton>
 
-                                    <p:commandButton id="btnReporteAveria" value="Generar Reporte" class="ui-button-secondary rounded-button" icon="pi pi-file-pdf" style="margin-right: .5rem"
+                                    <p:commandButton id="btnReporteAveria"
+                                                     class="ui-button-info rounded-button ui-button-outlined"
+                                                     icon="pi pi-file-pdf" style="margin-right: .5rem"
                                                      actionListener="#{averiaBean.ReportPDF()}" ajax="false"
                                                      disabled="#{averiaBean.botonReporteDisabled}">
                                     </p:commandButton>
@@ -163,15 +159,6 @@
 
 
                     </p:dialog>
-                    <p:confirmDialog widgetVar="deleteAveriaDialog" showEffect="fade" width="300"
-                                     message="Deseas eliminar Averia?" header="Confirmar" severity="warn">
-                        <p:commandButton value="Yes" icon="pi pi-check"
-                                         process="@this"
-                                         oncomplete="PF('deleteAveriaDialog').hide()"/>
-                        <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
-                                         onclick="PF('deleteAveriaDialog').hide()"/>
-                    </p:confirmDialog>
-
 
                 </h:form>
 

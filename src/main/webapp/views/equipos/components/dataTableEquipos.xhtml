@@ -89,15 +89,15 @@
                      <p:commandButton icon="pi pi-pencil"
                                       update=":dialogEquipo:manage-equipo-content"
                                       oncomplete="PF('manageEquipoDialog').show()"
-                                      styleClass="edit-button rounded-button ui-button-warning"
+                                      styleClass="edit-button rounded-button ui-button-warning ui-button-outlined"
                                       process="@this">
                         <f:setPropertyActionListener value="#{dtequipos}"
                                                      target="#{equipoBean.newEquipo}"/>
                         <p:resetInput target=":dialogEquipo:manage-equipo-content"/>
 
                      </p:commandButton>
-                     <p:commandButton class="ui-button-danger rounded-button" icon="pi pi-trash"
-                                      process="@this"
+                     <p:commandButton class="ui-button-danger rounded-button ui-button-outlined"
+                                      icon="pi pi-trash" process="@this"
                                       oncomplete="PF('deleteEquipoDialog').show()">
                         <f:setPropertyActionListener value="#{dtequipos}"
                                                      target="#{equipoBean.newEquipo}"/>
