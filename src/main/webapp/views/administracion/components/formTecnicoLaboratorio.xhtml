@@ -229,9 +229,13 @@
                                         id="dt-facd2" widgetVar="dtFacd2" var="asig"
                                         value="#{tecnicoLaboratorioBean.listPersona}"
                                         rowKey="#{asig.id}"
+                                        editable="true"
                                         reflow="true" styleClass="products-table" lazy="true"
                                         paginator="true" rows="10" rowSelectMode="add"
                                         paginatorPosition="bottom">
+                                    <p:ajax event="rowEdit" listener="#{tecnicoLaboratorioBean.onRowEdit}"/>
+                                    <p:ajax event="rowEditCancel" listener="#{tecnicoLaboratorioBean.onRowCancel}"/>
+
                                     <p:column headerText="id_aula" rendered="false">
                                         <h:outputText value="#{asig.id}"/>
                                     </p:column>
@@ -245,24 +249,25 @@
                                         <h:outputText value="#{asig.apellido}"/>
                                     </p:column>
                                     <p:column headerText="Estado">
-                                        <h:outputText value="#{asig.enable}"/>
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <p:tag severity="success" value="Activado" rendered="#{asig.enable}"/>
+                                                <p:tag severity="warning" value="Desactivado"
+                                                       rendered="#{not asig.enable}"/>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <h:selectOneMenu value="#{asig.enable}" >
+                                                    <f:selectItem itemLabel="Activado"
+                                                                   itemValue="1"/>
+                                                    <f:selectItem itemLabel="Desactivado"
+                                                                  itemValue="0"/>
+                                                </h:selectOneMenu>
+                                            </f:facet>
+                                        </p:cellEditor>
                                     </p:column>
                                     <p:column headerText="Acciones" exportable="false">
-                                        <p:commandButton icon="pi pi-pencil"
-                                                         update=":dialogs2:manage-facd2-content"
-                                                         oncomplete="PF('manageFacd2Dialog').show()"
-                                                         styleClass="edit-button rounded-button ui-button-success"
-                                                         process="@this">
-                                            <f:setPropertyActionListener value="#{asig}"
-                                                                         target="#{tecnicoLaboratorioBean.nuevaAula}"/>
-                                            <p:resetInput target=":dialogs2:manage-facd2-content"/>
-                                        </p:commandButton>
-                                        <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
-                                                         process="@this"
-                                                         oncomplete="PF('deleteFacd2Dialog').show()"
-                                        > <f:setPropertyActionListener value="#{asig}"
-                                                                       target="#{tecnicoLaboratorioBean.nuevaAula}"/>
-                                        </p:commandButton>
+                                        <p:rowEditor  styleClass="edit-button rounded-button ui-button-success" editTitle="Edit Row" cancelTitle="Cancel Edit" saveTitle="Save Row"/>
+
                                     </p:column>
                                 </p:dataTable>
 

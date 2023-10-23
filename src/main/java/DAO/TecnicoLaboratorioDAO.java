@@ -124,6 +124,7 @@ public class TecnicoLaboratorioDAO extends Conexion {
             String insertAulaQuery = "insert into laboratorio.tecnico_laboratorio (id_laboratorio, id_tecnico, id_periodo, enable)\n" +
                     "values (?,?,?,true);";
 
+
             try (PreparedStatement statementAula = connection.prepareStatement(insertAulaQuery, Statement.RETURN_GENERATED_KEYS)) {
 
                 statementAula.setInt(1, idLaboratorio);
@@ -143,7 +144,6 @@ public class TecnicoLaboratorioDAO extends Conexion {
                     }
                 }
             }
-
         } catch (SQLException e) {
             connection.rollback();
             throw e;
@@ -153,6 +153,91 @@ public class TecnicoLaboratorioDAO extends Conexion {
 
 
     }
+
+    public void cambiarEstadoTecnicoAsig(int idLaboratorio, int idTecnico, int idPeriodo) throws SQLException {
+        conectar();
+        connection.setAutoCommit(false);
+        String updateTecnicoLaboratorio = "UPDATE laboratorio.tecnico_laboratorio\n" +
+                "SET enable = false\n" +
+                "WHERE id_tecnico != ? and id_periodo = ? and id_laboratorio = ?;";
+        try (PreparedStatement statement = connection.prepareStatement(updateTecnicoLaboratorio, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setInt(1, idTecnico);
+            statement.setInt(2, idPeriodo);
+            statement.setInt(3, idLaboratorio);
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows <= 0) {
+                throw new SQLException("La actualización en la tabla aula falló, no se modificó ninguna fila.");
+            }
+            try (ResultSet generateKeys = statement.getGeneratedKeys()) {
+                if (generateKeys.next()) {
+                    connection.commit();
+
+                } else {
+                    throw new SQLException("No se pudo obtener el ID del aula.");
+
+                }
+            }
+        } catch (SQLException e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            this.desconectar();
+        }
+
+    }
+    public void editarEstadoTecnicoAsig(int idLaboratorio, int idTecnico, int idPeriodo) throws SQLException {
+        conectar();
+        connection.setAutoCommit(false);
+        String updateTecnicoLaboratorio = "UPDATE laboratorio.tecnico_laboratorio\n" +
+                "SET enable = false\n" +
+                "WHERE id != ? and id_periodo = ? and id_laboratorio = ?;";
+        try (PreparedStatement statement = connection.prepareStatement(updateTecnicoLaboratorio, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setInt(1, idTecnico);
+            statement.setInt(2, idPeriodo);
+            statement.setInt(3, idLaboratorio);
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows <= 0) {
+                throw new SQLException("La actualización en la tabla aula falló, no se modificó ninguna fila.");
+            }
+            try (ResultSet generateKeys = statement.getGeneratedKeys()) {
+                if (generateKeys.next()) {
+                    connection.commit();
+
+                } else {
+                    throw new SQLException("No se pudo obtener el ID del aula.");
+
+                }
+            }
+        } catch (SQLException e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            this.desconectar();
+        }
+
+    }
+    public boolean verificarTecnicoExiste(int idTecnico, int idPeriodo, int idLaboratorio) {
+        conectar();
+        String consulta = "SELECT id, id_laboratorio, id_tecnico, id_periodo, enable " +
+                "FROM laboratorio.tecnico_laboratorio " +
+                "WHERE id_tecnico = ? AND id_periodo = ? AND id_laboratorio = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(consulta)) {
+            stmt.setInt(1, idTecnico); // Asigna el valor de id_tecnico al primer parámetro
+            stmt.setInt(2, idPeriodo); // Asigna el valor de id_periodo al segundo parámetro
+            stmt.setInt(3, idLaboratorio); // Asigna el valor de id_laboratorio al tercer parámetro
+            try (ResultSet rs = stmt.executeQuery()) {
+                // Verificar si la consulta devuelve algún resultado
+                boolean hayResultado = rs.next();
+                return hayResultado;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
     public void update(Aula aula) throws SQLException {
         try {
