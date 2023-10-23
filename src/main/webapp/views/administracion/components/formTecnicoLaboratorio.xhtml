@@ -9,60 +9,45 @@
         <ui:include src="subNavBarAdministracion.xhtml"/>
         <div class="p-grid ui-fluid">
             <div class="p-col-12">
-
                 <h:form id="form">
                     <p:growl id="messages" showDetail="true"/>
-                    <div class="card crud-demo">
-                        <p:toolbar>
-                            <p:toolbarGroup>
-                                <h:outputLabel for="facd" value="Facultad:"/>
-                                <div class="ui-inputgroup">
-                                    <p:selectOneMenu id="facd" value="#{tecnicoLaboratorioBean.idFacultad}"
-                                                     styleClass="form-control" filter="true" filterMatchMode="contains"
-                                                     filterNormalize="true">
-                                        <f:selectItem itemLabel="Seleccione una facultad"/>
-                                        <f:selectItems value="#{facultadBean.facultades}" var="fad"
-                                                       itemLabel="#{fad.nombreFacd}" itemValue="#{fad.idFacd}"/>
-                                        <p:ajax event="change"
+                    <div class="card">
+                        <h:outputLabel for="facd" value="Facultad:"/>
+                        <div class="ui-inputgroup">
+                            <p:selectOneMenu id="facd" value="#{tecnicoLaboratorioBean.idFacultad}"
+                                             styleClass="form-control" filter="true" filterMatchMode="contains"
+                                             filterNormalize="true">
+                                <f:selectItem itemLabel="Seleccione una facultad"/>
+                                <f:selectItems value="#{facultadBean.facultades}" var="fad"
+                                               itemLabel="#{fad.nombreFacd}" itemValue="#{fad.idFacd}"/>
+                                <p:ajax event="change"
 
-                                                listener="#{tecnicoLaboratorioBean.listLabByFacultad()}"
+                                        listener="#{tecnicoLaboratorioBean.listLabByFacultad()}"
 
-                                                update="form:lab"
-                                        />
-                                    </p:selectOneMenu>
-                                </div>
-                            </p:toolbarGroup>
-                            <p:toolbarGroup>
-                                <h:outputLabel for="lab" value="Laboratorio:"/>
-
-                                <div class="ui-inputgroup">
-                                    <p:selectOneMenu id="lab" value="#{tecnicoLaboratorioBean.idLaboratorio}"
-                                                     filter="true" filterMatchMode="contains"
-                                                     filterNormalize="true">
-                                        <f:selectItem itemLabel="Seleccione un laboratorio"/>
-                                        <f:selectItems value="#{tecnicoLaboratorioBean.listLab}" var="labr"
-                                                       itemLabel="#{labr.nombre}" itemValue="#{labr.id}"/>
-                                    </p:selectOneMenu>
-                                    <p:commandButton icon="pi pi-plus"
-                                                     update=":dialogs-lab:manage-lab-content"
-                                                     oncomplete="PF('manageLabDialog').show()"
-                                                     styleClass="ui-button-success" style="margin-right: .5rem">
-                                        <p:resetInput target=":dialogs-lab:manage-lab-content"/>
-                                    </p:commandButton>
-                                </div>
-
-                            </p:toolbarGroup>
-                            <p:toolbarGroup>
-
-                            </p:toolbarGroup>
-                            <p:toolbarGroup>
-                                <p:commandButton value="Buscar" icon="pi pi-search"
-                                                 actionListener="#{tecnicoLaboratorioBean.listAulaByLab()}"
-                                                 update="form:dt-facd"
-                                                 style="margin-right: .5rem">
-                                </p:commandButton>
-                            </p:toolbarGroup>
-                        </p:toolbar>
+                                        update="form:lab"
+                                />
+                            </p:selectOneMenu>
+                        </div>
+                        <h:outputLabel for="lab" value="Laboratorio:"/>
+                        <div class="ui-inputgroup">
+                            <p:selectOneMenu id="lab" value="#{tecnicoLaboratorioBean.idLaboratorio}"
+                                             filter="true" filterMatchMode="contains"
+                                             filterNormalize="true">
+                                <f:selectItem itemLabel="Seleccione un laboratorio"/>
+                                <f:selectItems value="#{tecnicoLaboratorioBean.listLab}" var="labr"
+                                               itemLabel="#{labr.nombre}" itemValue="#{labr.id}"/>
+                                <p:ajax event="change"
+                                        listener="#{tecnicoLaboratorioBean.listAulaByLab()}"
+                                        update="form:dt-facd"
+                                />
+                            </p:selectOneMenu>
+                            <p:commandButton icon="pi pi-plus"
+                                             actionListener="#{tecnicoLaboratorioBean.msjValidateAddLab()}"
+                                             update=":dialogs-lab:manage-lab-content"
+                                             styleClass="ui-button-success" style="margin-right: .5rem">
+                                <p:resetInput target=":dialogs-lab:manage-lab-content"/>
+                            </p:commandButton>
+                        </div>
                         <p:dataTable
                                 id="dt-facd" widgetVar="dtFacd" var="facd"
                                 value="#{tecnicoLaboratorioBean.listAula}"
@@ -78,8 +63,6 @@
                                                 <p:commandButton value="Nueva area" icon="pi pi-plus"
                                                                  actionListener="#{tecnicoLaboratorioBean.openNew()}"
                                                                  update=":dialogs:manage-facd-content"
-                                                                 oncomplete="PF('manageFacdDialog').show()"
-
                                                                  style="margin-right: .5rem">
                                                     <p:resetInput target=":dialogs:manage-facd-content"/>
                                                 </p:commandButton>
@@ -87,7 +70,6 @@
                                                                  update=":dialogs2:manage-facd2-content"
                                                                  actionListener="#{tecnicoLaboratorioBean.clearListLabByTecnico()}"
                                                                  styleClass="ui-button-secondary"
-                                                                 oncomplete="PF('manageFacd2Dialog').show()"
                                                                  style="margin-right: .5rem">
                                                     <p:resetInput clearModel="true"
                                                                   target="dialogs2:manage-facd2-content"/>
@@ -236,7 +218,6 @@
                                                 />
                                             </p:selectOneMenu>
                                             <p:commandButton icon="pi pi-plus"
-                                                             update="form:dt-facd"
                                                              actionListener="#{tecnicoLaboratorioBean.insertTecnicoByAsig()}"
                                                              styleClass="ui-button-success" style="margin-right: .5rem">
                                             </p:commandButton>

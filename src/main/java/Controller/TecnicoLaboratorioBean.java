@@ -39,11 +39,13 @@ public class TecnicoLaboratorioBean implements Serializable {
     private boolean rendered;
 
 
-
-
     @PostConstruct
     public void main() {
         try {
+            idFacultad = 0;
+            idLaboratorio = 0;
+            idPeriodo =0;
+            idTecnico=0;
             rendered = true;
             listAula = new ArrayList<>();
             listPersona = new ArrayList<>();
@@ -56,21 +58,44 @@ public class TecnicoLaboratorioBean implements Serializable {
     }
 
     public void listLabByFacultad() {
-        tecnicoDAO = new TecnicoLaboratorioDAO();
-        listLab = tecnicoDAO.listarPorFacultad(this.idFacultad);
+
+            tecnicoDAO = new TecnicoLaboratorioDAO();
+            listLab = tecnicoDAO.listarPorFacultad(this.idFacultad);
+
+
+
+
     }
+    public void msjValidateAddLab(){
+        if(!validarSelectFacultad()){
+            PrimeFaces.current().executeScript("PF('manageLabDialog').show();");
+        }else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"Mensaje de advertencia","Seleccione una facultad"));
+        }
+        PrimeFaces.current().ajax().update("form:messages");
+    }
+
     public void listLabByTecnico() throws SQLException {
 
-           tecnicoDAO = new TecnicoLaboratorioDAO();
-           listPersona = tecnicoDAO.listarTecnicobyLab(idLaboratorio, idPeriodo);
-           PrimeFaces.current().ajax().update("form:messages", "dialogs2:dt-facd2");
+        tecnicoDAO = new TecnicoLaboratorioDAO();
+        listPersona = tecnicoDAO.listarTecnicobyLab(idLaboratorio, idPeriodo);
+        PrimeFaces.current().ajax().update("form:messages", "dialogs2:dt-facd2");
 
 
     }
-    public void clearListLabByTecnico()
-    {
+
+    public void clearListLabByTecnico() {
         listPersona.clear();
+        if(!validarSelectFLaboratorio()){
+            PrimeFaces.current().executeScript("PF('manageFacd2Dialog').show();");
+
+        }else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"Mensaje de advertencia","Seleccione un Laboratorio"));
+        }
+        PrimeFaces.current().ajax().update("form:messages");
+
     }
+
     public void listAulaByLab() {
 
         tecnicoDAO = new TecnicoLaboratorioDAO();
@@ -78,29 +103,50 @@ public class TecnicoLaboratorioBean implements Serializable {
         listAula = tecnicoDAO.listarAulaPorLaboratorio(this.idLaboratorio);
         PrimeFaces.current().ajax().update("form:messages", "form:dt-facd");
     }
-    public void openNew() {
-        this.nuevaAula = new Aula();
 
+    public boolean validarSelectFacultad() {
+        return idFacultad == 0;
     }
-    public void addAula(){
-        try{
-             if(nuevaAula.getFechaCreacion()==null){
-                 tecnicoDAO.insert(idLaboratorio,nuevaAula);
-                 listAulaByLab();
-                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Aula agregada"));
-             }else {
-                 tecnicoDAO.update(nuevaAula);
-                 listAulaByLab();
-                 PrimeFaces.current().ajax().update("form:messages", "form:dt-facd");
-                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Aula actualizada"));
+    public boolean validarSelectFLaboratorio() {
+        return idLaboratorio == 0;
+    }
+    public boolean validarSelectPeriodo() {
+        return idPeriodo == 0;
+    }
+    public boolean validarSelectTecnico() {
+        return idTecnico == 0;
+    }
+
+    public void openNew() {
+        if(!validarSelectFLaboratorio()){
+            PrimeFaces.current().executeScript("PF('manageFacdDialog').show();");
+            this.nuevaAula = new Aula();
+        }else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"Mensaje de advertencia","Seleccione un Laboratorio"));
+        }
+        PrimeFaces.current().ajax().update("form:messages");
+    }
+
+    public void addAula() {
+        try {
+            if (nuevaAula.getFechaCreacion() == null) {
+                tecnicoDAO.insert(idLaboratorio, nuevaAula);
+                listAulaByLab();
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Aula agregada"));
+            } else {
+                tecnicoDAO.update(nuevaAula);
+                listAulaByLab();
+                PrimeFaces.current().ajax().update("form:messages", "form:dt-facd");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Aula actualizada"));
             }
 
             PrimeFaces.current().executeScript("PF('manageFacdDialog').hide()");
-        }catch (Exception e){
+        } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar Aula"));
             e.printStackTrace();
         }
     }
+
     public void delete() {
         try {
 
@@ -114,6 +160,7 @@ public class TecnicoLaboratorioBean implements Serializable {
         }
 
     }
+
     public void saveLabByFacultad() throws SQLException {
         laboratorioDAO = new LaboratorioDAO();
         laboratorioDAO.saveLaboratoriobyFacultad(idFacultad, nombreLaboratorio);
@@ -123,14 +170,25 @@ public class TecnicoLaboratorioBean implements Serializable {
         PrimeFaces.current().executeScript("PF('manageLabDialog').hide()");
     }
 
-    public void  listPersonaTecnico() {
+    public void listPersonaTecnico() {
         tecnicoDAO = new TecnicoLaboratorioDAO();
         listTecnico = tecnicoDAO.listTecnico();
 
     }
+
     public void insertTecnicoByAsig() throws SQLException {
-        tecnicoDAO = new TecnicoLaboratorioDAO();
-        tecnicoDAO.insert(idLaboratorio,idTecnico,idPeriodo);
-        listLabByTecnico();
+        if(!validarSelectPeriodo()&!validarSelectTecnico()){
+
+            tecnicoDAO = new TecnicoLaboratorioDAO();
+            tecnicoDAO.insert(idLaboratorio, idTecnico, idPeriodo);
+            listLabByTecnico();
+            PrimeFaces.current().ajax().update("form:dt-facd");
+        }else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"Mensaje de advertencia","Seleccione un Periodo o un Técnico"));
+        }
+        PrimeFaces.current().ajax().update("form:messages");
+
+
+
     }
 }
