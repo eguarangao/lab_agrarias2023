@@ -77,13 +77,23 @@ public class SolicitudBean implements Serializable {
     String fechaString = "2023-05-01";
     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 
+    //idParaEliminar
+    private int solicitudIdToDelete; // Para almacenar temporalmente el ID de la solicitud a eliminar
+
+
     private UploadedFile fileResolucionPDF=null;
     private UploadedFile fileListaEstudiantes=null;
     boolean desactivarElementos = false;
     String value;
 
+    private boolean confirmation; // Variable de confirmación
+
     public void imprimir() {
         validarSeleccionHoras();
+    }
+
+    public void prepareDelete(int solicitudId) {
+        this.solicitudIdToDelete = solicitudId;
     }
 
 
@@ -201,6 +211,29 @@ public class SolicitudBean implements Serializable {
         System.out.println(myHorario);
         return myHorario;
     }
+
+    public void delete() {
+        if (confirmation) {
+            try {
+                // Realiza la eliminación de la solicitud usando solicitudIdToDelete
+                solicitudDAO.delete(solicitudIdToDelete);
+                findAllSolicitudes();
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso", "La solicitud se eliminó con éxito"));
+            } catch (Exception e) {
+                e.printStackTrace();
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", "Error al tratar de eliminar la solicitud"));
+            }
+        } else {
+            // La confirmación es falsa, no se realiza la eliminación
+        }
+    }
+
+    public void confirmDelete() {
+        confirmation = true; // Cuando el usuario confirma la eliminación
+        delete();
+    }
+
+
 
 
     public void validarSeleccionHoras() {

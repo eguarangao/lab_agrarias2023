@@ -5,6 +5,25 @@
         xmlns:p="http://primefaces.org/ui"
         xmlns:f="http://xmlns.jcp.org/jsf/core">
     <div class="p-grid ui-fluid">
+        <p:confirmDialog global="true"
+                         showEffect="fade"
+                         hideEffect="fade"
+                         responsive="true"
+                         width="350" header="Confirmación"
+                         message="¿Está seguro de que desea eliminar la solicitud?"
+                         widgetVar="confirmation" appendTo="@(body)" icon="pi pi-exclamation-triangle">
+            <p:commandButton value="Sí"
+                             icon="pi pi-check"
+                             oncomplete="PF('confirmation').hide(); #{solicitudBean.confirmDelete()}"
+                             update=":formData :msgs" />
+            <p:commandButton value="Cancelar"
+                             icon="pi pi-times"
+                             oncomplete="PF('confirmation').hide()"
+                             styleClass="ui-button-secondary" />
+        </p:confirmDialog>
+
+
+
         <div class="p-col-12">
             <div class="card" style="margin-top: 0px;">
                 <p:toolbar>
@@ -38,76 +57,78 @@
                                     stripedRows="true">
 
                                 <f:facet name="header">
-                                    <p:outputLabel value="Solicitudes activas" style="color: #007bff; font-weight: bold;"/>
+                                    <p:outputLabel value="Solicitudes activas"
+                                                   style="color: #007bff; font-weight: bold;"/>
                                 </f:facet>
 
                                 <!--HEADER - DATATABLE-->
 
                                 <p:column style="width:16px">
-                                    <p:rowToggler />
+                                    <p:rowToggler/>
                                 </p:column>
 
-                                <!--                                <p:column headerText="Equipos">-->
-                                <!--                                    <p:dataTable value="#{s.equipos}" var="equipo">-->
-                                <!--                                        <p:column headerText="ID Equipo">-->
-                                <!--                                            #{equipo.id}-->
-                                <!--                                        </p:column>-->
-                                <!--                                        <p:column headerText="Descripción">-->
-                                <!--                                            #{equipo.descripcion}-->
-                                <!--                                        </p:column>-->
-                                <!--                                    </p:dataTable>-->
-                                <!--                                </p:column>-->
 
 
                                 <!--CODIGO-->
                                 <p:column headerText="Código">
-                                    <p:outputLabel value="#{s.codigo}" />
+                                    <p:outputLabel value="#{s.codigo}"/>
                                 </p:column>
 
                                 <!--FECHA RESERVA-->
                                 <p:column headerText="Fecha de reserva">
-                                    <p:outputLabel value="#{s.fechaReserva}" />
+                                    <p:outputLabel value="#{s.fechaReserva}"/>
                                 </p:column>
                                 <!--TIPO SOLICITUD-->
                                 <p:column colspan="2" headerText="Tipo Solicitud">
-                                    <p:outputLabel value="#{s.tipo}" />
+                                    <p:outputLabel value="#{s.tipo}"/>
                                 </p:column>
                                 <!--TEMA SOLICITUD-->
                                 <p:column colspan="2" headerText="Tema">
-                                    <p:outputLabel value="#{s.tema}" />
+                                    <p:outputLabel value="#{s.tema}"/>
                                 </p:column>
                                 <!--ANALISIS SOLICITUD-->
                                 <p:column colspan="2" headerText="Analisis">
-                                    <p:outputLabel value="#{s.analisis}" />
+                                    <p:outputLabel value="#{s.analisis}"/>
                                 </p:column>
                                 <!--LABORATORIRO-->
                                 <p:column headerText="Laboratorio">
-                                    <p:outputLabel value="#{s.laboratorio.nombre}" />
+                                    <p:outputLabel value="#{s.laboratorio.nombre}"/>
                                 </p:column>
 
+                                <p:confirmDialog header="Confirmación"
+                                                 message="¿Está seguro de que desea eliminar la solicitud?"
+                                                 widgetVar="confirmation" appendTo="@(body)"
+                                                 icon="pi pi-exclamation-triangle">
+                                    <p:commandButton value="Sí" oncomplete="confirmation.hide()" process="@this"
+                                                     action="#{solicitudBean.delete(s.id)}"
+                                                     update=":formData :formRegistro"/>
+                                    <p:commandButton value="No" type="button" styleClass="ui-button-text-secondary"
+                                                     oncomplete="confirmation.hide()"/>
+                                </p:confirmDialog>
+
+
                                 <!--ACCIONES-->
-                                <p:column  headerText="Acciones">
-                                    <p:commandButton
-                                            icon="pi pi-trash"
-                                            class="ui-button-danger rounded-button ui-button-outlined p-mr-2 p-mb-2"
-                                            actionListener="#"
-                                            oncomplete="PF('modalNuevaSolicitud').show()"
-                                            process="@this"
-                                            update=":formRegistro">
-                                    </p:commandButton>
+                                <p:column headerText="Acciones">
+                                    <p:commandButton icon="pi pi-trash"
+                                                     styleClass="ui-button-danger rounded-button ui-button-outlined p-mr-2 p-mb-2"
+                                                     process="@this"
+                                                     oncomplete="PF('confirmation').show()"
+                                                     actionListener="#{solicitudBean.prepareDelete(s.id)}" />
                                 </p:column>
 
 
                                 <p:rowExpansion>
-                                    <p:dataTable value="#{s.equipos}" var="equipo" rowHover="true" tableStyle="animation-direction: alternate ">
+                                    <p:dataTable value="#{s.equipos}" var="equipo" rowHover="true"
+                                                 tableStyle="animation-direction: alternate ">
                                         <f:facet name="header">
-                                            <h:outputText value="Equipos Solicitados" style="color: #007bff; font-weight: bold;" />
+                                            <h:outputText value="Equipos Solicitados"
+                                                          style="color: #007bff; font-weight: bold;"/>
                                         </f:facet>
 
                                         <p:column headerText="Código">
                                             #{equipo.codigo}
                                         </p:column>
-                                        <p:column headerText="Equipo" >
+                                        <p:column headerText="Equipo">
                                             #{equipo.descripcion}
                                         </p:column>
                                         <p:column headerText="Categoría">

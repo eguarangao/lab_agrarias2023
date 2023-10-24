@@ -20,8 +20,6 @@ public class SolicitudDAO extends Conexion {
     List<Item> itemsSeleccionados = new ArrayList<>();
 
 
-
-
     public void save(Solicitud solicitud, UploadedFile pdfResolucion, UploadedFile listaEstudiantes) throws SQLException {
         int idHorario = 0;
         int idSolicitudMax = 0;
@@ -376,7 +374,6 @@ public class SolicitudDAO extends Conexion {
                     solicitud.setLaboratorio(laboratorio);
 
 
-
                     listaSolicitudes.add(solicitud);
                 }
 
@@ -404,6 +401,45 @@ public class SolicitudDAO extends Conexion {
         System.out.println(listaSolicitudes);
 
         return listaSolicitudes;
+    }
+
+    public void delete(int idSolicitud) {
+        try {
+            this.conectar();
+            this.getConnection().setAutoCommit(false);
+
+            //ELIMINAR EQUIPO_SOLICITUD
+            String sql = "DELETE FROM laboratorio.equipo_solicitud WHERE id_solicitud=?";
+            PreparedStatement st = this.getConnection().prepareStatement(sql);
+            st.setInt(1, idSolicitud);
+            st.executeUpdate();
+            st.close(); // Cierra la declaración
+
+
+            //ELIMINAR SOLICITUD
+            String sqlSolicitud = "DELETE FROM laboratorio.solicitud WHERE id=?";
+            PreparedStatement st2 = this.getConnection().prepareStatement(sqlSolicitud);
+            st2.setInt(1, idSolicitud);
+            st2.executeUpdate();
+            st2.close(); // Cierra la declaración
+
+            this.getConnection().commit(); // Commit de la transacción si todo sale bien
+        } catch (Exception e) {
+            System.out.println("ERROR:" + e.getMessage());
+            e.printStackTrace(); // Imprime la traza de la excepción para depurar
+            try {
+                this.getConnection().rollback(); // Rollback de la transacción si ocurre una excepción
+            } catch (SQLException rollbackEx) {
+                System.err.println("Rollback fallido: " + rollbackEx.getMessage());
+            }
+        } finally {
+            try {
+                this.getConnection().setAutoCommit(true); // Restablece el auto-commit a true
+                this.desconectar();
+            } catch (SQLException closeEx) {
+                System.err.println("Error al cerrar la conexión: " + closeEx.getMessage());
+            }
+        }
     }
 
 
