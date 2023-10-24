@@ -95,16 +95,6 @@
                                     <p:outputLabel value="#{s.laboratorio.nombre}"/>
                                 </p:column>
 
-                                <p:confirmDialog header="Confirmación"
-                                                 message="¿Está seguro de que desea eliminar la solicitud?"
-                                                 widgetVar="confirmation" appendTo="@(body)"
-                                                 icon="pi pi-exclamation-triangle">
-                                    <p:commandButton value="Sí" oncomplete="confirmation.hide()" process="@this"
-                                                     action="#{solicitudBean.delete(s.id)}"
-                                                     update=":formData :formRegistro"/>
-                                    <p:commandButton value="No" type="button" styleClass="ui-button-text-secondary"
-                                                     oncomplete="confirmation.hide()"/>
-                                </p:confirmDialog>
 
 
                                 <!--ACCIONES-->

@@ -19,6 +19,7 @@
 
                 <!--MENSAJES-->
                 <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true" update="msgs" />
+
                 <div class="p-formgrid p-grid">
 
                     <!--LABORATORIO  -->
@@ -88,8 +89,7 @@
                     <!--PERIODO-->
                     <div class="field p-col-12 p-md-2">
                         <p:outputLabel for="periodo" value="Periodo"/>
-                        <p:selectOneMenu id="periodo" value="#{solicitudBean.idPerido}" editable="false">
-                            <f:selectItem itemLabel="Seleccione Periodo" noSelectionOption="true"  required="true"/>
+                        <p:selectOneMenu id="periodo" value="#{solicitudBean.idPerido}" editable="false" disabled="true">
                             <f:selectItems value="#{solicitudBean.periodos}" var="periodo"
                                            itemLabel="#{periodo.namePeriodo}" itemValue="#{periodo.id}"/>
                         </p:selectOneMenu>

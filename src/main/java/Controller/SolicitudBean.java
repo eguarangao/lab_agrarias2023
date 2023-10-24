@@ -86,6 +86,7 @@ public class SolicitudBean implements Serializable {
     boolean desactivarElementos = false;
     String value;
 
+    boolean tipoSelected=false;
     private boolean confirmation; // Variable de confirmación
 
     public void imprimir() {
@@ -97,6 +98,9 @@ public class SolicitudBean implements Serializable {
     }
 
 
+    public void tipoChange(){
+        tipoSelected= true;
+    }
     public void save() {
         try {
             //Asignación de Laboratorio
