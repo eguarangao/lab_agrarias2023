@@ -43,7 +43,11 @@ public class SolicitudDAO extends Conexion {
             if (horarioDAO.existeHorario(solicitud.getLaboratorio().getId(), fechaSql.toString())) {
                 System.out.println("Se hace update");
 
+                System.out.println("id:HORARIO");
+                System.out.println(horarioDAO.existeHorario(solicitud.getLaboratorio().getId(), fechaSql.toString()));
+
                 int idHor = horarioDAO.gerIdHorario(solicitud.getLaboratorio().getId(), fechaSql.toString());
+                System.out.println(idHor);
                 //   REGISTRA LA SOLICITUD
                 String sqlRegistrarSolicitud = "insert into laboratorio.solicitud (codigo, \n" +
                         "                                   tema, \n" +
