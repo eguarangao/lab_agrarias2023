@@ -247,8 +247,6 @@ public class UsuarioBean implements Serializable {
     public void cerrarSesion() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-            FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
-
         } catch (Exception ignored) {
         }
     }
