@@ -251,22 +251,30 @@
                                     <p:column headerText="Estado">
                                         <p:cellEditor>
                                             <f:facet name="output">
-                                                <p:tag severity="success" value="Activado" rendered="#{asig.enable}"/>
-                                                <p:tag severity="warning" value="Desactivado"
-                                                       rendered="#{not asig.enable}"/>
+                                                <p:outputPanel id="outputPanel">
+                                                    <p:tag  severity="success" value="Activado"
+                                                           rendered="#{asig.enable}"/>
+                                                    <p:tag  severity="warning" value="Desactivado"
+                                                           rendered="#{not asig.enable}"/>
+                                                </p:outputPanel>
                                             </f:facet>
                                             <f:facet name="input">
-                                                <h:selectOneMenu value="#{asig.enable}" >
+                                                <h:selectOneMenu value="#{asig.enable}">
                                                     <f:selectItem itemLabel="Activado"
-                                                                   itemValue="1"/>
+                                                                  itemValue="1"/>
                                                     <f:selectItem itemLabel="Desactivado"
                                                                   itemValue="0"/>
+                                                    <p:ajax event="change"
+                                                            listener="#{tecnicoLaboratorioBean.valEnable()}"
+                                                    />
                                                 </h:selectOneMenu>
                                             </f:facet>
                                         </p:cellEditor>
                                     </p:column>
                                     <p:column headerText="Acciones" exportable="false">
-                                        <p:rowEditor  styleClass="edit-button rounded-button ui-button-success" editTitle="Edit Row" cancelTitle="Cancel Edit" saveTitle="Save Row"/>
+                                        <p:rowEditor styleClass="edit-button rounded-button ui-button-success"
+                                                     editTitle="Edit Row" cancelTitle="Cancel Edit"
+                                                     saveTitle="Save Row"/>
 
                                     </p:column>
                                 </p:dataTable>
@@ -275,24 +283,12 @@
                             </p:outputPanel>
                         </p:outputPanel>
                         <f:facet name="footer">
-                            <p:commandButton value="Guardar" icon="pi pi-check"
-                                             actionListener="#{tecnicoLaboratorioBean.addAula()}"
-                                             update="manage-facd2-content, dialogs2:dt-facd2"
-                                             styleClass="ui-button-success"
-                                             process="manage-facd2-content @this"/>
+
                             <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageFacd2Dialog').hide()"
                                              class="ui-button-secondary" type="button"/>
                         </f:facet>
                     </p:dialog>
-                    <p:confirmDialog widgetVar="deleteFacd2Dialog" showEffect="fade" width="300"
-                                     message="Delete the aula?" header="Confirm" severity="warn">
-                        <p:commandButton value="Si" icon="pi pi-check"
-                                         actionListener="#{tecnicoLaboratorioBean.delete()}"
-                                         process="@this"
-                                         oncomplete="PF('deleteFacd2Dialog').hide()"/>
-                        <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
-                                         onclick="PF('deleteFacd2Dialog').hide()"/>
-                    </p:confirmDialog>
+
 
                 </h:form>
             </div>
