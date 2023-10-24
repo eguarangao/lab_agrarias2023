@@ -111,8 +111,10 @@
                                         value="Entrar" update=":growl , form:panelRoles, form"
                                 />
                                 <p:commandButton
-                                        styleClass="ui-button-raised ui-button-raised" onclick="location.reload();"
-                                        value="Cancelar" rendered="#{usuarioBean.btnLogin==true}"                             />
+                                        action="#{usuarioBean.cerrarSesion()}"
+                                        oncomplete="recargarPagina()"
+                                        styleClass="ui-button-raised ui-button-secondary"
+                                         value="Cancelar" rendered="#{usuarioBean.btnLogin==true}"                             />
                             </div>
                         </div>
                     </div>
@@ -123,7 +125,11 @@
 
         </div>
     </h:form>
-
+    <script type="text/javascript">
+        function recargarPagina() {
+            location.reload(); // Recarga la página actual
+        }
+    </script>
 
 </h:body>
 </html>

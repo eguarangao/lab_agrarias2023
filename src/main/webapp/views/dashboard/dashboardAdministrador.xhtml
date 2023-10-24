@@ -17,13 +17,7 @@
                     <ui:include src="/views/dashboard/components/cardAjustePerfil.xhtml" />
                 </div>
                 <div class="p-col-12 p-lg-6 p-xl-3">
-                    <ui:include src="/views/dashboard/components/cardCalendario.xhtml" />
-                </div>
-                <div class="p-col-12 p-lg-6 p-xl-3">
                     <ui:include src="/views/dashboard/components/cardEquipos.xhtml" />
-                </div>
-                <div class="p-col-12 p-lg-6 p-xl-3">
-                    <ui:include src="/views/dashboard/components/cardLaboratorio.xhtml" />
                 </div>
                 <div class="p-col-12 p-lg-6 p-xl-3">
                     <ui:include src="/views/dashboard/components/cardSolicitud.xhtml" />
@@ -31,7 +25,7 @@
 
             </div>
         </div>
-        <p:commandButton value="Verifica" action="#{usuarioBean.verificarSession()}">
+        <p:commandButton rendered="false" value="Verifica" action="#{usuarioBean.verificarSession()}">
 
         </p:commandButton>
     </ui:define>
