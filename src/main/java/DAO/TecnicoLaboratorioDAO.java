@@ -186,9 +186,27 @@ public class TecnicoLaboratorioDAO extends Conexion {
         }
 
     }
+    public void editarTecAula(int idLaboratorio, int idTecnico, int idPeriodo, boolean p){
+        if(p){
+            try {
+                editarEstado(idLaboratorio, idTecnico, idPeriodo, p);
+                editarEstadoTecnicoAsig(idLaboratorio, idTecnico, idPeriodo);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }else {
+            try {
+                editarEstado(idLaboratorio, idTecnico, idPeriodo, p);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    }
     public void editarEstadoTecnicoAsig(int idLaboratorio, int idTecnico, int idPeriodo) throws SQLException {
         conectar();
         connection.setAutoCommit(false);
+
         String updateTecnicoLaboratorio = "UPDATE laboratorio.tecnico_laboratorio\n" +
                 "SET enable = false\n" +
                 "WHERE id != ? and id_periodo = ? and id_laboratorio = ?;";
@@ -200,6 +218,40 @@ public class TecnicoLaboratorioDAO extends Conexion {
 
             if (affectedRows <= 0) {
                 throw new SQLException("La actualización en la tabla aula falló, no se modificó ninguna fila.");
+            }
+            try (ResultSet generateKeys = statement.getGeneratedKeys()) {
+                if (generateKeys.next()) {
+                    connection.commit();
+
+                } else {
+                    throw new SQLException("No se pudo obtener el ID del aula.");
+
+                }
+            }
+        } catch (SQLException e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            this.desconectar();
+        }
+
+    }
+    public void editarEstado(int idLaboratorio, int idTecnico, int idPeriodo, boolean p) throws SQLException {
+        conectar();
+        connection.setAutoCommit(false);
+
+        String updateTecnicoLaboratorio = "UPDATE laboratorio.tecnico_laboratorio\n" +
+                "SET enable = ?\n" +
+                "WHERE id = ? and id_periodo = ? and id_laboratorio = ?;";
+        try (PreparedStatement statement = connection.prepareStatement(updateTecnicoLaboratorio, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setBoolean(1,p);
+            statement.setInt(2, idTecnico);
+            statement.setInt(3, idPeriodo);
+            statement.setInt(4, idLaboratorio);
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows <= 0) {
+                throw new SQLException("La actualización en la tabla aula_tecnico falló, no se modificó ninguna fila.");
             }
             try (ResultSet generateKeys = statement.getGeneratedKeys()) {
                 if (generateKeys.next()) {

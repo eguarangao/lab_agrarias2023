@@ -38,6 +38,7 @@ public class TecnicoLaboratorioBean implements Serializable {
 
     private String nombreLaboratorio;
     private boolean rendered;
+    private boolean enable;
 
 
     @PostConstruct
@@ -47,6 +48,7 @@ public class TecnicoLaboratorioBean implements Serializable {
             idLaboratorio = 0;
             idPeriodo = 0;
             idTecnico = 0;
+            enable = true;
             rendered = true;
             listAula = new ArrayList<>();
             listPersona = new ArrayList<>();
@@ -85,10 +87,12 @@ public class TecnicoLaboratorioBean implements Serializable {
     }
     public void onRowEdit(RowEditEvent<Persona> event) throws SQLException {
         tecnicoDAO = new TecnicoLaboratorioDAO();
-        tecnicoDAO.editarEstadoTecnicoAsig(idLaboratorio,event.getObject().getId(),idPeriodo);
+        tecnicoDAO.editarTecAula(idLaboratorio,event.getObject().getId(),idPeriodo, enable);
+        PrimeFaces.current().ajax().update("form:messages", "dialogs2:dt-facd2:outputPanel");
         listLabByTecnico();
+        PrimeFaces.current().executeScript("PF('manageFacd2Dialog').hide();");
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Mensaje de información", String.valueOf(event.getObject().getDni())));
-
+        PrimeFaces.current().ajax().update("form:messages", "dialogs2:dt-facd2");
 
     }
     public void onRowCancel(){
@@ -121,6 +125,9 @@ public class TecnicoLaboratorioBean implements Serializable {
 
     public boolean validarSelectFLaboratorio() {
         return idLaboratorio == 0;
+    }
+    public boolean valEnable(){
+        return enable ;
     }
 
     public boolean validarSelectPeriodo() {
