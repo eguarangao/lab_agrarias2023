@@ -36,6 +36,7 @@
 
 
 <h:body styleClass="login-body">
+
     <p:growl id="growl" widgetVar="growl" showDetail="true" life="3000"/>
 
     <script type="text/javascript">
@@ -47,18 +48,16 @@
             $('#nonAjaxLoad').show();
         });
     </script>
-    <div id="top">
-        <div class="layout-topbar">
 
-        </div>
-    </div>
     <h:form id="form">
 
         <div class="login-body" >
+            <p:graphicImage name="fondoUTEQ2.jpg" library="Images" width="100%" height="100%"/>
             <div class="login-panel">
+
                 <div class="p-grid">
                     <div class="p-col-12 p-lg-6 left-side right-side"
-                         style="border-bottom-left-radius: 5%;border-top-left-radius: 5%;margin-top: 1%;margin-left: 1%;background-color: rgba(62,144,24,0.7);">
+                         style="background-color: rgb(2, 90, 39);">
                         <div>
                             <p:graphicImage name="lab_pecuarias.png" library="Images" class="login-image"/>
 
@@ -69,7 +68,7 @@
                             <div class="p-col-12 container">
                                 <h3 style="color: #3e9018">Bienvenido</h3>
 
-                                <h2 style="color: #0a3622">Iniciar Sesión </h2>
+                                <h2 style="color: #025a27">Iniciar Sesión </h2>
 
 
                             </div>
@@ -105,8 +104,7 @@
 
                             </div>
                             <div class="p-col-12 button-container">
-                                <p:commandButton
-                                        styleClass="ui-button-raised ui-button-success"
+                                <p:commandButton style="background-color: #025a27;"
                                         actionListener="#{usuarioBean.login()}"
                                         value="Entrar" update=":growl , form:panelRoles, form"
                                 />
