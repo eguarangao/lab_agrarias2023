@@ -67,7 +67,7 @@ public class SolicitudBean implements Serializable {
     int idLaboratorio2;
     int idHorario =0;
     int idUsuarioSession = 0;
-    int idPerido = 0;
+    int idPeriodo = 0;
     Date fecha;
     String tipoSolicitud;
     String fechaReserva2;
@@ -126,9 +126,11 @@ public class SolicitudBean implements Serializable {
             solicitud.setDocente(findByDocenteID());
 
             //Asignamos Periodo
-            periodo.setId(idPerido);
+            periodo.setId(idPeriodo);
             solicitud.setPeriodo(periodo);
-            System.out.println("Solciitud Empaquetada");
+            System.out.println("periodo");
+            System.out.println(periodo);
+            System.out.println("Solicitud Empaquetada");
             System.out.println(solicitud);
             //Llamamos al método para guadar
             solicitudDAO.save(solicitud, fileResolucionPDF, fileListaEstudiantes);

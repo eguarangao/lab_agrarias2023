@@ -20,6 +20,8 @@ public class SolicitudDAO extends Conexion {
     List<Item> itemsSeleccionados = new ArrayList<>();
 
 
+
+
     public void save(Solicitud solicitud, UploadedFile pdfResolucion, UploadedFile listaEstudiantes) throws SQLException {
         int idHorario = 0;
         int idSolicitudMax = 0;
@@ -91,7 +93,27 @@ public class SolicitudDAO extends Conexion {
                 st0.executeUpdate();
                 st0.close();
 
+                // OBTENER EL ÚLTIMO ID DE SOLICITUD
+                PreparedStatement st000 = this.getConnection().prepareStatement("SELECT MAX(id) FROM laboratorio.solicitud;");
+                ResultSet rs0 = st000.executeQuery();
+                if (rs0.next()) {
+                    idSolicitudMax = rs0.getInt(1);
+                }
+                rs0.close();
+                st000.close();
 
+                //REGISTRAR LOS EQUIPOS DE LABORATORIO
+                for (int i = 0; i < solicitud.getEquipos().size(); i++) {
+                    System.out.println(idSolicitudMax);
+                    int idEquipo = solicitud.getEquipos().get(i).getId();
+                    PreparedStatement st00 = this.getConnection().prepareStatement("insert into laboratorio.equipo_solicitud  (id_equipo, id_solicitud) values (?,?);");
+                    st00.setInt(1, idEquipo);  //idEquipo
+                    st00.setInt(2, idSolicitudMax);  //idSolicitud
+                    st00.executeUpdate();
+                    st00.close();
+
+                    // Hacer algo con el objeto "equipo" en cada iteración
+                }
                 PreparedStatement st1 = this.getConnection().prepareStatement("update laboratorio.horario set jornada1=?, jornada2=?, jornada3=?, jornada4=?, jornada5=? , jornada6=? , jornada7=? ,  jornada8=? where fecha= '" + fechaSql + "'");
                 st1.setBoolean(1, solicitud.getHorario().isJornada1()); //Jornada1
                 st1.setBoolean(2, solicitud.getHorario().isJornada2()); //Jornada2
@@ -309,6 +331,107 @@ public class SolicitudDAO extends Conexion {
 
 
     public List<Solicitud> findAll(int idDocente) throws SQLException {
+        List<Solicitud> listaSolicitudes = new ArrayList<>();
+        ResultSet rs;
+
+        try {
+            this.conectar();
+            String sql = "SELECT solicitud.id               AS id,\n" +
+                    "       solicitud.tipo             AS tipo_solicitud,\n" +
+                    "       solicitud.analisis         AS analisis,\n" +
+                    "       solicitud.codigo           AS codigo,\n" +
+                    "       solicitud.excel_estudiante AS lista_estudiantes,\n" +
+                    "       solicitud.pdf_resolucion   AS pdf_resolucion,\n" +
+                    "       solicitud.fecha_registro   AS fecha_registro,\n" +
+                    "       solicitud.tema             AS tema,\n" +
+                    "       solicitud.enabled          AS enabled,\n" +
+                    "       e.codigo                   AS codigo_equipo,\n" +
+                    "       e.id                       AS id_equipo,\n" +
+                    "       e.descripcion              AS nombre_equipo,\n" +
+                    "       l.id                       AS id_laboratorio,\n" +
+                    "       l.nom_laboratorio          AS nombre_laboratorio,\n" +
+                    "       ce.categoria               as categoria_equipo\n" +
+                    "FROM laboratorio.solicitud\n" +
+                    "         INNER JOIN laboratorio.docente d ON d.id = solicitud.id_docente\n" +
+                    "         INNER JOIN laboratorio.horario h ON h.id = solicitud.id_horarios\n" +
+                    "         INNER JOIN laboratorio.equipo_solicitud es ON solicitud.id = es.id_solicitud\n" +
+                    "         INNER JOIN laboratorio.equipo e ON e.id = es.id_equipo\n" +
+                    "         INNER JOIN laboratorio.laboratorio l ON h.id_laboratorio = l.id\n" +
+                    "         INNER JOIN laboratorio.persona p ON d.id_persona = p.id\n" +
+                    "         INNER JOIN laboratorio.usuario u ON p.id = u.id_persona\n" +
+                    "         INNER JOIN laboratorio.categoria_equipo ce on ce.id_categoria = e.id_categoria_equipo\n" +
+                    "WHERE u.id = ?\n" +
+                    "  and solicitud.enabled = true\n" +
+                    "ORDER BY solicitud.fecha_registro DESC;";
+            PreparedStatement st = this.getConnection().prepareStatement(sql);
+            st.setInt(1, idDocente);
+            rs = st.executeQuery();
+
+            while (rs.next()) {
+                int solicitudId = rs.getInt("id");
+                Solicitud solicitud = null;
+
+                // Buscar si la solicitud ya existe en la lista de solicitudes
+                for (Solicitud existingSolicitud : listaSolicitudes) {
+                    if (existingSolicitud.getId() == solicitudId) {
+                        solicitud = existingSolicitud;
+                        break;
+                    }
+                }
+
+                // Si no existe, crea una nueva solicitud
+                if (solicitud == null) {
+                    solicitud = new Solicitud();
+                    // Llena los campos comunes de la solicitud
+                    solicitud.setId(solicitudId);
+                    solicitud.setTipo(rs.getString("tipo_solicitud"));
+                    solicitud.setCodigo(rs.getString("codigo"));
+                    solicitud.setAnalisis(rs.getString("analisis"));
+                    solicitud.setTema(rs.getString("tema"));
+                    solicitud.setFechaReserva(rs.getDate("fecha_registro"));
+
+                    // Crea una nueva lista de equipos para esta solicitud
+                    solicitud.setEquipos(new ArrayList<>());
+
+                    // Crea un nuevo laboratorio y asigna los datos
+                    Laboratorio laboratorio = new Laboratorio();
+                    laboratorio.setId(rs.getInt("id_laboratorio"));
+                    laboratorio.setNombre(rs.getString("nombre_laboratorio"));
+                    solicitud.setLaboratorio(laboratorio);
+
+
+                    listaSolicitudes.add(solicitud);
+                }
+
+                // Llena los campos del equipo
+                Equipo equipo = new Equipo();
+                equipo.setId(rs.getInt("id_equipo"));
+                equipo.setDescripcion(rs.getString("nombre_equipo"));
+                equipo.setCodigo(rs.getString("codigo_equipo"));
+
+                //Creau una categoria Equipo y a asigna a EQUIPO
+                CategoriaEquipo categoriaEquipo = new CategoriaEquipo();
+                categoriaEquipo.setNombre(rs.getString("categoria_equipo"));
+                equipo.setCategoriaEquipo(categoriaEquipo);
+
+
+                // Agrega el equipo a la lista de equipos de la solicitud
+                solicitud.getEquipos().add(equipo);
+            }
+        } catch (Exception e) {
+            System.out.println("Error:");
+            System.out.println(e);
+            throw e;
+        } finally {
+            this.desconectar();
+        }
+        System.out.println("LISTA$");
+        System.out.println(listaSolicitudes);
+
+        return listaSolicitudes;
+    }
+
+    public List<Solicitud> findAll2(int idDocente) throws SQLException {
         List<Solicitud> listaSolicitudes = new ArrayList<>();
         ResultSet rs;
 

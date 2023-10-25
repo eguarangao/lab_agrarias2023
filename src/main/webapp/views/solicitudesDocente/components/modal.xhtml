@@ -89,7 +89,7 @@
                     <!--PERIODO-->
                     <div class="field p-col-12 p-md-2">
                         <p:outputLabel for="periodo" value="Periodo"/>
-                        <p:selectOneMenu id="periodo" value="#{solicitudBean.idPerido}" editable="false" disabled="true">
+                        <p:selectOneMenu id="periodo" value="#{solicitudBean.idPeriodo}" editable="false">
                             <f:selectItems value="#{solicitudBean.periodos}" var="periodo"
                                            itemLabel="#{periodo.namePeriodo}" itemValue="#{periodo.id}"/>
                         </p:selectOneMenu>
