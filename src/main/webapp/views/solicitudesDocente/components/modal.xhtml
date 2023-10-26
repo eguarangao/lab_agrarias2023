@@ -10,9 +10,10 @@
                       modal="true"
                       widgetVar="modalNuevaSolicitud"
                       responsive="true"
-                      width="70%"
+                      width="90%"
                       draggable="false"
-                      height="500">
+                      height="90%"
+                      style="background-color: blue; color: white;">
 
                 <!--SUB NAVBAR-->
                 <ui:include src="/views/solicitudesDocente/components/subNavbar.xhtml"/>
@@ -123,7 +124,7 @@
                     <!--PDF RESOLUCIÓN-->
                     <div class="p-grid p-justify-around">
                         <div class="p-field p-col-12 p-md-4">
-                            <p:fieldset legend="Documento de resolución">
+                            <p:fieldset legend="#{solicitudBean.tipoPDF}" id="fieldsetDocumento">
                                 <p:fileUpload mode="simple" skinSimple="true"
                                               value="#{solicitudBean.fileResolucionPDF}"
                                               label="Subir PDF"
@@ -139,7 +140,7 @@
 
                         <!--EXCELL - LISTA ESTUDIANTES-->
                         <div class="p-field p-col-12 p-md-4">
-                            <p:fieldset legend="Lista de estudiantes">
+                            <p:fieldset legend="Lista de estudiantes" >
                                 <p:fileUpload mode="simple" widgetVar="ff"
                                               value="#{solicitudBean.fileListaEstudiantes}"
                                               icon="pi pi-plus-circle"
@@ -155,6 +156,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <!-- BOTONES FORM-->
                 <f:facet name="footer">

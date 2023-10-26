@@ -11,6 +11,7 @@ import jakarta.inject.Named;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.primefaces.PrimeFaces;
+import org.primefaces.context.PrimeFacesContext;
 import org.primefaces.model.file.UploadedFile;
 
 import java.io.Serial;
@@ -77,6 +78,10 @@ public class SolicitudBean implements Serializable {
     String fechaString = "2023-05-01";
     SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 
+    private int progress = 0;
+
+    String tipoPDF="";
+
     //idParaEliminar
     private int solicitudIdToDelete; // Para almacenar temporalmente el ID de la solicitud a eliminar
 
@@ -100,9 +105,29 @@ public class SolicitudBean implements Serializable {
 
     public void tipoChange(){
         tipoSelected= true;
+        tipoPDF();
     }
+
+
+    public void tipoPDF(){
+        switch (tipoSolicitud) {
+            case "SOLICITUD PRÁCTICAS ESTUDIANTES":
+                tipoPDF="Guía Práctica / PDF";
+                break;
+            case "SOLICITUD PRÁCTICAS DE PROYECTO DE INVESTIGACÓN", "SOLICITUD PRÁCTICAS DE TESIS":
+                tipoPDF="Documento de Resolución";
+                break;
+            default:
+
+        }
+    }
+
+
     public void save() {
         try {
+
+
+
             //Asignación de Laboratorio
             Laboratorio laboratorio = new Laboratorio();
             laboratorio.setId(idLaboratorio);

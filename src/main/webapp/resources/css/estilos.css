@@ -2,3 +2,10 @@
     color: blue;
 }
 
+.custom-header .ui-dialog-title {
+    background-color: blue; /* Fondo azul */
+    color: white;          /* Texto blanco */
+}.custom-header .ui-dialog-title {
+     background-color: blue; /* Fondo azul */
+     color: white;          /* Texto blanco */
+ }

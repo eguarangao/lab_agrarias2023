@@ -7,3 +7,8 @@
     color: #ffffff; /* Texto blanco */
     font-weight: bold; /* Opcional: texto en negrita */
 }
+
+.custom-header .ui-dialog-title {
+    background-color: blue; /* Fondo azul */
+    color: white;          /* Texto blanco */
+}
