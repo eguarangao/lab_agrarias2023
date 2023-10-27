@@ -21,6 +21,7 @@
                   </p:toolbarGroup>
 
                   <p:toolbarGroup style="float: right;">
+                     <p:outputLabel style="margin-right: 10px;">LABORATORIO:</p:outputLabel>
                      <p:selectOneMenu id="laboratoriosDelTecnico"
                                       value="#{equipoBean.idlaboratorioSession}"
                                       style="width: 200px;">
@@ -72,10 +73,6 @@
                      <h:outputText value="#{dtequipos.fechaAdquisicion}"/>
                   </p:column>
 
-                   <p:column headerText="Laboratorio">
-                       <h:outputText value="#{dtequipos.laboratorio.nombre}"/>
-                   </p:column>
-
                   <p:column headerText="Área">
                      <h:outputText value="#{dtequipos.aula.nombre}"/>
                   </p:column>
@@ -99,6 +96,7 @@
                      <p:commandButton class="ui-button-danger rounded-button ui-button-outlined"
                                       icon="pi pi-trash" process="@this"
                                       oncomplete="PF('deleteEquipoDialog').show()">
+
                         <f:setPropertyActionListener value="#{dtequipos}"
                                                      target="#{equipoBean.newEquipo}"/>
                      </p:commandButton>
@@ -175,7 +173,7 @@
                            <h:outputLabel for="estado" value="Estado:" />
                            <div style="display: block">
                            <p:selectBooleanButton id="estado" onLabel="Activado" offLabel="Desactivado"
-                                                  value="#{equipoBean.newEquipo.estado}"/>
+                                                  disabled="true" value="#{equipoBean.newEquipo.estado}"/>
                            </div>
                         </div>
 

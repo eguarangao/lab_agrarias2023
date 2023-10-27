@@ -3,6 +3,7 @@ package Model;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class Mantenimiento {
@@ -10,4 +11,11 @@ public class Mantenimiento {
     private Date fechaRegistro;
     private Boolean estado;
     private Date fechaRetorno;
+    private String descripcion_mante;
+
+    //Relaciones entidades
+    private MantenimientoEquipo mantenimientoEquipo;
+    private TipoMantenimiento tipoMantenimiento;
+    private List<MantenimientoEquipo> LisMantenimientoEquipo;
+
 }

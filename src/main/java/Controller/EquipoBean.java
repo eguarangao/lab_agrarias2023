@@ -134,6 +134,7 @@ public class EquipoBean implements Serializable {
         this.newEquipo = new Equipo();
         this.newEquipo.setCategoriaEquipo(new CategoriaEquipo());
         this.newEquipo.setAula(new Aula());
+        newEquipo.setEstado(true);
         ListarCategoriaEquipo();
         ListarAulaxLaboratorio();
 
@@ -161,21 +162,19 @@ public class EquipoBean implements Serializable {
     }
     public void eliminarEquipo() {
         try {
-            int eliminarEquipoID = newEquipo.getId();
-            DaoEquipo.eliminarEquipo(eliminarEquipoID);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipo Eliminado"));
+            if(newEquipo.getEstado()==true){
+                int eliminarEquipoID = newEquipo.getId();
+                DaoEquipo.eliminarEquipo(eliminarEquipoID);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipo Eliminado"));
+                PrimeFaces.current().executeScript("PF('manageEquipoDialog').hide()");
+                PrimeFaces.current().ajax().update("form-equipo:messages", "form-equipo:dt-equipos");
+                Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
+
+            } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("No se puede eliminar equipo se encuentra en mantenimiento o averia"));
             PrimeFaces.current().executeScript("PF('manageEquipoDialog').hide()");
             PrimeFaces.current().ajax().update("form-equipo:messages", "form-equipo:dt-equipos");
-
-            if(DaoEquipo.VerificadorAdmin(idUsuarioSession)){
-                Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idUsuarioSession);
-            }
-            else if (DaoEquipo.VerificadorTecnic(idUsuarioSession)){
-                Listequipos = DaoEquipo.listarEquiposPorTecnico(idlaboratorioSession);
-            }
-            else{ System.out.println("ERROR"); }
-
-
+        }
 
         } catch (Exception e) {
             e.printStackTrace();

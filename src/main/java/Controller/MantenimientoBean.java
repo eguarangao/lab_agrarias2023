@@ -13,6 +13,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import lombok.Data;
 import org.primefaces.PrimeFaces;
+import org.primefaces.event.ToggleEvent;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -29,7 +30,8 @@ public class MantenimientoBean implements Serializable {
     private List<Equipo> Listequipos;
     private EquipoBean BeanEquipo = new EquipoBean();
     private MantenimientoDAO DAOmantenimiento = new MantenimientoDAO();
-    private List<MantenimientoEquipo> ListMante;
+    private List<Mantenimiento> ListMante;
+    private List<MantenimientoEquipo> LisMantenimientoEquipo;
     private MantenimientoEquipo newMante;
     private List<Equipo> equiposRequeridosMantenimiento = new ArrayList<>();
     private boolean botonManteDisabled = true;
@@ -77,6 +79,7 @@ public class MantenimientoBean implements Serializable {
 
     public void SelectLaboratorioTecnico() throws SQLException {
         try {
+            tablaequiposIDmantenimiento();
             TablaMantePorLaboratorio();
             listEquiposPorLaboratorio();
             equiposRequeridosMantenimiento = new ArrayList<>();
@@ -99,8 +102,20 @@ public class MantenimientoBean implements Serializable {
         }
     }
 
+    public void tablaequiposIDmantenimiento() {
+        try{
+            this.LisMantenimientoEquipo = new ArrayList<>();
+            LisMantenimientoEquipo = DAOmantenimiento.listarMantenimientoEquipoPorLaboratorio(22);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+    }
+
+
     public void nuevoMantenimiento() throws SQLException {
         this.newMante = new MantenimientoEquipo();
+        this.newMante.setMantenimiento(new Mantenimiento());
         this.newMante.setAula(new Aula());
         this.newMante.setEquipo(new Equipo());
         this.newMante.setTipoMantenimiento(new TipoMantenimiento());

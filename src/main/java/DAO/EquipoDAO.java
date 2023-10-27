@@ -150,7 +150,7 @@ public class EquipoDAO extends Conexion {
             preparedStatement.setString(6, equipo.getModelo());
             preparedStatement.setString(7, equipo.getNumeroSerie());
             preparedStatement.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
-            preparedStatement.setBoolean(9, equipo.getEstado());
+            preparedStatement.setBoolean(9, true);
 
             preparedStatement.executeQuery();
 

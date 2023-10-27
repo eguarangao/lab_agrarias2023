@@ -24,6 +24,7 @@
                         </p:toolbarGroup>
 
                         <p:toolbarGroup style="float: right;">
+                            <p:outputLabel style="margin-right: 10px;">LABORATORIO:</p:outputLabel>
                             <p:selectOneMenu id="laboratoriosDelTecnico"
                                              value="#{mantenimientoBean.idlaboratorioSession}"
                                              style="width: 200px;">
@@ -40,29 +41,39 @@
                     </p:toolbar>
                     <p:outputPanel id="tablaMante">
                         <p:dataTable id="dt-Mante" widgetVar="dtMante" var="dtmante"
-                                     value="#{mantenimientoBean.listMante}" reflow="true" styleClass="products-table"
-                                     lazy="true" rowKey="#{dtmante.id}" paginator="true" rows="10" rowSelectMode="add"
+                                     value="#{mantenimientoBean.listMante}"
+                                     rowHover="true" rowTogglerSelect="true" stripedRows="true"
+                                     rowKey="#{dtmante.id}" paginator="true" rows="10"
                                      paginatorPosition="bottom" rendered="#{mantenimientoBean.mostrarTablaMante}">
+
+                            <f:facet name="header">
+                                <p:outputLabel value="Lista de mantenimientos" style="font-weight: bold;"/>
+                            </f:facet>
+
+                            <p:column style="width:16px">
+                                <p:rowToggler />
+                            </p:column>
+
                             <p:column headerText="id">
-                                <h:outputText value="#{dtmante.id_mant_equipo}"/>
-                            </p:column>
-
-                            <p:column headerText="Equipo">
-                                <h:outputText value="#{dtmante.equipo.descripcion}"/>
-                            </p:column>
-
-                            <p:column headerText="Fecha registro mantenimiento">
-                                <h:outputText value="#{dtmante.mantenimiento.fechaRegistro}">
-                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                </h:outputText>
-                            </p:column>
-
-                            <p:column headerText="Fecha mantenimiento realizado">
-                                <h:outputText value="#{dtmante.mantenimiento.fechaRetorno}"/>
+                                <p:outputLabel value="#{dtmante.id}"/>
                             </p:column>
 
                             <p:column headerText="Tipo de mantenimiento">
-                                <h:outputText value="#{dtmante.tipoMantenimiento.tipo}"/>
+                                <p:outputLabel  value="#{dtmante.tipoMantenimiento.tipo}"/>
+                            </p:column>
+
+                            <p:column headerText="Descripción">
+                                <p:outputLabel value="#{dtmante.descripcion_mante}"/>
+                            </p:column>
+
+                            <p:column headerText="Fecha registro mantenimiento">
+                                <p:outputLabel  value="#{dtmante.fechaRegistro}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:outputLabel >
+                            </p:column>
+
+                            <p:column headerText="Fecha mantenimiento realizado">
+                                <p:outputLabel  value="#{dtmante.fechaRetorno}"/>
                             </p:column>
 
                             <p:column headerText="Estado">
@@ -77,7 +88,7 @@
                                                  process="@this">
                                     <f:setPropertyActionListener value="#{dtmante}"
                                                                  target="#{mantenimientoBean.newMante}"/>
-                                    <p:resetInput target=":dialogMante:manage-Mante-content"/>
+                                    <p:resetInput target=":dialogMante:manage-ManteRealiz-content"/>
 
                                 </p:commandButton>
                                 <p:commandButton class="ui-button-danger rounded-button ui-button-outlined"
@@ -87,6 +98,54 @@
                                                                  target="#{mantenimientoBean.newMante}"/>
                                 </p:commandButton>
                             </p:column>
+
+                            <p:rowExpansion>
+                                <p:dataTable value="#{dtmante.lisMantenimientoEquipo}" var="equipos" rowHover="true"
+                                             tableStyle="animation-direction: alternate ">
+                                    <f:facet name="header">
+                                        <h:outputText value="Lista de equipos en mantenimiento" style=" font-weight: bold;" />
+                                    </f:facet>
+
+                                    <p:column headerText="Equipo">
+                                        #{equipos.equipo.descripcion}
+                                    </p:column>
+                                    <p:column headerText="Área" >
+                                        #{equipos.aula.nombre}
+                                    </p:column>
+                                    <p:column headerText="Fecha de retorno equipo">
+                                        #{equipos.fecha_retorno_equipo}
+                                    </p:column>
+
+                                    <p:column headerText="Estado">
+                                        <p:tag severity="success" value="Mantenimiento realizado" rendered="#{equipos.estado}"/>
+                                        <p:tag severity="warning" value="En mantenimiento" rendered="#{not equipos.estado}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Acciones" exportable="false">
+                                        <p:commandButton icon="pi pi-pencil"
+                                                         update=":dialogMante:manage-ManteRealiz-content"
+                                                         oncomplete="PF('manageManteRealizDialog').show()"
+                                                         styleClass="edit-button rounded-button ui-button-warning ui-button-outlined"
+                                                         process="@this">
+                                            <f:setPropertyActionListener value="#{dtmante}"
+                                                                         target="#{mantenimientoBean.newMante}"/>
+                                            <p:resetInput target=":dialogMante:manage-ManteRealiz-content"/>
+
+                                        </p:commandButton>
+                                        <p:commandButton class="ui-button-danger rounded-button ui-button-outlined"
+                                                         icon="pi pi-trash" process="@this"
+                                                         oncomplete="PF('deleteManteDialog').show()">
+                                            <f:setPropertyActionListener value="#{dtmante}"
+                                                                         target="#{mantenimientoBean.newMante}"/>
+                                        </p:commandButton>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                            </p:rowExpansion>
+
+
+
                         </p:dataTable>
                     </p:outputPanel>
                 </div>
@@ -94,37 +153,12 @@
 
 
             <h:form id="dialogMante">
-                <p:dialog header="Registrar Mantenimiento realizado" showEffect="fade" modal="true" widgetVar="manageManteRealizDialog"
+                <p:dialog header="Editar Mantenimiento" showEffect="fade" modal="true" widgetVar="manageManteRealizDialog"
                           responsive="true" style="max-width: 680px;">
                     <p:outputPanel id="manage-ManteRealiz-content" class="ui-fluid">
                         <p:outputPanel rendered="#{not empty mantenimientoBean.newMante}">
 
                             <div class="p-formgrid p-grid">
-                                <div class="field p-col-12 p-md-6">
-                                    <p:outputLabel for="fechaMantenimientoRealizado">Fecha mantenimiento realizado</p:outputLabel>
-                                    <p:inputText id="fechaMantenimientoRealizado"  value="#{mantenimientoBean.getFechaActual()}"
-                                                 required="true" disabled="true"
-                                                 rendered="#{not empty mantenimientoBean.getFechaActual()}"
-                                                 style="color: green;">
-                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                    </p:inputText>
-                                </div>
-
-
-                                <div class="field p-col-12 p-md-6">
-                                    <p:outputLabel for="fecharegistroManteRealiz">Fecha registro mantenimiento</p:outputLabel>
-                                    <p:inputText id="fecharegistroManteRealiz" value="#{mantenimientoBean.newMante.mantenimiento.fechaRegistro}"
-                                                 required="true" disabled="true">
-                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
-                                    </p:inputText>
-                                </div>
-
-                                <div class="field p-col-12 p-md-4">
-                                    <p:outputLabel for="equipoManteRealiz">Equipo</p:outputLabel>
-                                    <p:inputText id="equipoManteRealiz" value="#{mantenimientoBean.newMante.equipo.descripcion}"
-                                                 required="true" disabled="true">
-                                    </p:inputText>
-                                </div>
                                 <div class="field p-col-12 p-md-5">
                                     <p:outputLabel for="SelecttipoManteRealiz">Tipo mantenimiento</p:outputLabel>
                                     <p:selectOneMenu id="SelecttipoManteRealiz"
@@ -137,15 +171,38 @@
 
                                 </div>
 
+                                <div class="field p-col-12 p-md-4">
+                                    <p:outputLabel for="desMantenimientoRealizado">Descripción del mantenimiento</p:outputLabel>
+                                    <p:inputText id="desMantenimientoRealizado" value="#{mantenimientoBean.newMante.mantenimiento.descripcion_mante}"
+                                                 required="true" disabled="true">
+                                    </p:inputText>
+                                </div>
+
+                                <div class="field p-col-12 p-md-6">
+                                    <p:outputLabel for="fecharegistroManteRealiz">Fecha registro mantenimiento</p:outputLabel>
+                                    <p:inputText id="fecharegistroManteRealiz" value="#{mantenimientoBean.newMante.fechaRegistro}"
+                                                 required="true" disabled="true">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                    </p:inputText>
+                                </div>
+
+                                <div class="field p-col-12 p-md-6">
+                                    <p:outputLabel for="fechaMantenimientoRealizado">Fecha mantenimiento realizado</p:outputLabel>
+                                    <p:inputText id="fechaMantenimientoRealizado"  value="#{mantenimientoBean.getFechaActual()}"
+                                                 required="true" disabled="true"
+                                                 rendered="#{not empty mantenimientoBean.getFechaActual()}"
+                                                 style="color: green;">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                    </p:inputText>
+                                </div>
 
                                 <div class="field p-col-12 p-md-3 " style="margin-top: 3px;">
                                     <h:outputLabel for="estadoMante" value="Estado:" />
                                     <div style="display: block">
-                                        <p:selectBooleanButton id="estadoManteRealiz" offLabel="En mantenimiento"
+                                        <p:selectBooleanButton id="estadoManteRealiz" onLabel="En mantenimiento"
                                                                disabled="true" value="#{dtmante.estado}"/>
                                     </div>
                                 </div>
-
 
                             </div>
 
@@ -204,8 +261,15 @@
                                     </div>
                                 </div>
 
+                                <div class="field p-col-12 p-md-12">
+                                    <p:outputLabel for="descripciMante">Descripción del mantenimiento</p:outputLabel>
+                                    <p:inputText id="descripciMante" value="#{mantenimientoBean.newMante.mantenimiento.descripcion_mante}"
+                                                 required="true"/>
+
+                                </div>
+
                                 <div class="p-field p-col-12 p-md-12">
-                                    <p:outputLabel for="comboEquiposMante">Seleccinar equipos para Mantenimiento:</p:outputLabel>
+                                    <p:outputLabel for="comboEquiposMante">Seleccinar equipos para realizar mantenimiento:</p:outputLabel>
                                     <p:selectCheckboxMenu id="comboEquiposMante" label="MantenimientoCombo" style="min-width: 15rem"
                                                           value="#{mantenimientoBean.equiposRequeridosMantenimiento}"
                                                           multiple="true" filter="true" filterMatchMode="startsWith"

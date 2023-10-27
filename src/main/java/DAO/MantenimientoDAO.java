@@ -6,15 +6,17 @@ import global.Conexion;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class MantenimientoDAO extends Conexion {
 
-    public List<MantenimientoEquipo> listarMantenimientoPorLaboratorio(int LaboID) throws SQLException {
+    public List<MantenimientoEquipo> listarMantenimientoEquipoPorLaboratorio(int LaboID) throws SQLException {
         List<MantenimientoEquipo> ListMantenimientos = new ArrayList<>();
         this.conectar();
-        String query = "select * from laboratorio.listarmanteequipoporlaboratorio(?)";
+        String query = "select * from laboratorio.listarequiposmantenimientoequipoid(?)";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
             preparedStatement.setInt(1, LaboID);
@@ -22,33 +24,23 @@ public class MantenimientoDAO extends Conexion {
 
                 while (resultSet.next()) {
                     MantenimientoEquipo mantenimientoEquipo = new MantenimientoEquipo();
-                    Mantenimiento mantenimiento = new Mantenimiento();
-                    TipoMantenimiento tipoMantenimiento =new TipoMantenimiento();
-                    
+
                     Equipo equipo = new Equipo();
                     Aula aula = new Aula();
 
                     mantenimientoEquipo.setId_mant_equipo(resultSet.getInt("id_mantenimientoequipo"));
-
-                    mantenimiento.setId(resultSet.getInt("mantenimiento_id"));
-                    mantenimiento.setFechaRegistro(resultSet.getDate("fecha_registro"));
-                    mantenimiento.setEstado(resultSet.getBoolean("estado_mantenimiento"));
-                    mantenimiento.setFechaRetorno(resultSet.getDate("fecha_retorno"));
+                    mantenimientoEquipo.setFecha_retorno_equipo(resultSet.getDate("fecha_retorno_equipo"));
 
                     equipo.setId(resultSet.getInt("equipo_id"));
                     equipo.setDescripcion(resultSet.getString("descripcion"));
+                    mantenimientoEquipo.setEquiposRequeridosMantenimiento(new ArrayList<>());
 
                     mantenimientoEquipo.setEstado(resultSet.getBoolean("estado_me"));
-
-                    tipoMantenimiento.setId(resultSet.getInt("tipo_mantenimiento_id"));
-                    tipoMantenimiento.setTipo(resultSet.getString("tipo"));
 
                     aula.setId(resultSet.getInt("id_aula"));
                     aula.setNombre(resultSet.getString("aula"));
 
-                    mantenimientoEquipo.setMantenimiento(mantenimiento);
                     mantenimientoEquipo.setEquipo(equipo);
-                    mantenimientoEquipo.setTipoMantenimiento(tipoMantenimiento);
                     mantenimientoEquipo.setAula(aula);
 
 
@@ -60,6 +52,88 @@ public class MantenimientoDAO extends Conexion {
         } finally {
             this.desconectar();
         }
+        return ListMantenimientos;
+    }
+
+    public List<Mantenimiento> listarMantenimientoPorLaboratorio(int LaboID) throws SQLException {
+        List<Mantenimiento> ListMantenimientos = new ArrayList<>();
+
+        ResultSet rs = null;
+        PreparedStatement st = null;
+
+        try{
+        this.conectar();
+        String query = "select * from laboratorio.listarmantenimientosporlaboratorioperfect(?)";
+
+
+            st = this.getConnection().prepareStatement(query);
+            st.setInt(1, LaboID);
+            rs = st.executeQuery();
+
+            Map<Integer, Mantenimiento> mantenimientoMap = new HashMap<>();
+
+            while (rs.next()) {
+                int mantenimientoID = rs.getInt("id_mantenimiento");
+
+                if (!mantenimientoMap.containsKey(mantenimientoID)) {
+                    Mantenimiento mantenimiento = new Mantenimiento();
+                    TipoMantenimiento tipoMantenimiento = new TipoMantenimiento();
+
+                    mantenimiento.setId(mantenimientoID);
+
+                    tipoMantenimiento.setId(rs.getInt("tipo_mantenimiento_id"));
+                    tipoMantenimiento.setTipo(rs.getString("tipo"));
+                    mantenimiento.setTipoMantenimiento(tipoMantenimiento);
+
+                    mantenimiento.setDescripcion_mante(rs.getString("descripcion_mante"));
+                    mantenimiento.setEstado(rs.getBoolean("estado_mantenimiento"));
+                    mantenimiento.setFechaRegistro(rs.getDate("fecha_registro"));
+                    mantenimiento.setFechaRetorno(rs.getDate("fecha_retorno"));
+                    mantenimiento.setLisMantenimientoEquipo(new ArrayList<>());
+
+                    mantenimientoMap.put(mantenimientoID,mantenimiento);
+                    ListMantenimientos.add(mantenimiento);
+
+                   }
+
+                    MantenimientoEquipo mantenimientoEquipo = new MantenimientoEquipo();
+                    Equipo equipo = new Equipo();
+                    Aula aula = new Aula();
+
+                    mantenimientoEquipo.setId_mant_equipo(rs.getInt("id_mantenimientoequipo"));
+                    mantenimientoEquipo.setFecha_retorno_equipo(rs.getDate("fecha_retorno_equipo"));
+
+                    equipo.setId(rs.getInt("equipo_id"));
+                    equipo.setDescripcion(rs.getString("descripcion"));
+                    mantenimientoEquipo.setEquipo(equipo);
+
+                    mantenimientoEquipo.setEstado(rs.getBoolean("estado_me"));
+
+                    aula.setId(rs.getInt("id_aula"));
+                    aula.setNombre(rs.getString("aula"));
+                    mantenimientoEquipo.setAula(aula);
+
+                    mantenimientoMap.get(mantenimientoID).getLisMantenimientoEquipo().add(mantenimientoEquipo);
+
+                }
+                System.out.println("Ya liste Mantenimiento equipos por laboratorio");
+        } catch (Exception e) {
+            System.out.println("Error:");
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+            this.desconectar();
+        }
+
+        System.out.println("LISTA DE MANTENIMIENTOS");
+        System.out.println(ListMantenimientos);
+
         return ListMantenimientos;
     }
 
@@ -138,17 +212,18 @@ public class MantenimientoDAO extends Conexion {
 
         this.conectar();
 
-        String query = "select * from laboratorio.agregarmantenimientoequipo(?, ?, ?)";
+        String query = "select * from laboratorio.agregarmantenimientoequipo(?, ?, ?, ?)";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+            preparedStatement.setString(2,mantenimientoEquipo.getMantenimiento().getDescripcion_mante());
 
             Object[] equipoIdsArray = equipoIDS.toArray();
 
             Array array = connection.createArrayOf("integer", equipoIdsArray);
-                preparedStatement.setArray(2,array);
-                preparedStatement.setInt(3, mantenimientoEquipo.getTipoMantenimiento().getId());
+                preparedStatement.setArray(3,array);
+                preparedStatement.setInt(4, mantenimientoEquipo.getTipoMantenimiento().getId());
                 preparedStatement.executeQuery();
 
 
