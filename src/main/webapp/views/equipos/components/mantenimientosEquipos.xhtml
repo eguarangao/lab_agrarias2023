@@ -54,10 +54,6 @@
                                 <p:rowToggler />
                             </p:column>
 
-                            <p:column headerText="id">
-                                <p:outputLabel value="#{dtmante.id}"/>
-                            </p:column>
-
                             <p:column headerText="Tipo de mantenimiento">
                                 <p:outputLabel  value="#{dtmante.tipoMantenimiento.tipo}"/>
                             </p:column>
@@ -114,13 +110,6 @@
                                     <f:facet name="header">
                                         <h:outputText value="Lista de equipos en mantenimiento" style=" font-weight: bold;" />
                                     </f:facet>
-
-                                    <p:column headerText="Id" >
-                                        #{dtmante.id}
-                                    </p:column>
-                                    <p:column headerText="Id">
-                                        #{equipos.equipo.id}
-                                    </p:column>
                                     <p:column headerText="Equipo">
                                         #{equipos.equipo.descripcion}
                                     </p:column>
@@ -139,15 +128,19 @@
                                     <p:column headerText="Acciones" exportable="false">
                                         <p:commandButton class="ui-button-danger rounded-button ui-button-outlined"
                                                          icon="pi pi-trash" process="@this"
-                                                         oncomplete="PF('deleteManteDialog').show()">
+                                                         oncomplete="PF('deleteManteEquipoDialog').show()">
                                             <f:setPropertyActionListener value="#{equipos}"
                                                                          target="#{mantenimientoBean.newMantenimientoEquipos}"/>
+                                            <f:setPropertyActionListener value="#{dtmante}"
+                                                                         target="#{mantenimientoBean.newMantenimiento}"/>
                                         </p:commandButton>
                                         <p:commandButton class="ui-button-success  rounded-button ui-button-outlined"
                                                          icon="pi pi-wrench" process="@this"
                                                          oncomplete="PF('ConfirmarManteEquipoDialog').show()">
                                             <f:setPropertyActionListener value="#{equipos}"
                                                                          target="#{mantenimientoBean.newMantenimientoEquipos}"/>
+                                            <f:setPropertyActionListener value="#{dtmante}"
+                                                                         target="#{mantenimientoBean.newMantenimiento}"/>
                                         </p:commandButton>
                                     </p:column>
 
@@ -321,6 +314,15 @@
                                      oncomplete="PF('deleteManteDialog').hide()"/>
                     <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
                                      onclick="PF('deleteManteDialog').hide()"/>
+                </p:confirmDialog>
+
+                <p:confirmDialog widgetVar="deleteManteEquipoDialog" showEffect="fade" width="300"
+                                 message="Deseas eliminar equipo de mantenimiento?" header="Confirmar" severity="warn">
+                    <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{mantenimientoBean.eliminarequipodeMantenimiento()}"
+                                     process="@this"
+                                     oncomplete="PF('deleteManteEquipoDialog').hide()"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                     onclick="PF('deleteManteEquipoDialog').hide()"/>
                 </p:confirmDialog>
 
                 <p:confirmDialog widgetVar="ConfirmarManteDialog" showEffect="fade" width="300"

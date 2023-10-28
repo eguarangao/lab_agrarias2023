@@ -187,8 +187,7 @@ public class MantenimientoBean implements Serializable {
     public void confirmarmantenimientoaEquipo() {
         try {
             if(newMantenimientoEquipos.getEstado()==false){
-                System.out.println("estoy en mantenimiento realizado a equipo");
-                DAOmantenimiento.ConfirmarMantenimientoRealizadoEquipo(newMantenimientoEquipos);
+                DAOmantenimiento.ConfirmarMantenimientoRealizadoEquipo(newMantenimientoEquipos,newMantenimiento);
                 ListMante = DAOmantenimiento.listarMantenimientoPorLaboratorio(idlaboratorioSession);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Mantenimiento realizado al equipo"));
                 PrimeFaces.current().executeScript("PF('ConfirmarManteEquipoDialog').hide()");
@@ -204,6 +203,34 @@ public class MantenimientoBean implements Serializable {
             e.printStackTrace();
         }
 
+    }
+
+    public void eliminarequipodeMantenimiento() {
+        try {
+            if(newMantenimientoEquipos.getEstado()==false){
+                int eliminarMantenimientoID = newMantenimiento.getId();
+                int eliminarEquipoID = newMantenimientoEquipos.getEquipo().getId();
+                DAOmantenimiento.eliminarelEquipodeMantenimiento(eliminarMantenimientoID, eliminarEquipoID);
+                ListMante = DAOmantenimiento.listarMantenimientoPorLaboratorio(idlaboratorioSession);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipo eliminado de Mantenimiento"));
+                PrimeFaces.current().executeScript("PF('deleteManteDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante","form-Mante:messages" );
+
+                if(DAOmantenimiento.verificarexisteidmante(eliminarMantenimientoID) == false){
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Mantenimiento tambien eliminado"));
+                    PrimeFaces.current().executeScript("PF('deleteManteDialog').hide()");
+                    PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante","form-Mante:messages" );
+                }
+
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("No se puede eliminar el equipo de mantenimiento ya realizado"));
+                PrimeFaces.current().executeScript("PF('deleteManteDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante","form-Mante:messages" );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void eliminarMantenimiento() {
@@ -226,7 +253,6 @@ public class MantenimientoBean implements Serializable {
             e.printStackTrace();
         }
     }
-
 
 
 }

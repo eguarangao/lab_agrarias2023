@@ -279,16 +279,17 @@ public class MantenimientoDAO extends Conexion {
         }
     }
 
-    public void ConfirmarMantenimientoRealizadoEquipo(MantenimientoEquipo mantenimientoEquipo) {
+    public void ConfirmarMantenimientoRealizadoEquipo(MantenimientoEquipo mantenimientoEquipo, Mantenimiento mantenimiento) {
         try  {
-            System.out.println("Este es el ID del equipo del mantenimiento realizado:" + mantenimientoEquipo.getEquipo().getId());
+            System.out.println("Este es el ID del equipo del mantenimiento realizado:" + mantenimiento.getId());
             this.conectar();
-            String query = "SELECT laboratorio.mantenimientorealizadoaequipo(?, ?)";
+            String query = "SELECT laboratorio.mantenimientorealizadoaequipoperfect(?, ?, ?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-                preparedStatement.setInt(1, mantenimientoEquipo.getEquipo().getId());
-                preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+                preparedStatement.setInt(1, mantenimiento.getId());
+                preparedStatement.setInt(2, mantenimientoEquipo.getEquipo().getId());
+                preparedStatement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
 
                 preparedStatement.execute();
             }
@@ -319,5 +320,46 @@ public class MantenimientoDAO extends Conexion {
         }
     }
 
+    public void eliminarelEquipodeMantenimiento(int manteId, int equipID) throws SQLException {
+        this.conectar();
+        String query = "SELECT laboratorio.eliminarequipodelmantenimiento(?, ?)";
+
+        try {
+            connection.setAutoCommit(false);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, manteId);
+                preparedStatement.setInt(2,equipID);
+                preparedStatement.execute();
+
+                connection.commit(); }
+        } catch (SQLException e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            this.desconectar();
+        }
+    }
+
+    public boolean verificarexisteidmante(int manteId) {
+        try {
+            this.conectar();
+            String query = "SELECT laboratorio.verificarexisteidmantenimiento(?)";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, manteId);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getBoolean(1);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.desconectar();
+        }
+
+        return false;
+    }
 
 }
