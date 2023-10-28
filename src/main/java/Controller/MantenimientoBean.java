@@ -32,7 +32,8 @@ public class MantenimientoBean implements Serializable {
     private MantenimientoDAO DAOmantenimiento = new MantenimientoDAO();
     private List<Mantenimiento> ListMante;
     private List<MantenimientoEquipo> LisMantenimientoEquipo;
-    private MantenimientoEquipo newMante;
+    private MantenimientoEquipo newMantenimientoEquipos;
+    private Mantenimiento newMantenimiento;
     private List<Equipo> equiposRequeridosMantenimiento = new ArrayList<>();
     private boolean botonManteDisabled = true;
     private boolean mostrarTablaMante = false;
@@ -114,11 +115,14 @@ public class MantenimientoBean implements Serializable {
 
 
     public void nuevoMantenimiento() throws SQLException {
-        this.newMante = new MantenimientoEquipo();
-        this.newMante.setMantenimiento(new Mantenimiento());
-        this.newMante.setAula(new Aula());
-        this.newMante.setEquipo(new Equipo());
-        this.newMante.setTipoMantenimiento(new TipoMantenimiento());
+        this.newMantenimiento = new Mantenimiento();
+        this.newMantenimiento.setMantenimientoEquipo(new MantenimientoEquipo());
+        this.newMantenimiento.setAula(new Aula());
+        this.newMantenimiento.setEquipo(new Equipo());
+        this.newMantenimiento.setTipoMantenimiento(new TipoMantenimiento());
+
+        this.newMantenimientoEquipos = new MantenimientoEquipo();
+        this.newMantenimientoEquipos.setMantenimiento(new Mantenimiento());
 
     }
 
@@ -126,7 +130,7 @@ public class MantenimientoBean implements Serializable {
     public void addManteninimiento() {
 
         try {
-                DAOmantenimiento.agregarMantenimiento(newMante,equiposRequeridosMantenimiento);
+                DAOmantenimiento.agregarMantenimiento(newMantenimiento,equiposRequeridosMantenimiento);
                 mostrarTablaMante = !ListMante.isEmpty();
                 ListMante = DAOmantenimiento.listarMantenimientoPorLaboratorio(idlaboratorioSession);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Mantenimiento agregado"));
@@ -141,11 +145,11 @@ public class MantenimientoBean implements Serializable {
     public void updateManteninimiento() {
         try {
                 System.out.println("voy a editar mantenimiento");
-                DAOmantenimiento.editarMantenimiento(newMante);
+                DAOmantenimiento.editarMantenimiento(newMantenimiento);
                 ListMante = DAOmantenimiento.listarMantenimientoPorLaboratorio(idlaboratorioSession);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Mantenimiento actualizado"));
-            PrimeFaces.current().executeScript("PF('manageManteDialog').hide()");
-            PrimeFaces.current().ajax().update("form-Mante:messages");
+            PrimeFaces.current().executeScript("PF('manageManteRealizDialog').hide()");
+            PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante","form-Mante:messages" );
 
         } catch (Exception e){
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar el Mantenimiento"));
@@ -157,6 +161,70 @@ public class MantenimientoBean implements Serializable {
         this.ListTipoMantenimiento = new ArrayList<>();
         ListTipoMantenimiento = DAOmantenimiento.listartipomantenimientos();
         System.out.println(ListTipoMantenimiento);
+    }
+
+    public void confirmarmantenimiento() {
+        try {
+            if(newMantenimiento.getEstado()==false){
+                DAOmantenimiento.ConfirmarMantenimientoRealizado(newMantenimiento);
+                ListMante = DAOmantenimiento.listarMantenimientoPorLaboratorio(idlaboratorioSession);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Mantenimiento realizado"));
+                PrimeFaces.current().executeScript("PF('manageManteDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante","form-Mante:messages" );
+
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Mantenimiento ya realizado anteriormente"));
+                PrimeFaces.current().executeScript("PF('manageManteDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Mante:messages");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void confirmarmantenimientoaEquipo() {
+        try {
+            if(newMantenimientoEquipos.getEstado()==false){
+                System.out.println("estoy en mantenimiento realizado a equipo");
+                DAOmantenimiento.ConfirmarMantenimientoRealizadoEquipo(newMantenimientoEquipos);
+                ListMante = DAOmantenimiento.listarMantenimientoPorLaboratorio(idlaboratorioSession);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Mantenimiento realizado al equipo"));
+                PrimeFaces.current().executeScript("PF('ConfirmarManteEquipoDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante","form-Mante:messages" );
+
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Mantenimiento ya realizado anteriormente a equipo"));
+                PrimeFaces.current().executeScript("PF('ConfirmarManteEquipoDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Mante:messages");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void eliminarMantenimiento() {
+        try {
+            if(newMantenimiento.getEstado()==false){
+                int eliminarMantenimientoID = newMantenimiento.getId();
+                DAOmantenimiento.eliminarMantenimiento(eliminarMantenimientoID);
+                ListMante = DAOmantenimiento.listarMantenimientoPorLaboratorio(idlaboratorioSession);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Mantenimiento Eliminado"));
+                PrimeFaces.current().executeScript("PF('deleteManteDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante","form-Mante:messages" );
+
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("No se puede eliminar el mantenimiento ya realizado"));
+                PrimeFaces.current().executeScript("PF('deleteManteDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante","form-Mante:messages" );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

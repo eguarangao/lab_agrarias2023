@@ -17,5 +17,8 @@ public class Mantenimiento {
     private MantenimientoEquipo mantenimientoEquipo;
     private TipoMantenimiento tipoMantenimiento;
     private List<MantenimientoEquipo> LisMantenimientoEquipo;
+    private Equipo equipo;
+    private List<Equipo> equiposRequeridosMantenimiento;
+    private Aula aula;
 
 }
