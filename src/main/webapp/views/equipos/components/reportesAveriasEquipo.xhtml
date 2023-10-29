@@ -179,7 +179,7 @@
 
                                     <div class="field p-col-12 p-md-4">
                                         <p:outputLabel >Fecha registro</p:outputLabel>
-                                        <p:inputText id="fecharegistroManteedit" value="#{dtaveria.fecha_registro}"
+                                        <p:inputText id="fecharegistroManteedit" value="#{averiaBean.newAveria.fecha_registro}"
                                                      required="true" disabled="true">
                                             <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
                                         </p:inputText>
@@ -187,21 +187,21 @@
                                     <div class="field p-col-12 p-md-4" style="margin-top: 3px;">
                                         <h:outputLabel value="Estado:" />
                                         <div style="display: block">
-                                            <p:selectBooleanButton id="estadoManteedit" offLabel="Averiado" onLabel="Dañado"
-                                                                   disabled="true" value="#{dtaveria.enabled}"/>
+                                            <p:selectBooleanButton id="estadoManteedit" offLabel="Dañado" onLabel="Averiado"
+                                                                   disabled="true" value="#{averiaBean.newAveria.enabled}"/>
                                         </div>
                                     </div>
 
                                     <div class="field p-col-12 p-md-12">
                                         <p:outputLabel>Descripción averia</p:outputLabel>
                                         <p:inputText id="descriptionAveriaedit"
-                                                     value="#{dtaveria.descripcion}" required="true"/>
+                                                     value="#{averiaBean.newAveria.descripcion}" required="true"/>
                                     </div>
 
                                     <div class="p-field p-col-12 p-md-12">
                                         <p:outputLabel >Equipo averiado:</p:outputLabel>
                                         <p:inputText id="equipoaveriadoedit" disabled="true"
-                                                     value="#{dtaveria.equipo.descripcion}" required="true"/>
+                                                     value="#{averiaBean.newAveria.equipo.descripcion}" required="true"/>
                                     </div>
                                 </div>
 
