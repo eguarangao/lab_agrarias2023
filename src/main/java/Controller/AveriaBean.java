@@ -93,8 +93,7 @@ public class AveriaBean implements Serializable {
     public void listEquiposPorLaboratorio() throws SQLException {
         try {
             this.Listequipos = new ArrayList<>();
-            Listequipos = DAOmantenimiento.listarEquiposPorLaboratorioActivos(idlaboratorioSession);
-            System.out.println(Listequipos);
+            Listequipos = DAOaveria.listarEquiposPorLaboratorioAverias(idlaboratorioSession);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -108,15 +107,17 @@ public class AveriaBean implements Serializable {
     }
     public void addAveria() {
         try {
-                DAOaveria.agregarAveria(newAveria,equiposAveriados);
+                DAOaveria.agregarAveria(newAveria);
                 mostrarTablaAveria = ListAveria.isEmpty();
                 ListAveria = DAOaveria.listarAveriasPorLaboratorio(idlaboratorioSession);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Averia agregada"));
-            PrimeFaces.current().executeScript("PF('manageAveriaDialog').hide()");
-            PrimeFaces.current().ajax().update("form-Averia:messages");
+                PrimeFaces.current().executeScript("PF('manageAveriaDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Averia:dt-Averia","form-Averia:messages" );
 
         } catch (Exception e){
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar la averia"));
+            PrimeFaces.current().executeScript("PF('manageAveriaDialog').hide()");
+            PrimeFaces.current().ajax().update("form-Averia:messages");
             e.printStackTrace();
         }
     }
@@ -134,6 +135,26 @@ public class AveriaBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar la averia"));
             e.printStackTrace();
         }
+    }
+
+    public void confirmaraveria() {
+        try {
+            if(newAveria.getEnabled()==true){
+                DAOaveria.ConfirmarAveriaRealizada(newAveria);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Mantenimiento realizado"));
+                PrimeFaces.current().executeScript("PF('manageManteDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante","form-Mante:messages" );
+
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Mantenimiento ya realizado anteriormente"));
+                PrimeFaces.current().executeScript("PF('manageManteDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Mante:messages");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void ReportPDF() throws IOException, JRException, SQLException {

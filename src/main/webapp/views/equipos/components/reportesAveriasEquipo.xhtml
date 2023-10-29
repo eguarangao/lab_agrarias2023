@@ -24,6 +24,7 @@
                             </p:toolbarGroup>
 
                             <p:toolbarGroup style="float: right;">
+                                <p:outputLabel style="margin-right: 10px;">LABORATORIO:</p:outputLabel>
                                 <p:selectOneMenu id="laboratoriosDelTecnico"
                                                  value="#{averiaBean.idlaboratorioSession}"
                                                  style="width: 200px;">
@@ -54,7 +55,9 @@
                                 </p:column>
 
                                 <p:column headerText="Fecha registro averia">
-                                    <h:outputText value="#{dtaveria.fecha_registro}"/>
+                                    <h:outputText value="#{dtaveria.fecha_registro}">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                    </h:outputText>
                                 </p:column>
 
                                 <p:column headerText="Descripción averia">
@@ -71,14 +74,21 @@
                                 </p:column>
                                 <p:column headerText="Acciones" exportable="false">
                                     <p:commandButton icon="pi pi-pencil"
-                                                     update=":dialogAveria:manage-Averia-content"
-                                                     oncomplete="PF('manageAveriaDialog').show()"
+                                                     update=":dialogAveria:manage-Averiaedit-content"
+                                                     oncomplete="PF('manageAveriaeditDialog').show()"
                                                      styleClass="edit-button rounded-button ui-button-warning ui-button-outlined"
                                                      process="@this">
                                         <f:setPropertyActionListener value="#{dtaveria}"
                                                                      target="#{averiaBean.newAveria}"/>
-                                        <p:resetInput target=":dialogAveria:manage-Averia-content"/>
+                                        <p:resetInput target=":dialogAveria:manage-Averiaedit-content"/>
 
+                                    </p:commandButton>
+
+                                    <p:commandButton class="ui-button-success  rounded-button ui-button-outlined"
+                                                     icon="pi pi-wrench" process="@this"
+                                                     oncomplete="PF('ConfirmarAveriaDialog').show()">
+                                        <f:setPropertyActionListener value="#{dtaveria}"
+                                                                     target="#{averiaBean.newAveria}"/>
                                     </p:commandButton>
 
                                     <p:commandButton id="btnReporteAveria"
@@ -95,7 +105,7 @@
 
 
                 <h:form id="dialogAveria">
-                    <p:dialog header="Agregar nuevo Mantenimiento" showEffect="fade" modal="true" widgetVar="manageAveriaDialog"
+                    <p:dialog header="Agregar averia de equipo"  showEffect="fade" modal="true" widgetVar="manageAveriaDialog"
                               responsive="true" style="max-width: 680px;">
                         <p:outputPanel id="manage-Averia-content" class="ui-fluid">
                             <p:outputPanel rendered="#{not empty averiaBean.newAveria}">
@@ -115,7 +125,7 @@
                                         <h:outputLabel for="estadoMante" value="Estado:" />
                                         <div style="display: block">
                                             <p:selectBooleanButton id="estadoMante" offLabel="Averiado" onLabel="Dañado"
-                                                                   value="#{dtaveria.enabled}"/>
+                                                                   disabled="true" value="#{dtaveria.enabled}"/>
                                         </div>
                                     </div>
 
@@ -126,20 +136,18 @@
                                     </div>
 
                                     <div class="p-field p-col-12 p-md-12">
-                                        <p:outputLabel for="comboEquiposAveria">Seleccionar equipos averiados:</p:outputLabel>
-                                        <p:selectCheckboxMenu id="comboEquiposAveria" label="AveriaCombo" style="min-width: 15rem"
-                                                              value="#{averiaBean.equiposAveriados}"
-                                                              multiple="true" filter="true" filterMatchMode="startsWith"
-                                                              panelStyle="width: 30rem" scrollHeight="250"  required="true">
+                                        <p:outputLabel >Equipo averiado:</p:outputLabel>
+                                        <p:selectOneMenu id="EquipoAveriado"
+                                                         filter="true"
+                                                         value="#{averiaBean.newAveria.equipo.id}">
+                                            <f:selectItem itemLabel="Seleccione equipo" noSelectionOption="true"
+                                                          itemValue="0"/>
                                             <f:selectItems value="#{averiaBean.listequipos}"
-                                                           var="equiposAveria"
-                                                           itemLabel="#{equiposAveria.descripcion}"
-                                                           itemValue="#{equiposAveria.id}"/>
-                                        </p:selectCheckboxMenu>
-
+                                                           var="eaveriado"
+                                                          itemLabel="#{eaveriado.descripcion}"
+                                                          itemValue="#{eaveriado.id}"/>
+                                        </p:selectOneMenu>
                                     </div>
-
-
                                 </div>
 
                             </p:outputPanel>
@@ -159,6 +167,70 @@
 
 
                     </p:dialog>
+
+
+                    <p:dialog header="Editar averia equipo"  showEffect="fade" modal="true" widgetVar="manageAveriaeditDialog"
+                              responsive="true" style="max-width: 680px;">
+                        <p:outputPanel id="manage-Averiaedit-content" class="ui-fluid">
+                            <p:outputPanel rendered="#{not empty averiaBean.newAveria}">
+
+
+                                <div class="p-formgrid p-grid">
+
+                                    <div class="field p-col-12 p-md-4">
+                                        <p:outputLabel >Fecha registro</p:outputLabel>
+                                        <p:inputText id="fecharegistroManteedit" value="#{dtaveria.fecha_registro}"
+                                                     required="true" disabled="true">
+                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                        </p:inputText>
+                                    </div>
+                                    <div class="field p-col-12 p-md-4" style="margin-top: 3px;">
+                                        <h:outputLabel value="Estado:" />
+                                        <div style="display: block">
+                                            <p:selectBooleanButton id="estadoManteedit" offLabel="Averiado" onLabel="Dañado"
+                                                                   disabled="true" value="#{dtaveria.enabled}"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="field p-col-12 p-md-12">
+                                        <p:outputLabel>Descripción averia</p:outputLabel>
+                                        <p:inputText id="descriptionAveriaedit"
+                                                     value="#{dtaveria.descripcion}" required="true"/>
+                                    </div>
+
+                                    <div class="p-field p-col-12 p-md-12">
+                                        <p:outputLabel >Equipo averiado:</p:outputLabel>
+                                        <p:inputText id="equipoaveriadoedit" disabled="true"
+                                                     value="#{dtaveria.equipo.descripcion}" required="true"/>
+                                    </div>
+                                </div>
+
+                            </p:outputPanel>
+                        </p:outputPanel>
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Guardar" icon="pi pi-check"
+                                             class="ui-button-success"
+                                             actionListener="#{averiaBean.addAveria()}"
+                                             update="manage-Averiaedit-content, form-Averia:dt-Averia"
+                                             process="manage-Averiaedit-content @this"/>
+                            <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageAveriaeditDialog').hide()"
+                                             class="ui-button-secondary" type="button"/>
+
+                        </f:facet>
+
+
+
+                    </p:dialog>
+
+                    <p:confirmDialog widgetVar="ConfirmarAveriaDialog" showEffect="fade" width="300"
+                                     message="Deseas confirmar la averia realizada?" header="Confirmar" severity="warn">
+                        <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{averiaBean.confirmaraveria()}"
+                                         process="@this"
+                                         oncomplete="PF('ConfirmarAveriaDialog').hide()"/>
+                        <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                         onclick="PF('ConfirmarAveriaDialog').hide()"/>
+                    </p:confirmDialog>
 
                 </h:form>
 

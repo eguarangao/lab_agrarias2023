@@ -47,14 +47,39 @@ public class AveriaDAO extends Conexion {
         return ListAveria;
     }
 
-    public void agregarAveria(Averia averia, List<Equipo> equiposIDS){
+    public List<Equipo> listarEquiposPorLaboratorioAverias(int LaboID) throws SQLException {
+        List<Equipo> Listequipos = new ArrayList<>();
         this.conectar();
-        String query = "select * from laboratorio.agregaraveriaequipo(?, ?, ?)";
+        String query = "select * from laboratorio.listarequiposporlaboratorioquenoexistenenaveria(?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            preparedStatement.setInt(1, LaboID);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    Equipo equipo = new Equipo();
+
+                    equipo.setId(resultSet.getInt("id"));
+                    equipo.setDescripcion(resultSet.getString("descripcion"));
+
+                    Listequipos.add(equipo);
+                }
+                System.out.println("Ya liste equipos");
+            }
+        } finally {
+            this.desconectar();
+        }
+        return Listequipos;
+    }
+
+    public void agregarAveria(Averia averia){
+        this.conectar();
+        String query = "select * from laboratorio.agregaraveria(?, ?, ?)";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
-            preparedStatement.setBoolean(2, averia.getEnabled());
+            preparedStatement.setInt(1, averia.getEquipo().getId());
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
             preparedStatement.setString(3, averia.getDescripcion());
 
             preparedStatement.executeQuery();
@@ -102,6 +127,26 @@ public class AveriaDAO extends Conexion {
             this.desconectar();
         }
         return ListAveria;
+    }
+
+    public void ConfirmarAveriaRealizada(Averia averia) {
+        try  {
+            this.conectar();
+            String query = "SELECT laboratorio.mantenimientorealizado(?, ?)";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+                preparedStatement.setInt(1, averia.getId_averia());
+                preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            this.desconectar();
+        }
     }
 
 
