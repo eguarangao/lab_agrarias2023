@@ -108,11 +108,10 @@ public class AveriaBean implements Serializable {
     public void addAveria() {
         try {
                 DAOaveria.agregarAveria(newAveria);
-                mostrarTablaAveria = ListAveria.isEmpty();
                 ListAveria = DAOaveria.listarAveriasPorLaboratorio(idlaboratorioSession);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Averia agregada"));
                 PrimeFaces.current().executeScript("PF('manageAveriaDialog').hide()");
-                PrimeFaces.current().ajax().update("form-Averia:dt-Averia","form-Averia:messages" );
+                PrimeFaces.current().ajax().update("form-Averia:tablaAveria" ,"form-Averia:dt-Averia","form-Averia:messages" );
 
         } catch (Exception e){
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar la averia"));
