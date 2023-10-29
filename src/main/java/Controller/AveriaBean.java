@@ -127,11 +127,13 @@ public class AveriaBean implements Serializable {
                 DAOaveria.editarAveria(newAveria);
                 ListAveria = DAOaveria.listarAveriasPorLaboratorio(idlaboratorioSession);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Averia actualizada"));
-            PrimeFaces.current().executeScript("PF('manageAveriaDialog').hide()");
-            PrimeFaces.current().ajax().update("form-Averia:messages");
+                PrimeFaces.current().executeScript("PF('manageAveriaeditDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Averia:tablaAveria" ,"form-Averia:dt-Averia","form-Averia:messages" );
 
         } catch (Exception e){
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar la averia"));
+            PrimeFaces.current().executeScript("PF('manageAveriaDialog').hide()");
+            PrimeFaces.current().ajax().update("form-Averia:messages");
             e.printStackTrace();
         }
     }

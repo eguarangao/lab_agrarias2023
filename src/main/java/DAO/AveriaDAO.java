@@ -92,7 +92,23 @@ public class AveriaDAO extends Conexion {
     }
 
     public void editarAveria(Averia averia){
-        this.conectar();
+        try  {
+            this.conectar();
+            String query = "SELECT laboratorio.editaraveria(?, ?)";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+                preparedStatement.setInt(1, averia.getId_averia());
+                preparedStatement.setString(2, averia.getDescripcion());
+
+                preparedStatement.execute();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            this.desconectar();
+        }
     }
 
 
