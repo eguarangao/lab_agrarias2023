@@ -170,6 +170,7 @@ public class MantenimientoDAO extends Conexion {
                     equipo.setNumeroSerie(resultSet.getString("num_serie"));
                     equipo.setFechaAdquisicion(resultSet.getDate("fecha_adquisicion"));
                     equipo.setEstado(resultSet.getBoolean("estado"));
+                    equipo.setEstadoAveriaEquipo(resultSet.getBoolean("averia"));
 
                     equipo.setAula(aula);
                     equipo.setCategoriaEquipo(categoriaEquipo);
@@ -237,7 +238,6 @@ public class MantenimientoDAO extends Conexion {
 
     public void editarMantenimiento(Mantenimiento mantenimiento){
         try  {
-            System.out.println("Estoy editando MANTENIMIENTO:" + mantenimiento.getId());
             this.conectar();
             String query = "SELECT laboratorio.editarmantenimiento(?, ?, ?)";
 
@@ -260,7 +260,6 @@ public class MantenimientoDAO extends Conexion {
 
     public void ConfirmarMantenimientoRealizado(Mantenimiento mantenimiento) {
         try  {
-            System.out.println("Este es el ID MANTENIMIENTO:" + mantenimiento.getId());
             this.conectar();
             String query = "SELECT laboratorio.mantenimientorealizado(?, ?)";
 
@@ -281,7 +280,6 @@ public class MantenimientoDAO extends Conexion {
 
     public void ConfirmarMantenimientoRealizadoEquipo(MantenimientoEquipo mantenimientoEquipo, Mantenimiento mantenimiento) {
         try  {
-            System.out.println("Este es el ID del equipo del mantenimiento realizado:" + mantenimiento.getId());
             this.conectar();
             String query = "SELECT laboratorio.mantenimientorealizadoaequipoperfect(?, ?, ?)";
 

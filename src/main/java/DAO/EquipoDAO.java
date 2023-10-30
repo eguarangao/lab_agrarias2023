@@ -121,6 +121,7 @@ public class EquipoDAO extends Conexion {
                     equipo.setNumeroSerie(resultSet.getString("num_serie"));
                     equipo.setFechaAdquisicion(resultSet.getDate("fecha_adquisicion"));
                     equipo.setEstado(resultSet.getBoolean("estado"));
+                    equipo.setEstadoAveriaEquipo(resultSet.getBoolean("averia"));
 
                     equipo.setAula(aula);
                     equipo.setCategoriaEquipo(categoriaEquipo);

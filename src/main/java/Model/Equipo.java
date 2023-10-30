@@ -14,6 +14,7 @@ public class Equipo {
     private String numeroSerie;
     private Date fechaAdquisicion;
     private Boolean estado;
+    private Boolean estadoAveriaEquipo;
     //Relaciones entidades
     private Aula aula;
     private CategoriaEquipo categoriaEquipo;

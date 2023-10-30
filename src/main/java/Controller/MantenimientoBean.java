@@ -144,13 +144,17 @@ public class MantenimientoBean implements Serializable {
 
     public void updateManteninimiento() {
         try {
-                System.out.println("voy a editar mantenimiento");
+            if(newMantenimiento.getEstado()==false) {
                 DAOmantenimiento.editarMantenimiento(newMantenimiento);
                 ListMante = DAOmantenimiento.listarMantenimientoPorLaboratorio(idlaboratorioSession);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Mantenimiento actualizado"));
-            PrimeFaces.current().executeScript("PF('manageManteRealizDialog').hide()");
-            PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante","form-Mante:messages" );
-
+                PrimeFaces.current().executeScript("PF('manageManteRealizDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante", "form-Mante:messages");
+            } else{
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("No se puede editar Mantenimiento !Equipo Activo¡"));
+                PrimeFaces.current().executeScript("PF('manageManteRealizDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante", "form-Mante:messages");
+            }
         } catch (Exception e){
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar el Mantenimiento"));
             e.printStackTrace();

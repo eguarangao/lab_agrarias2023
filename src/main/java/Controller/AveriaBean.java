@@ -40,7 +40,6 @@ public class AveriaBean implements Serializable {
     private int idUsuarioSession;
     private int idlaboratorioSession;
     private Date fechaActual = new Date();
-    private List<Equipo> equiposAveriados = new ArrayList<>();
     @PostConstruct
     public void main() {
         try {
@@ -71,7 +70,6 @@ public class AveriaBean implements Serializable {
             ListAveria = DAOaveria.listarAveriasPorLaboratorio(idlaboratorioSession);
             TablaAveriaPorLaboratorio();
             listEquiposPorLaboratorio();
-            equiposAveriados = new ArrayList<>();
             getFechaActual();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -123,13 +121,26 @@ public class AveriaBean implements Serializable {
 
     public void updateAveria() {
         try {
+            boolean equipoEstadoAveria = DAOaveria.verificarEstadoAveriaEquipo(newAveria);
+            if(newAveria.getEnabled()==true && equipoEstadoAveria==true) {
                 System.out.println("voy a editar averia");
                 DAOaveria.editarAveria(newAveria);
                 ListAveria = DAOaveria.listarAveriasPorLaboratorio(idlaboratorioSession);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Averia actualizada"));
                 PrimeFaces.current().executeScript("PF('manageAveriaeditDialog').hide()");
-                PrimeFaces.current().ajax().update("form-Averia:tablaAveria" ,"form-Averia:dt-Averia","form-Averia:messages" );
+                PrimeFaces.current().ajax().update("form-Averia:tablaAveria", "form-Averia:dt-Averia", "form-Averia:messages");
+            }
+            else if (equipoEstadoAveria==false){
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("No se puede editar averia !Equipo Dañado¡ "));
+                PrimeFaces.current().executeScript("PF('manageAveriaeditDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Averia:tablaAveria", "form-Averia:dt-Averia", "form-Averia:messages");
+            }
 
+            else{
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("No se puede editar averia !Equipo reparado¡ "));
+                PrimeFaces.current().executeScript("PF('manageAveriaeditDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Averia:tablaAveria", "form-Averia:dt-Averia", "form-Averia:messages");
+            }
         } catch (Exception e){
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar la averia"));
             PrimeFaces.current().executeScript("PF('manageAveriaDialog').hide()");
@@ -140,16 +151,25 @@ public class AveriaBean implements Serializable {
 
     public void confirmaraveria() {
         try {
-            if(newAveria.getEnabled()==true){
-                DAOaveria.ConfirmarAveriaRealizada(newAveria);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Mantenimiento realizado"));
-                PrimeFaces.current().executeScript("PF('manageManteDialog').hide()");
-                PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante","form-Mante:messages" );
+            boolean equipoEstadoAveria = DAOaveria.verificarEstadoAveriaEquipo(newAveria);
 
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Mantenimiento ya realizado anteriormente"));
-                PrimeFaces.current().executeScript("PF('manageManteDialog').hide()");
-                PrimeFaces.current().ajax().update("form-Mante:messages");
+            if(newAveria.getEnabled()==true && equipoEstadoAveria==true){
+                DAOaveria.ConfirmarAveriaRealizada(newAveria);
+                ListAveria = DAOaveria.listarAveriasPorLaboratorio(idlaboratorioSession);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipo reparado"));
+                PrimeFaces.current().executeScript("PF('manageAveriaRealizadaDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Averia:tablaAveria", "form-Averia:dt-Averia","form-Averia:messages" );
+
+            } else if (equipoEstadoAveria==false){
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipo dañado"));
+                PrimeFaces.current().executeScript("PF('ConfirmarAveriaDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Averia:messages");
+
+            }
+                else{
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipo reparado ya anteriormente"));
+                PrimeFaces.current().executeScript("PF('ConfirmarAveriaDialog').hide()");
+                PrimeFaces.current().ajax().update("form-Averia:messages");
             }
 
         } catch (Exception e) {

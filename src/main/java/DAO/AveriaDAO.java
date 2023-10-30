@@ -148,14 +148,15 @@ public class AveriaDAO extends Conexion {
     public void ConfirmarAveriaRealizada(Averia averia) {
         try  {
             this.conectar();
-            String query = "SELECT laboratorio.mantenimientorealizado(?, ?)";
+            String query = "SELECT laboratorio.averiarealizadaaequipo(?, ?, ?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
                 preparedStatement.setInt(1, averia.getId_averia());
-                preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+                preparedStatement.setInt(2, averia.getEquipo().getId());
+                preparedStatement.setBoolean(3, averia.getEquipo().getEstadoAveriaEquipo());
 
-                preparedStatement.executeUpdate();
+                preparedStatement.execute();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -163,6 +164,30 @@ public class AveriaDAO extends Conexion {
         finally {
             this.desconectar();
         }
+    }
+
+    public boolean verificarEstadoAveriaEquipo(Averia averia) {
+        boolean resultado = false;
+        try {
+            this.conectar();
+            String query = "SELECT laboratorio.verificaraveriaequipo(?)";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, averia.getEquipo().getId());
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        resultado = resultSet.getBoolean(1);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.desconectar();
+        }
+
+        return resultado;
     }
 
 
