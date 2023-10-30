@@ -10,6 +10,7 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
@@ -185,6 +186,7 @@ public class AveriaBean implements Serializable {
         // es una peticion para descargar
         FacesContext fc = FacesContext.getCurrentInstance();
         ExternalContext ec = fc.getExternalContext();
+        ServletContext servletContext = (ServletContext) ec.getContext();
 
         // Cabecera de la respuesta.
         ec.responseReset();
@@ -203,8 +205,9 @@ public class AveriaBean implements Serializable {
             //parametros.put("fecha_registro", newAveria.getFecha_registro());
             //parametros.put("descripcion", newAveria.getEquipo().getDescripcion());
 
+            String reportDirectory = servletContext.getRealPath("/resources/reportes/");
 
-            String reportePDF = "C:\\Users\\Equipo\\Documents\\GitHub\\lab_agrarias2023\\target\\jsfdemolab\\resources\\reportes\\reporteAveriaA4.jrxml";
+            String reportePDF = reportDirectory + File.separator + "reporteAveriaA4.jrxml";
 
             JasperReport jasperReport = JasperCompileManager.compileReport(reportePDF);
 
