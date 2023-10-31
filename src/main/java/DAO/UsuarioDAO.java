@@ -1,12 +1,7 @@
 package DAO;
 
-import Model.AjustePerfil;
-import Model.ListFullUser;
-import Model.Persona;
-import Model.Usuario;
+import Model.*;
 import global.Conexion;
-import jakarta.inject.Inject;
-import lombok.Data;
 import org.mindrot.jbcrypt.BCrypt;
 import utils.PasswordHashing;
 
@@ -638,4 +633,25 @@ public class UsuarioDAO extends Conexion {
         }
         return usuario;
     }
+
+    public void actualizarUsuario(String nuevaclave, int idUsuario){
+        try  {
+            this.conectar();
+            String query = "SELECT laboratorio.cambiarclaveusuario(?, ?)";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+                preparedStatement.setInt(1, idUsuario);
+                preparedStatement.setString(2, nuevaclave);
+
+                preparedStatement.execute();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            this.desconectar();
+        }
+    }
+
 }

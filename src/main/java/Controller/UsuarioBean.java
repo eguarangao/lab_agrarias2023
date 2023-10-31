@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import utils.PasswordHashing;
+
 @Data
 @Named
 @SessionScoped
@@ -38,6 +40,7 @@ public class UsuarioBean implements Serializable {
     private String password;
 
     private int idUsuarioSession;
+    private String idUsuarioClaveSession;
 
     private boolean isAdministrador = false;
     private boolean isTecnico = false;
@@ -51,6 +54,8 @@ public class UsuarioBean implements Serializable {
 
     private String mostrarClave = "";
     private String compararClave;
+
+    private PasswordHashing passwordHashing = new PasswordHashing();
 
     @PostConstruct
     public void main() {
@@ -102,6 +107,7 @@ public class UsuarioBean implements Serializable {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         Usuario usuario = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
         idUsuarioSession = usuario.getId();
+        idUsuarioClaveSession = usuario.getClave();
         System.out.println("USAURIO LOGUEADO");
         System.out.println(usuario);
 
@@ -346,8 +352,33 @@ public class UsuarioBean implements Serializable {
         this.compararClave = compararClave;
     }
 
-    public void cambiarClave() {
-        System.out.println("SOPECHOSO");
+    public void cambiarClave() throws IOException {
+
+        if (passwordHashing.verifyPassword(mostrarClave,idUsuarioClaveSession )) {
+
+            String hashedNuevaContrasena = passwordHashing.hashPassword(compararClave);
+
+            DAO.actualizarUsuario(hashedNuevaContrasena, idUsuarioSession);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Contraseña actualizada", null));
+            PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
+            logout();
+
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Contraseña no actualizada", null));
+            PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
+        }
 
     }
+
+    public void handleKeyEvent() {
+        if (passwordHashing.verifyPassword(mostrarClave,idUsuarioClaveSession )) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña actual es correcta", null));
+            PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
+
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña actual es incorrecta", null));
+            PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
+        }
+    }
+
 }
