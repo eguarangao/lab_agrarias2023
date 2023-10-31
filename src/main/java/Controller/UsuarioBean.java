@@ -353,24 +353,46 @@ public class UsuarioBean implements Serializable {
     }
 
     public void cambiarClave() throws IOException {
+        String mayuscula = ".*[A-Z].*";
+        String minuscula = ".*[a-z].*";
+        String numero = ".*[0-9].*";
 
-        if (passwordHashing.verifyPassword(mostrarClave,idUsuarioClaveSession )) {
-
-            String hashedNuevaContrasena = passwordHashing.hashPassword(compararClave);
-
-            DAO.actualizarUsuario(hashedNuevaContrasena, idUsuarioSession);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Contraseña actualizada", null));
+        if (compararClave.length() < 8) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña debe tener al menos 8 caracteres", null));
             PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
-            logout();
-
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Contraseña no actualizada", null));
+        }
+        else if (!compararClave.matches(mayuscula)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña debe contener al menos una letra mayúscula", null));
+            PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
+        }
+        else if (!compararClave.matches(minuscula)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña debe contener al menos una letra minuscula", null));
             PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
         }
 
+        else if (!compararClave.matches(numero)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña debe contener al menos una letra minuscula", null));
+            PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
+        }
+
+        else {
+            if (passwordHashing.verifyPassword(mostrarClave,idUsuarioClaveSession )) {
+
+                String hashedNuevaContrasena = passwordHashing.hashPassword(compararClave);
+
+                DAO.actualizarUsuario(hashedNuevaContrasena, idUsuarioSession);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Contraseña actualizada", null));
+                PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
+                logout();
+
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Contraseña no actualizada", null));
+                PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
+            }
+        }
     }
 
-    public void handleKeyEvent() {
+    public void verificarclaveactual() {
         if (passwordHashing.verifyPassword(mostrarClave,idUsuarioClaveSession )) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña actual es correcta", null));
             PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
@@ -380,5 +402,4 @@ public class UsuarioBean implements Serializable {
             PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
         }
     }
-
 }

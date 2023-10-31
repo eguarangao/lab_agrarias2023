@@ -28,7 +28,7 @@
                                     <p:outputLabel value="Contraseña actual:"/>
                                     <p:password id="claveactual" value="#{usuarioBean.mostrarClave}" placeholder="Ingrese contraseña actual"
                                                 toggleMask="true" redisplay="true" style="width: 100%;">
-                                        <p:ajax event="blur" listener="#{usuarioBean.handleKeyEvent}"/>
+                                        <p:ajax event="blur" listener="#{usuarioBean.verificarclaveactual}"/>
                                     </p:password>
                                 </div>
 
@@ -36,7 +36,8 @@
                                 <p:outputLabel for="clavenew" value="Contraseña nueva:" styleClass="col-fixed"/>
                                     <p:password id="clavenew" value="#{usuarioBean.compararClave}" placeholder="Ingrese contraseña nueva"
                                                 toggleMask="true" redisplay="true" style="width: 100%;"
-                                                match="clavenewrepetir" label="Password 1" required="true"/>
+                                                match="clavenewrepetir" label="Password 1" required="true">
+                                    </p:password>
                             </div>
                             <div class="field">
                                 <p:outputLabel for="clavenewrepetir" value="Repetir contraseña nueva:" styleClass="col-fixed"/>
@@ -53,8 +54,8 @@
 
                                 </p:commandButton>
                                 <p:commandButton value="Cancelar"  icon="pi pi-times"
-                                                 actionListener="#{usuarioBean.home()}"
-                                                 class="ui-button-secondary" type="submit"/>
+                                                 class="ui-button-secondary" type="submit"
+                                                 />
                             </div>
                         </div>
 
