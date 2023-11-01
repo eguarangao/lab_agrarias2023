@@ -42,30 +42,14 @@ public class EquipoBean implements Serializable {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             Usuario usuario = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
             idUsuarioSession = usuario.getId();
-
             if(DaoEquipo.VerificadorAdmin(idUsuarioSession)){
-                ListarTodosLaboratorios();
-            }
+                ListarTodosLaboratorios();}
             else if (DaoEquipo.VerificadorTecnic(idUsuarioSession)){
-                ListarLaboratorios();
-            }
-            else{ System.out.println("No existe usuario"); }
+                ListarLaboratorios();}
+            else{ System.out.println("Error rol no encontrado"); }
 
             ListarCategoriaEquipo();
-
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void TablaEquiposPorTecnico() throws SQLException {
-        try {
-            this.Listequipos = new ArrayList<>();
-            Listequipos = DaoEquipo.listarEquiposPorTecnico(idUsuarioSession);
-            mostrarTablaEquipos = !Listequipos.isEmpty();
-            PrimeFaces.current().ajax().update("form-equipo:selectArea", "form-equipo:dt-equipos");
-        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -86,35 +70,23 @@ public class EquipoBean implements Serializable {
         this.listlaboratorios = new ArrayList<>();
         listlaboratorios = DaoEquipo.ListarLosLaboratorios();
         System.out.println(listlaboratorios);
-
     }
 
     public void ListarLaboratorios() throws SQLException {
         this.listlaboratorios = new ArrayList<>();
         listlaboratorios = DaoEquipo.listarlaboratoriosPorTecnico(idUsuarioSession);
-
     }
 
     public void ListarCategoriaEquipo() throws SQLException {
         this.listCatergoria = new ArrayList<>();
         listCatergoria = DaoEquipo.listarCategorias();
         System.out.println(listCatergoria);
-
     }
 
     public void ListarAulaxLaboratorio() {
         try {
             this.listaula = new ArrayList<>();
             listaula = DaoEquipo.ListarAulaPorLaboratorio(idlaboratorioSession);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void ListarAulasEquipo() {
-        try {
-            this.listaula = new ArrayList<>();
-            listaula = DaoEquipo.ListaAulas();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -129,7 +101,6 @@ public class EquipoBean implements Serializable {
         }
     }
 
-
     public void nuevoEquipo() throws SQLException {
         this.newEquipo = new Equipo();
         this.newEquipo.setCategoriaEquipo(new CategoriaEquipo());
@@ -137,7 +108,6 @@ public class EquipoBean implements Serializable {
         newEquipo.setEstado(true);
         ListarCategoriaEquipo();
         ListarAulaxLaboratorio();
-
     }
 
     public void addEquipo() {
@@ -145,18 +115,15 @@ public class EquipoBean implements Serializable {
             if (this.newEquipo.getFechaAdquisicion() == null) {
                 DaoEquipo.agregarEquipo(newEquipo);
                 Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipo agregado"));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Equipo agregado",null));
             } else {
-                System.out.println("Entre a la parte de editar");
                 DaoEquipo.editarEquipo(newEquipo);
                 Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipo actualizado"));
-            }
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Equipo actualizado",null));}
             PrimeFaces.current().executeScript("PF('manageEquipoDialog').hide()");
             PrimeFaces.current().ajax().update("form-equipo:messages");
-
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar el Equipo"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error al agregar el Equipo",null));
             e.printStackTrace();
         }
     }
@@ -165,27 +132,17 @@ public class EquipoBean implements Serializable {
             if(newEquipo.getEstado()==true){
                 int eliminarEquipoID = newEquipo.getId();
                 DaoEquipo.eliminarEquipo(eliminarEquipoID);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipo Eliminado"));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Equipo Eliminado",null));
                 PrimeFaces.current().executeScript("PF('manageEquipoDialog').hide()");
                 PrimeFaces.current().ajax().update("form-equipo:messages", "form-equipo:dt-equipos");
                 Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
-
             } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("No se puede eliminar equipo se encuentra en mantenimiento o averia"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"No se puede eliminar equipo se encuentra en mantenimiento o averia",null));
             PrimeFaces.current().executeScript("PF('manageEquipoDialog').hide()");
-            PrimeFaces.current().ajax().update("form-equipo:messages", "form-equipo:dt-equipos");
-        }
-
+            PrimeFaces.current().ajax().update("form-equipo:messages", "form-equipo:dt-equipos");}
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
-
-
     }
-
-
 
 }

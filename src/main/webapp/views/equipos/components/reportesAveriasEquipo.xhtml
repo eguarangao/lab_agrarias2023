@@ -43,27 +43,23 @@
                         <p:outputPanel id="tablaAveria">
                             <p:dataTable id="dt-Averia" widgetVar="dtAveria" var="dtaveria"
                                          value="#{averiaBean.listAveria}" reflow="true" styleClass="products-table"
-                                         lazy="true" rowKey="#{dtaveria.id}" paginator="true" rows="10" rowSelectMode="add"
+                                         rowKey="#{dtaveria.id}" paginator="true" rows="10" rowSelectMode="add"
                                          paginatorPosition="bottom" rendered="#{averiaBean.mostrarTablaAveria}">
-                                <p:column headerText="id">
-                                    <h:outputText value="#{dtaveria.id_averia}"/>
-                                </p:column>
-
-                                <p:column headerText="Equipo">
+                                <p:column headerText="Equipo" filterBy="#{dtaveria.equipo.descripcion}" filterMatchMode="contains">
                                     <h:outputText value="#{dtaveria.equipo.descripcion}"/>
                                 </p:column>
 
-                                <p:column headerText="Fecha registro averia">
+                                <p:column headerText="Descripción averia" >
+                                    <h:outputText value="#{dtaveria.descripcion}"/>
+                                </p:column>
+
+                                <p:column headerText="Fecha registro averia" filterBy="#{dtaveria.fecha_registro}" filterMatchMode="contains">
                                     <h:outputText value="#{dtaveria.fecha_registro}">
                                         <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
                                     </h:outputText>
                                 </p:column>
 
-                                <p:column headerText="Descripción averia">
-                                    <h:outputText value="#{dtaveria.descripcion}"/>
-                                </p:column>
-
-                                <p:column headerText="Área">
+                                <p:column headerText="Área" filterBy="#{dtaveria.aula.nombre}" filterMatchMode="contains">
                                     <h:outputText value="#{dtaveria.aula.nombre}"/>
                                 </p:column>
 
@@ -114,9 +110,9 @@
                                 <div class="p-formgrid p-grid">
 
                                     <div class="field p-col-12 p-md-4">
-                                        <p:outputLabel for="fecharegistroMante">Fecha registro</p:outputLabel>
+                                        <p:outputLabel for="fecharegistroMante">Fecha registro:</p:outputLabel>
                                         <p:inputText id="fecharegistroMante" value="#{averiaBean.fechaActual}"
-                                                     required="true" disabled="true"
+                                                     disabled="true"
                                                      rendered="#{not empty averiaBean.fechaActual}">
                                             <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
                                         </p:inputText>
@@ -130,7 +126,7 @@
                                     </div>
 
                                     <div class="field p-col-12 p-md-12">
-                                        <p:outputLabel for="descriptionAveria">Descripción averia</p:outputLabel>
+                                        <p:outputLabel for="descriptionAveria">Descripción averia:</p:outputLabel>
                                         <p:inputText id="descriptionAveria"
                                                      value="#{averiaBean.newAveria.descripcion}" required="true"/>
                                     </div>
@@ -138,7 +134,7 @@
                                     <div class="p-field p-col-12 p-md-12">
                                         <p:outputLabel >Equipo averiado:</p:outputLabel>
                                         <p:selectOneMenu id="EquipoAveriado"
-                                                         filter="true"
+                                                         filter="true" required="true"
                                                          value="#{averiaBean.newAveria.equipo.id}">
                                             <f:selectItem itemLabel="Seleccione equipo" noSelectionOption="true"
                                                           itemValue="0"/>
@@ -178,7 +174,7 @@
                                 <div class="p-formgrid p-grid">
 
                                     <div class="field p-col-12 p-md-4">
-                                        <p:outputLabel >Fecha registro</p:outputLabel>
+                                        <p:outputLabel >Fecha registro:</p:outputLabel>
                                         <p:inputText id="fecharegistroManteedit" value="#{averiaBean.newAveria.fecha_registro}"
                                                      required="true" disabled="true">
                                             <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
@@ -199,7 +195,7 @@
                                     </div>
 
                                     <div class="field p-col-12 p-md-12">
-                                        <p:outputLabel>Descripción averia</p:outputLabel>
+                                        <p:outputLabel>Descripción averia:</p:outputLabel>
                                         <p:inputText id="descriptionAveriaedit"
                                                      value="#{averiaBean.newAveria.descripcion}" required="true"/>
                                     </div>

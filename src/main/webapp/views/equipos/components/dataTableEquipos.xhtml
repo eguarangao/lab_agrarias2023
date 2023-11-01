@@ -37,43 +37,42 @@
 
                </p:toolbar>
                <p:outputPanel id="tablaEquipos">
-               <p:dataTable id="dt-equipos" widgetVar="dtEquipos" var="dtequipos"
+               <p:dataTable id="dt-equipos" widgetVar="dtEquipos" var="dtequipos" stripedRows="true" emptyMessage="No se encontro equipos"
                             value="#{equipoBean.listequipos}" reflow="true" styleClass="products-table"
-                            lazy="true" rowKey="#{dtequipos.id}" paginator="true" rows="10" rowSelectMode="add"
-                            paginatorPosition="bottom" rendered="#{equipoBean.mostrarTablaEquipos}"
-               >
-                  <p:column headerText="id">
-                     <h:outputText value="#{dtequipos.id}"/>
-                  </p:column>
-                  <p:column headerText="Codigo">
+                            rowKey="#{dtequipos.id}" paginator="true" rows="10" rowSelectMode="add"
+                            paginatorPosition="bottom" rendered="#{equipoBean.mostrarTablaEquipos}">
+
+                  <p:column headerText="Código" filterBy="#{dtequipos.codigo}" filterMatchMode="contains">
                      <h:outputText value="#{dtequipos.codigo}"/>
                   </p:column>
 
-                  <p:column headerText="Categoria">
+                  <p:column headerText="Categoria" filterBy="#{dtequipos.categoriaEquipo.nombre}" filterMatchMode="contains">
                      <h:outputText value="#{dtequipos.categoriaEquipo.nombre}"/>
                   </p:column>
 
-                  <p:column headerText="Descripción">
+                  <p:column headerText="Descripción" filterBy="#{dtequipos.descripcion}" filterMatchMode="contains">
                      <h:outputText value="#{dtequipos.descripcion}"/>
                   </p:column>
 
-                  <p:column headerText="Marca">
+                  <p:column headerText="Marca" filterBy="#{dtequipos.marca}" filterMatchMode="contains">
                      <h:outputText value="#{dtequipos.marca}"/>
                   </p:column>
 
-                  <p:column headerText="Modelo">
+                  <p:column headerText="Modelo" filterBy="#{dtequipos.modelo}" filterMatchMode="contains">
                      <h:outputText value="#{dtequipos.modelo}"/>
                   </p:column>
 
-                  <p:column headerText="Nº Serie">
+                  <p:column headerText="Nº Serie" filterBy="#{dtequipos.numeroSerie}" filterMatchMode="contains">
                      <h:outputText value="#{dtequipos.numeroSerie}"/>
                   </p:column>
 
-                  <p:column headerText="Fecha adquisición">
-                     <h:outputText value="#{dtequipos.fechaAdquisicion}"/>
+                  <p:column headerText="Fecha adquisición" filterBy="#{dtequipos.fechaAdquisicion}" filterMatchMode="contains">
+                     <h:outputText value="#{dtequipos.fechaAdquisicion}">
+                     <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                  </h:outputText>
                   </p:column>
 
-                  <p:column headerText="Área">
+                  <p:column headerText="Área" filterBy="#{dtequipos.aula.nombre}" filterMatchMode="contains">
                      <h:outputText value="#{dtequipos.aula.nombre}"/>
                   </p:column>
 
@@ -107,7 +106,6 @@
             </div>
          </h:form>
 
-
          <h:form id="dialogEquipo">
             <p:dialog header="Agregar nuevo Equipo" showEffect="fade" modal="true" widgetVar="manageEquipoDialog"
                       responsive="true" style="max-width: 980px;">
@@ -117,8 +115,8 @@
 
                      <div class="p-formgrid p-grid">
                         <div class="field p-col-12 p-md-3">
-                           <p:outputLabel for="selectArea">Área</p:outputLabel>
-                           <p:selectOneMenu id="selectArea"
+                           <p:outputLabel for="selectArea">Área:</p:outputLabel>
+                           <p:selectOneMenu id="selectArea" required="true"
                                             value="#{equipoBean.newEquipo.aula.id}">
                               <f:selectItem itemLabel="Seleccione aula" noSelectionOption="true"
                                             itemValue="0"/>
@@ -128,8 +126,8 @@
                         </div>
 
                         <div class="field p-col-12 p-md-3">
-                           <p:outputLabel for="SelecCategory">Categoria</p:outputLabel>
-                           <p:selectOneMenu id="SelecCategory"
+                           <p:outputLabel for="SelecCategory">Categoria:</p:outputLabel>
+                           <p:selectOneMenu id="SelecCategory" required="true"
                                             value="#{equipoBean.newEquipo.categoriaEquipo.id}">
                               <f:selectItem itemLabel="Seleccione Categoria" noSelectionOption="true"
                                             itemValue="0"/>
@@ -139,32 +137,31 @@
                         </div>
 
                         <div class="field p-col-12 p-md-3">
-                           <p:outputLabel for="code">Código</p:outputLabel>
-                           <p:inputText id="code" value="#{equipoBean.newEquipo.codigo}"
-                                        required="true"/>
-
-                        </div>
-
-                        <div class="field p-col-12 p-md-3">
-                           <p:outputLabel for="description">Descripción</p:outputLabel>
-                           <p:inputText id="description" value="#{equipoBean.newEquipo.descripcion}"
+                           <p:outputLabel for="codeequipo">Código:</p:outputLabel>
+                           <p:inputText id="codeequipo" value="#{equipoBean.newEquipo.codigo}"
                                         required="true"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
-                           <p:outputLabel for="brand">Marca </p:outputLabel>
+                           <p:outputLabel for="descriptionequipo">Descripción:</p:outputLabel>
+                           <p:inputText id="descriptionequipo" value="#{equipoBean.newEquipo.descripcion}"
+                                        required="true"/>
+                        </div>
+
+                        <div class="field p-col-12 p-md-3">
+                           <p:outputLabel for="brand">Marca: </p:outputLabel>
                            <p:inputText id="brand" value="#{equipoBean.newEquipo.marca}"
                                         required="true"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
-                           <p:outputLabel for="model">Modelo </p:outputLabel>
+                           <p:outputLabel for="model">Modelo: </p:outputLabel>
                            <p:inputText id="model" value="#{equipoBean.newEquipo.modelo}"
                                         required="true"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
-                           <p:outputLabel for="serialNumber">Nº Serio </p:outputLabel>
+                           <p:outputLabel for="serialNumber" value="Nº Serie:" ></p:outputLabel>
                            <p:inputText id="serialNumber" value="#{equipoBean.newEquipo.numeroSerie}"
                                         required="true"/>
                         </div>
@@ -176,13 +173,9 @@
                                                   disabled="true" value="#{equipoBean.newEquipo.estado}"/>
                            </div>
                         </div>
-
-
                      </div>
-
                </p:outputPanel>
                </p:outputPanel>
-
                <f:facet name="footer">
                   <p:commandButton value="Guardar" icon="pi pi-check"
                                    class="ui-button-success"
@@ -191,11 +184,7 @@
                                    process="manage-equipo-content @this"/>
                   <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageEquipoDialog').hide()"
                                    class="ui-button-secondary" type="button"/>
-
                </f:facet>
-
-
-
             </p:dialog>
             <p:confirmDialog widgetVar="deleteEquipoDialog" showEffect="fade" width="300"
                              message="Deseas eliminar el Equipo?" header="Confirmar" severity="warn">
@@ -205,13 +194,7 @@
                <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
                                 onclick="PF('deleteEquipoDialog').hide()"/>
             </p:confirmDialog>
-
-
          </h:form>
-
-
-
       </div>
    </div>
-
 </ui:composition>

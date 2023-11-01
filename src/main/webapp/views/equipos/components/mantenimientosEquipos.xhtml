@@ -54,21 +54,21 @@
                                 <p:rowToggler />
                             </p:column>
 
-                            <p:column headerText="Tipo de mantenimiento">
+                            <p:column headerText="Tipo de mantenimiento" filterBy="#{dtmante.tipoMantenimiento.tipo}" filterMatchMode="contains">
                                 <p:outputLabel  value="#{dtmante.tipoMantenimiento.tipo}"/>
                             </p:column>
 
                             <p:column headerText="Descripción">
-                                <p:outputLabel value="#{dtmante.descripcion_mante}"/>
+                                <p:outputLabel value="#{dtmante.descripcion_mante}" />
                             </p:column>
 
-                            <p:column headerText="Fecha registro mantenimiento">
+                            <p:column headerText="Fecha registro mantenimiento" filterBy="#{dtmante.fechaRegistro}" filterMatchMode="contains">
                                 <p:outputLabel  value="#{dtmante.fechaRegistro}">
-                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
                                 </p:outputLabel >
                             </p:column>
 
-                            <p:column headerText="Fecha mantenimiento realizado">
+                            <p:column headerText="Fecha mantenimiento realizado" filterBy="#{dtmante.fechaRetorno}" filterMatchMode="contains">
                                 <p:outputLabel  value="#{dtmante.fechaRetorno}">
                                 <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
                             </p:outputLabel >
@@ -110,14 +110,16 @@
                                     <f:facet name="header">
                                         <h:outputText value="Lista de equipos en mantenimiento" style=" font-weight: bold;" />
                                     </f:facet>
-                                    <p:column headerText="Equipo">
+                                    <p:column headerText="Equipo" filterBy="#{equipos.equipo.descripcion}" filterMatchMode="contains" >
                                         #{equipos.equipo.descripcion}
                                     </p:column>
-                                    <p:column headerText="Área" >
+                                    <p:column headerText="Área" filterBy="#{equipos.aula.nombre}" filterMatchMode="contains"  >
                                         #{equipos.aula.nombre}
                                     </p:column>
-                                    <p:column headerText="Fecha de retorno equipo">
-                                        #{equipos.fecha_retorno_equipo}
+                                    <p:column headerText="Fecha de retorno equipo" filterBy="#{equipos.fecha_retorno_equipo}" filterMatchMode="contains" >
+                                        <p:outputLabel  value="#{equipos.fecha_retorno_equipo}">
+                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                        </p:outputLabel >
                                     </p:column>
 
                                     <p:column headerText="Estado">
@@ -167,22 +169,23 @@
                                 <div class="field p-col-12 p-md-4">
                                     <p:outputLabel for="fecharegistroManteRealiz" value="Fecha registro:" ></p:outputLabel>
                                     <p:inputText id="fecharegistroManteRealiz" value="#{mantenimientoBean.newMantenimiento.fechaRegistro}"
-                                                 required="true" disabled="true">
+                                                 disabled="true">
                                         <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
                                     </p:inputText>
                                 </div>
 
                                 <div class="field p-col-12 p-md-4">
                                     <p:outputLabel for="fechaMantenimientoRealizado" value="Fecha realizado:"></p:outputLabel>
-                                    <p:inputText id="fechaMantenimientoRealizado"  value="#{mantenimientoBean.newMantenimiento.fechaRetorno}"
-                                                 required="true" disabled="true">
+                                    <p:inputText id="fechaMantenimientoRealizado"
+                                                 value="#{mantenimientoBean.newMantenimiento.fechaRetorno}"
+                                                 disabled="true">
                                         <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
                                     </p:inputText>
                                 </div>
 
                                 <div class="field p-col-12 p-md-4">
-                                    <p:outputLabel for="SelecttipoManteRealiz">Tipo mantenimiento</p:outputLabel>
-                                    <p:selectOneMenu id="SelecttipoManteRealiz"
+                                    <p:outputLabel for="SelecttipoManteRealiz">Tipo mantenimiento:</p:outputLabel>
+                                    <p:selectOneMenu id="SelecttipoManteRealiz" required="true"
                                                      value="#{mantenimientoBean.newMantenimiento.tipoMantenimiento.id}">
                                         <f:selectItem itemLabel="Seleccione tipo mantenimiento" noSelectionOption="true"
                                                       itemValue="0"/>
@@ -201,7 +204,7 @@
                                 </div>
 
                                 <div class="field p-col-12 p-md-12">
-                                    <p:outputLabel for="desMantenimientoRealizado">Descripción del mantenimiento</p:outputLabel>
+                                    <p:outputLabel for="desMantenimientoRealizado">Descripción del mantenimiento: </p:outputLabel>
                                     <p:inputText id="desMantenimientoRealizado" value="#{mantenimientoBean.newMantenimiento.descripcion_mante}"
                                                  required="true">
                                     </p:inputText>
@@ -238,16 +241,16 @@
                             <div class="p-formgrid p-grid">
 
                                 <div class="field p-col-12 p-md-3">
-                                    <p:outputLabel for="fecharegistroMante">Fecha registro</p:outputLabel>
+                                    <p:outputLabel for="fecharegistroMante">Fecha registro:</p:outputLabel>
                                     <p:inputText id="fecharegistroMante" value="#{mantenimientoBean.fechaActual}"
-                                                 required="true" disabled="true"
+                                                  disabled="true"
                                                  rendered="#{not empty mantenimientoBean.fechaActual}">
                                  <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
                                 </p:inputText>
                                 </div>
                                 <div class="field p-col-12 p-md-6">
-                                    <p:outputLabel for="SelecttipoMante">Tipo mantenimiento</p:outputLabel>
-                                    <p:selectOneMenu id="SelecttipoMante"
+                                    <p:outputLabel for="SelecttipoMante">Tipo mantenimiento:</p:outputLabel>
+                                    <p:selectOneMenu id="SelecttipoMante" required="true"
                                                      value="#{mantenimientoBean.newMantenimiento.tipoMantenimiento.id}">
                                         <f:selectItem itemLabel="Seleccione tipo mantenimiento" noSelectionOption="true"
                                                       itemValue="0"/>
@@ -267,14 +270,14 @@
                                 </div>
 
                                 <div class="field p-col-12 p-md-12">
-                                    <p:outputLabel for="descripciMante">Descripción del mantenimiento</p:outputLabel>
+                                    <p:outputLabel for="descripciMante">Descripción del mantenimiento:</p:outputLabel>
                                     <p:inputText id="descripciMante" value="#{mantenimientoBean.newMantenimiento.descripcion_mante}"
                                                  required="true"/>
 
                                 </div>
 
                                 <div class="p-field p-col-12 p-md-12">
-                                    <p:outputLabel for="comboEquiposMante">Seleccinar equipos para realizar mantenimiento:</p:outputLabel>
+                                    <p:outputLabel for="comboEquiposMante">Seleccionar equipos para realizar mantenimiento:</p:outputLabel>
                                     <p:selectCheckboxMenu id="comboEquiposMante" label="MantenimientoCombo" style="min-width: 15rem"
                                                           value="#{mantenimientoBean.equiposRequeridosMantenimiento}"
                                                           multiple="true" filter="true" filterMatchMode="startsWith"
