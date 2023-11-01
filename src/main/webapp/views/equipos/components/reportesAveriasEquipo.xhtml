@@ -129,7 +129,8 @@
                                         <p:outputLabel for="descriptionAveria">Descripción averia:</p:outputLabel>
                                         <p:inputText id="descriptionAveria"
                                                      value="#{averiaBean.newAveria.descripcion}" required="true"
-                                                     requiredMessage="Por favor, Ingrese la descripción de averia del equipo"/>
+                                                     requiredMessage="Por favor, Ingrese la descripción de averia del equipo"
+                                                     maxlength="200"/>
                                         <p:message for="descriptionAveria"/>
                                     </div>
 
@@ -200,7 +201,7 @@
                                     <div class="field p-col-12 p-md-12">
                                         <p:outputLabel>Descripción averia:</p:outputLabel>
                                         <p:inputText id="descriptionAveriaedit"
-                                                     value="#{averiaBean.newAveria.descripcion}" required="true"/>
+                                                     value="#{averiaBean.newAveria.descripcion}" required="true" maxlength="200"/>
                                     </div>
 
                                     <div class="p-field p-col-12 p-md-12">

@@ -143,35 +143,40 @@
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="codeequipo">Código:</p:outputLabel>
                            <p:inputText id="codeequipo" value="#{equipoBean.newEquipo.codigo}"
-                                        required="true" requiredMessage="Por favor, ingrese codigo del equipo"/>
+                                        required="true" requiredMessage="Por favor, ingrese codigo del equipo"
+                                        maxlength="8"/>
                            <p:message for="serialNumber"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="descriptionequipo">Descripción:</p:outputLabel>
                            <p:inputText id="descriptionequipo" value="#{equipoBean.newEquipo.descripcion}"
-                                        required="true" requiredMessage="Por favor, ingrese descripción del equipo"/>
+                                        required="true" requiredMessage="Por favor, ingrese descripción del equipo"
+                                        maxlength="50"/>
                            <p:message for="descriptionequipo"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="brand">Marca: </p:outputLabel>
                            <p:inputText id="brand" value="#{equipoBean.newEquipo.marca}"
-                                        required="true" requiredMessage="Por favor, ingrese marca del equipo"/>
+                                        required="true" requiredMessage="Por favor, ingrese marca del equipo"
+                                        maxlength="10"/>
                            <p:message for="brand"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="model">Modelo: </p:outputLabel>
                            <p:inputText id="model" value="#{equipoBean.newEquipo.modelo}"
-                                        required="true" requiredMessage="Por favor, ingrese modelo del equipo"/>
+                                        required="true" requiredMessage="Por favor, ingrese modelo del equipo"
+                                        maxlength="20"/>
                            <p:message for="model"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="serialNumber" value="Nº Serie:" ></p:outputLabel>
                            <p:inputText id="serialNumber" value="#{equipoBean.newEquipo.numeroSerie}"
-                                        required="true" requiredMessage="Por favor, ingrese Nº Serie del equipo"/>
+                                        required="true" requiredMessage="Por favor, ingrese Nº Serie del equipo"
+                                        maxlength="15"/>
                            <p:message for="serialNumber"/>
                         </div>
 

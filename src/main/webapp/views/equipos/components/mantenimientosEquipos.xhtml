@@ -206,7 +206,7 @@
                                 <div class="field p-col-12 p-md-12">
                                     <p:outputLabel for="desMantenimientoRealizado">Descripción del mantenimiento: </p:outputLabel>
                                     <p:inputText id="desMantenimientoRealizado" value="#{mantenimientoBean.newMantenimiento.descripcion_mante}"
-                                                 required="true">
+                                                 required="true" maxlength="200">
                                     </p:inputText>
                                 </div>
 
@@ -273,7 +273,8 @@
                                 <div class="field p-col-12 p-md-12">
                                     <p:outputLabel for="descripciMante">Descripción del mantenimiento:</p:outputLabel>
                                     <p:inputText id="descripciMante" value="#{mantenimientoBean.newMantenimiento.descripcion_mante}"
-                                                 required="true" requiredMessage="Por favor, Ingrese una descripción del mantenimiento."/>
+                                                 required="true" requiredMessage="Por favor, Ingrese una descripción del mantenimiento."
+                                                 maxlength="200"/>
                                     <p:message for="descripciMante"/>
                                 </div>
 
