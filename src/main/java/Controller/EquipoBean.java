@@ -124,6 +124,7 @@ public class EquipoBean implements Serializable {
             PrimeFaces.current().ajax().update("form-equipo:messages");
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error al agregar el Equipo",null));
+            PrimeFaces.current().ajax().update("form-equipo:messages");
             e.printStackTrace();
         }
     }

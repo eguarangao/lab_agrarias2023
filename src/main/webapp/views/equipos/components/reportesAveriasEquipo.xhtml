@@ -128,13 +128,15 @@
                                     <div class="field p-col-12 p-md-12">
                                         <p:outputLabel for="descriptionAveria">Descripción averia:</p:outputLabel>
                                         <p:inputText id="descriptionAveria"
-                                                     value="#{averiaBean.newAveria.descripcion}" required="true"/>
+                                                     value="#{averiaBean.newAveria.descripcion}" required="true"
+                                                     requiredMessage="Por favor, Ingrese la descripción de averia del equipo"/>
+                                        <p:message for="descriptionAveria"/>
                                     </div>
 
                                     <div class="p-field p-col-12 p-md-12">
                                         <p:outputLabel >Equipo averiado:</p:outputLabel>
-                                        <p:selectOneMenu id="EquipoAveriado"
-                                                         filter="true" required="true"
+                                        <p:selectOneMenu id="EquipoAveriado" filter="true" required="true"
+                                                         requiredMessage="Por favor, Seleccione el equipo averiado"
                                                          value="#{averiaBean.newAveria.equipo.id}">
                                             <f:selectItem itemLabel="Seleccione equipo" noSelectionOption="true"
                                                           itemValue="0"/>
@@ -143,6 +145,7 @@
                                                           itemLabel="#{eaveriado.descripcion}"
                                                           itemValue="#{eaveriado.id}"/>
                                         </p:selectOneMenu>
+                                        <p:message for="EquipoAveriado"/>
                                     </div>
                                 </div>
 

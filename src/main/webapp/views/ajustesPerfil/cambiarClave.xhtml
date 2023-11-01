@@ -27,7 +27,8 @@
                             <div class="field">
                                     <p:outputLabel value="Contraseña actual:"/>
                                     <p:password id="claveactual" value="#{usuarioBean.mostrarClave}" placeholder="Ingrese contraseña actual"
-                                                toggleMask="true" redisplay="true" style="width: 100%;">
+                                                toggleMask="true" redisplay="true" required="true" style="width: 100%;"
+                                                requiredMessage="Por favor, ingrese la contraseña actual.">
                                         <p:ajax event="blur" listener="#{usuarioBean.verificarclaveactual}"/>
                                     </p:password>
                                 </div>
@@ -36,13 +37,15 @@
                                 <p:outputLabel for="clavenew" value="Contraseña nueva:" styleClass="col-fixed"/>
                                     <p:password id="clavenew" value="#{usuarioBean.compararClave}" placeholder="Ingrese contraseña nueva"
                                                 toggleMask="true" redisplay="true" style="width: 100%;"
-                                                match="clavenewrepetir" label="Password 1" required="true">
+                                                match="clavenewrepetir" label="Password 1" required="true"
+                                                requiredMessage="Por favor, ingrese la contraseña nueva.">
                                     </p:password>
                             </div>
                             <div class="field">
                                 <p:outputLabel for="clavenewrepetir" value="Repetir contraseña nueva:" styleClass="col-fixed"/>
                                 <p:password id="clavenewrepetir" value="#{usuarioBean.compararClave}"  placeholder="Repetir contraseña nueva"
-                                            toggleMask="true" redisplay="true" style="width: 100%;" label="Password 2" required="true"/>
+                                            toggleMask="true" redisplay="true" style="width: 100%;" label="Password 2" required="true"
+                                            requiredMessage="Por favor, ingrese la contraseña repetida"/>
                             </div>
                         </div>
 

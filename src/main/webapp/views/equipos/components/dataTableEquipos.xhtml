@@ -111,59 +111,68 @@
                       responsive="true" style="max-width: 980px;">
                <p:outputPanel id="manage-equipo-content" class="ui-fluid">
                <p:outputPanel rendered="#{not empty equipoBean.newEquipo}">
-
-
                      <div class="p-formgrid p-grid">
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="selectArea">Área:</p:outputLabel>
-                           <p:selectOneMenu id="selectArea" required="true"
-                                            value="#{equipoBean.newEquipo.aula.id}">
+                           <p:selectOneMenu id="selectArea"
+                                            value="#{equipoBean.newEquipo.aula.id}"
+                                            required="true"
+                                            requiredMessage="Por favor, Seleccione una area.">
                               <f:selectItem itemLabel="Seleccione aula" noSelectionOption="true"
                                             itemValue="0"/>
                               <f:selectItems value="#{equipoBean.listaula}" var="au"
                                              itemLabel="#{au.nombre}" itemValue="#{au.id}"/>
                            </p:selectOneMenu>
+                           <p:message for="selectArea"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="SelecCategory">Categoria:</p:outputLabel>
-                           <p:selectOneMenu id="SelecCategory" required="true"
-                                            value="#{equipoBean.newEquipo.categoriaEquipo.id}">
+                           <p:selectOneMenu id="SelecCategory"
+                                            value="#{equipoBean.newEquipo.categoriaEquipo.id}"
+                                            required="true"
+                                            requiredMessage="Por favor, Seleccione una categoria">
                               <f:selectItem itemLabel="Seleccione Categoria" noSelectionOption="true"
                                             itemValue="0"/>
                               <f:selectItems value="#{equipoBean.listCatergoria}" var="cate"
                                              itemLabel="#{cate.nombre}" itemValue="#{cate.id}"/>
                            </p:selectOneMenu>
+                           <p:message for="SelecCategory"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="codeequipo">Código:</p:outputLabel>
                            <p:inputText id="codeequipo" value="#{equipoBean.newEquipo.codigo}"
-                                        required="true"/>
+                                        required="true" requiredMessage="Por favor, ingrese codigo del equipo"/>
+                           <p:message for="serialNumber"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="descriptionequipo">Descripción:</p:outputLabel>
                            <p:inputText id="descriptionequipo" value="#{equipoBean.newEquipo.descripcion}"
-                                        required="true"/>
+                                        required="true" requiredMessage="Por favor, ingrese descripción del equipo"/>
+                           <p:message for="descriptionequipo"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="brand">Marca: </p:outputLabel>
                            <p:inputText id="brand" value="#{equipoBean.newEquipo.marca}"
-                                        required="true"/>
+                                        required="true" requiredMessage="Por favor, ingrese marca del equipo"/>
+                           <p:message for="brand"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="model">Modelo: </p:outputLabel>
                            <p:inputText id="model" value="#{equipoBean.newEquipo.modelo}"
-                                        required="true"/>
+                                        required="true" requiredMessage="Por favor, ingrese modelo del equipo"/>
+                           <p:message for="model"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="serialNumber" value="Nº Serie:" ></p:outputLabel>
                            <p:inputText id="serialNumber" value="#{equipoBean.newEquipo.numeroSerie}"
-                                        required="true"/>
+                                        required="true" requiredMessage="Por favor, ingrese Nº Serie del equipo"/>
+                           <p:message for="serialNumber"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3 " style="margin-top: 3px;">

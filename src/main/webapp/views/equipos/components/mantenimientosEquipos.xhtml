@@ -251,13 +251,14 @@
                                 <div class="field p-col-12 p-md-6">
                                     <p:outputLabel for="SelecttipoMante">Tipo mantenimiento:</p:outputLabel>
                                     <p:selectOneMenu id="SelecttipoMante" required="true"
+                                                     requiredMessage="Por favor, seleccione un tipo de mantenimiento."
                                                      value="#{mantenimientoBean.newMantenimiento.tipoMantenimiento.id}">
                                         <f:selectItem itemLabel="Seleccione tipo mantenimiento" noSelectionOption="true"
                                                       itemValue="0"/>
                                         <f:selectItems value="#{mantenimientoBean.listTipoMantenimiento}" var="tm"
                                                        itemLabel="#{tm.tipo}" itemValue="#{tm.id}"/>
                                     </p:selectOneMenu>
-
+                                    <p:message for="SelecttipoMante"/>
                                 </div>
 
 
@@ -272,8 +273,8 @@
                                 <div class="field p-col-12 p-md-12">
                                     <p:outputLabel for="descripciMante">Descripción del mantenimiento:</p:outputLabel>
                                     <p:inputText id="descripciMante" value="#{mantenimientoBean.newMantenimiento.descripcion_mante}"
-                                                 required="true"/>
-
+                                                 required="true" requiredMessage="Por favor, Ingrese una descripción del mantenimiento."/>
+                                    <p:message for="descripciMante"/>
                                 </div>
 
                                 <div class="p-field p-col-12 p-md-12">
@@ -281,13 +282,14 @@
                                     <p:selectCheckboxMenu id="comboEquiposMante" label="MantenimientoCombo" style="min-width: 15rem"
                                                           value="#{mantenimientoBean.equiposRequeridosMantenimiento}"
                                                           multiple="true" filter="true" filterMatchMode="startsWith"
-                                                          panelStyle="width: 30rem" scrollHeight="250"  required="true">
+                                                          panelStyle="width: 30rem" scrollHeight="250"  required="true"
+                                                          requiredMessage="Por favor, Seleccione los equipos para el mantenimiento.">
                                         <f:selectItems value="#{mantenimientoBean.listequipos}"
                                                        var="equiporequeridos"
                                                        itemLabel="#{equiporequeridos.descripcion}"
                                                        itemValue="#{equiporequeridos.id}"/>
                                     </p:selectCheckboxMenu>
-
+                                    <p:message for="comboEquiposMante"/>
                                 </div>
 
 
