@@ -10,6 +10,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import lombok.Data;
 import org.primefaces.PrimeFaces;
@@ -22,7 +23,7 @@ import java.util.List;
 
 @Data
 @Named
-@SessionScoped
+@ViewScoped
 public class EquipoBean implements Serializable {
 
     private EquipoDAO DaoEquipo = new EquipoDAO();
@@ -130,15 +131,23 @@ public class EquipoBean implements Serializable {
     }
     public void eliminarEquipo() {
         try {
-            if(newEquipo.getEstado()==true){
-                int eliminarEquipoID = newEquipo.getId();
+            int eliminarEquipoID = newEquipo.getId();
+            boolean existeenMantenimiento = DaoEquipo.verificarexisteequipoenmante(eliminarEquipoID);
+            boolean existeenAveria = DaoEquipo.verificarexisteequipoenaveria(eliminarEquipoID);
+
+            if(newEquipo.getEstado()==true && existeenMantenimiento==false && existeenAveria==false){
                 DaoEquipo.eliminarEquipo(eliminarEquipoID);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Equipo Eliminado",null));
                 PrimeFaces.current().executeScript("PF('manageEquipoDialog').hide()");
                 PrimeFaces.current().ajax().update("form-equipo:messages", "form-equipo:dt-equipos");
                 Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
-            } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"No se puede eliminar equipo se encuentra en mantenimiento o averia",null));
+            } else if(existeenMantenimiento==true){
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"No se puede eliminar equipo se encuentra en mantenimiento",null));
+                PrimeFaces.current().executeScript("PF('manageEquipoDialog').hide()");
+                PrimeFaces.current().ajax().update("form-equipo:messages", "form-equipo:dt-equipos");}
+
+            else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"No se puede eliminar equipo se encuentra averiado",null));
             PrimeFaces.current().executeScript("PF('manageEquipoDialog').hide()");
             PrimeFaces.current().ajax().update("form-equipo:messages", "form-equipo:dt-equipos");}
         } catch (Exception e) {

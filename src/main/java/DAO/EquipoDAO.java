@@ -384,4 +384,48 @@ public class EquipoDAO extends Conexion {
         return verificador;
     }
 
+    public boolean verificarexisteequipoenmante(int equipoId) {
+        try {
+            this.conectar();
+            String query = "SELECT laboratorio.verificarsiequipoestaenmantenimiento(?)";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, equipoId);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getBoolean(1);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.desconectar();
+        }
+
+        return false;
+    }
+
+    public boolean verificarexisteequipoenaveria(int equipoId) {
+        try {
+            this.conectar();
+            String query = "SELECT laboratorio.verificarsiequipoestaenaveria(?)";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, equipoId);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getBoolean(1);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.desconectar();
+        }
+
+        return false;
+    }
+
 }
