@@ -45,18 +45,29 @@
                                          value="#{averiaBean.listAveria}" reflow="true" styleClass="products-table"
                                          rowKey="#{dtaveria.id}" paginator="true" rows="10" rowSelectMode="add"
                                          paginatorPosition="bottom" rendered="#{averiaBean.mostrarTablaAveria}">
+
                                 <p:column headerText="Equipo" filterBy="#{dtaveria.equipo.descripcion}" filterMatchMode="contains">
                                     <h:outputText value="#{dtaveria.equipo.descripcion}"/>
                                 </p:column>
 
-                                <p:column headerText="Descripción averia" >
+                                <p:column headerText="Descripción averia" filterBy="#{dtaveria.descripcion}" filterMatchMode="contains" >
                                     <h:outputText value="#{dtaveria.descripcion}"/>
+                                </p:column>
+
+                                <p:column headerText="Prioridad" filterBy="#{dtaveria.prioridad}" filterMatchMode="contains" >
+                                    <h:outputText value="ALTA" rendered="#{dtaveria.prioridad == 'A'}"/>
+                                    <h:outputText value="MEDIA" rendered="#{dtaveria.prioridad == 'M'}"/>
+                                    <h:outputText value="BAJO" rendered="#{dtaveria.prioridad == 'B'}"/>
                                 </p:column>
 
                                 <p:column headerText="Fecha registro averia" filterBy="#{dtaveria.fecha_registro}" filterMatchMode="contains">
                                     <h:outputText value="#{dtaveria.fecha_registro}">
                                         <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
                                     </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Tipo de Daño" filterBy="#{dtaveria.problema}" filterMatchMode="contains" >
+                                    <h:outputText value="#{dtaveria.problema}"/>
                                 </p:column>
 
                                 <p:column headerText="Área" filterBy="#{dtaveria.aula.nombre}" filterMatchMode="contains">
@@ -89,9 +100,9 @@
 
                                     <p:commandButton id="btnReporteAveria"
                                                      class="ui-button-info rounded-button ui-button-outlined"
-                                                     icon="pi pi-file-pdf" style="margin-right: .5rem"
-                                                     actionListener="#{averiaBean.ReportPDF()}" ajax="false"
-                                                     disabled="#{averiaBean.botonReporteDisabled}">
+                                                     icon="pi pi-file-pdf" style="margin-right: .5rem" process="@this"
+                                                     actionListener="#{averiaBean.ReportPDF(dtaveria.id_averia)}" ajax="false"
+                                                     update=":dialogAveria:manage-Averiaedit-content">
                                     </p:commandButton>
                                 </p:column>
                             </p:dataTable>
@@ -125,6 +136,17 @@
                                         </div>
                                     </div>
 
+                                    <div class="field p-col-12 p-md-4" style="margin-top: 3px;">
+                                        <h:outputLabel for="prioridadaveria" value="Prioridad:"/>
+                                        <p:selectOneMenu id="prioridadaveria" value="#{averiaBean.newAveria.prioridad}"
+                                                         required="true" requiredMessage="Por favor, Seleccione la prioridad">
+                                            <f:selectItem itemLabel="Seleccione la prioridad" itemValue=""/>
+                                            <f:selectItem itemLabel="Alta" itemValue="A"/>
+                                            <f:selectItem itemLabel="Media" itemValue="M"/>
+                                            <f:selectItem itemLabel="Baja" itemValue="B"/>
+                                        </p:selectOneMenu>
+                                    </div>
+
                                     <div class="field p-col-12 p-md-12">
                                         <p:outputLabel for="descriptionAveria">Descripción averia:</p:outputLabel>
                                         <p:inputText id="descriptionAveria"
@@ -134,7 +156,7 @@
                                         <p:message for="descriptionAveria"/>
                                     </div>
 
-                                    <div class="p-field p-col-12 p-md-12">
+                                    <div class="field p-col-12 p-md-12">
                                         <p:outputLabel >Equipo averiado:</p:outputLabel>
                                         <p:selectOneMenu id="EquipoAveriado" filter="true" required="true"
                                                          requiredMessage="Por favor, Seleccione el equipo averiado"
@@ -170,21 +192,21 @@
 
 
                     <p:dialog header="Editar averia equipo"  showEffect="fade" modal="true" widgetVar="manageAveriaeditDialog"
-                              responsive="true" style="max-width: 680px;">
+                              responsive="true" style="max-width: 720px;">
                         <p:outputPanel id="manage-Averiaedit-content" class="ui-fluid">
                             <p:outputPanel rendered="#{not empty averiaBean.newAveria}">
 
 
                                 <div class="p-formgrid p-grid">
 
-                                    <div class="field p-col-12 p-md-4">
+                                    <div class="field p-col-12 p-md-3">
                                         <p:outputLabel >Fecha registro:</p:outputLabel>
                                         <p:inputText id="fecharegistroManteedit" value="#{averiaBean.newAveria.fecha_registro}"
                                                      required="true" disabled="true">
                                             <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
                                         </p:inputText>
                                     </div>
-                                    <div class="field p-col-12 p-md-4" style="margin-top: 3px;">
+                                    <div class="field p-col-12 p-md-3" style="margin-top: 3px;">
                                         <h:outputLabel value="Estado:" />
                                         <div style="display: block">
                                             <p:selectBooleanButton id="estadoAveriaedit" offLabel="Dañado" onLabel="Averiado"
@@ -192,10 +214,20 @@
                                         </div>
                                     </div>
 
-                                    <div class="field p-col-12 p-md-4" style="margin-top: 3px;">
+                                    <div class="field p-col-12 p-md-3" style="margin-top: 3px;">
                                         <h:outputLabel value="Área:" />
                                         <p:inputText id="areaAveriaedit" disabled="true"
                                                      value="#{averiaBean.newAveria.aula.nombre}" required="true"/>
+                                    </div>
+
+                                    <div class="field p-col-12 p-md-3" style="margin-top: 3px;">
+                                        <h:outputLabel value="Prioridad:"/>
+                                        <p:selectOneMenu id="prioridadaveriaedit" value="#{averiaBean.newAveria.prioridad}">
+                                            <f:selectItem itemLabel="Seleccione la prioridad" itemValue=""/>
+                                            <f:selectItem itemLabel="Alta" itemValue="A"/>
+                                            <f:selectItem itemLabel="Media" itemValue="M"/>
+                                            <f:selectItem itemLabel="Baja" itemValue="B"/>
+                                        </p:selectOneMenu>
                                     </div>
 
                                     <div class="field p-col-12 p-md-12">
@@ -218,7 +250,7 @@
                             <p:commandButton value="Guardar" icon="pi pi-check"
                                              class="ui-button-success"
                                              actionListener="#{averiaBean.updateAveria()}"
-                                             update="manage-Averiaedit-content, form-Averia:dt-Averia"
+                                             update="manage-Averiaedit-content"
                                              process="manage-Averiaedit-content @this"/>
                             <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageAveriaeditDialog').hide()"
                                              class="ui-button-secondary" type="button"/>
@@ -235,7 +267,6 @@
                             <p:outputPanel rendered="#{not empty averiaBean.newAveria}">
 
                                 <div class="p-formgrid p-grid">
-
                                     <div class="p-field p-col-12 p-md-12">
                                         <p:outputLabel >Seleccionar el estado:</p:outputLabel>
                                         <div style="display: block">
@@ -243,6 +274,12 @@
                                                                    value="#{averiaBean.newAveria.equipo.estadoAveriaEquipo}"/>
                                         </div>
                                     </div>
+                                    <div class="p-field p-col-12 p-md-12">
+                                        <p:outputLabel>Tipo de daño:</p:outputLabel>
+                                        <p:inputText id="tipodañoAveriaconfir"
+                                                     value="#{averiaBean.newAveria.problema}" required="true" maxlength="200"/>
+                                    </div>
+
                                     <div class="p-field p-col-12 p-md-12">
                                         <p:outputLabel >Deseas confirmar la averia realizada?</p:outputLabel>
                                     </div>
@@ -255,7 +292,7 @@
                             <p:commandButton value="SI" icon="pi pi-check"
                                              class="ui-button-success"
                                              actionListener="#{averiaBean.confirmaraveria()}"
-                                             update="manage-AveriaRealizada-content, form-Averia:dt-Averia"
+                                             update="manage-AveriaRealizada-content"
                                              process="manage-AveriaRealizada-content @this"/>
                             <p:commandButton value="NO" icon="pi pi-times" onclick="PF('manageAveriaRealizadaDialog').hide()"
                                              class="ui-button-secondary" type="button"/>

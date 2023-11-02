@@ -3,27 +3,54 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Averias_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f14ea119-5d74-478e-a642-ed2e4defbb79">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.jrdax"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="675"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="311"/>
 	<queryString>
-		<![CDATA[SELECT
+		<![CDATA[SELECT DISTINCT
 	    av.id as id_averia,
 		av.fecha_registro,
 		av.descripcion,
 		av.enabled as estado_averia,
+		av.prioridad,
+		av.problema,
 		av.id_equipo,
+		e.codigo, 
 		e.descripcion as descrip_equipo,
+		e.marca, 
+		e.modelo, 
+		e.num_serie, 
+		e.fecha_adquisicion, 
+		e.estado, 
+		e.averia,
+		e.id_categoria_equipo, 
+		ce.categoria, 
 		au.id_aula,
-        au.aula
+        au.aula,
+		l.id as id_laborat, 
+		l.nom_laboratorio,
+		pers.id as id_person,
+		pers.nombre,
+		pers.apellido,
+		l.id_facultad,
+		fa.facultad
+		
 	FROM laboratorio.averia as av	
     INNER JOIN laboratorio.equipo AS e ON av.id_equipo = e.id
     INNER JOIN laboratorio.laboratorio_aula AS la ON e.id_aula_equipo = la.id_aula
-	INNER JOIN laboratorio.aula as au ON la.id_aula = au.id_aula]]>
+	INNER JOIN laboratorio.aula as au ON la.id_aula = au.id_aula
+    INNER JOIN laboratorio.categoria_equipo as ce ON e.id_categoria_equipo = ce.id_categoria
+    INNER JOIN laboratorio.laboratorio as l ON la.id_laboratorio = l.id
+	INNER JOIN laboratorio.facultad as fa ON fa.id = l.id_facultad
+	INNER JOIN laboratorio.tecnico as tec ON tec.id_laboratorio = l.id
+	INNER JOIN laboratorio.usuario as usu ON usu.id = tec.id_usuario
+	INNER JOIN laboratorio.persona as pers ON pers.id = usu.id_persona]]>
 	</queryString>
 	<field name="id_averia" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="id_averia"/>
 		<property name="com.jaspersoft.studio.field.label" value="id_averia"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="averia"/>
 	</field>
-	<field name="fecha_registro" class="java.sql.Timestamp">
+	<field name="fecha_registro" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="fecha_registro"/>
 		<property name="com.jaspersoft.studio.field.label" value="fecha_registro"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="averia"/>
@@ -38,15 +65,70 @@
 		<property name="com.jaspersoft.studio.field.label" value="estado_averia"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="averia"/>
 	</field>
+	<field name="prioridad" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="prioridad"/>
+		<property name="com.jaspersoft.studio.field.label" value="prioridad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="averia"/>
+	</field>
+	<field name="problema" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="problema"/>
+		<property name="com.jaspersoft.studio.field.label" value="problema"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="averia"/>
+	</field>
 	<field name="id_equipo" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="id_equipo"/>
 		<property name="com.jaspersoft.studio.field.label" value="id_equipo"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="averia"/>
 	</field>
+	<field name="codigo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="codigo"/>
+		<property name="com.jaspersoft.studio.field.label" value="codigo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="equipo"/>
+	</field>
 	<field name="descrip_equipo" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="descrip_equipo"/>
 		<property name="com.jaspersoft.studio.field.label" value="descrip_equipo"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="equipo"/>
+	</field>
+	<field name="marca" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="marca"/>
+		<property name="com.jaspersoft.studio.field.label" value="marca"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="equipo"/>
+	</field>
+	<field name="modelo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="modelo"/>
+		<property name="com.jaspersoft.studio.field.label" value="modelo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="equipo"/>
+	</field>
+	<field name="num_serie" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="num_serie"/>
+		<property name="com.jaspersoft.studio.field.label" value="num_serie"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="equipo"/>
+	</field>
+	<field name="fecha_adquisicion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_adquisicion"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_adquisicion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="equipo"/>
+	</field>
+	<field name="estado" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="estado"/>
+		<property name="com.jaspersoft.studio.field.label" value="estado"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="equipo"/>
+	</field>
+	<field name="averia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="averia"/>
+		<property name="com.jaspersoft.studio.field.label" value="averia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="equipo"/>
+	</field>
+	<field name="id_categoria_equipo" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_categoria_equipo"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_categoria_equipo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="equipo"/>
+	</field>
+	<field name="categoria" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="categoria"/>
+		<property name="com.jaspersoft.studio.field.label" value="categoria"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="categoria_equipo"/>
 	</field>
 	<field name="id_aula" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="id_aula"/>
@@ -57,6 +139,41 @@
 		<property name="com.jaspersoft.studio.field.name" value="aula"/>
 		<property name="com.jaspersoft.studio.field.label" value="aula"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="aula"/>
+	</field>
+	<field name="id_laborat" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_laborat"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_laborat"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="laboratorio"/>
+	</field>
+	<field name="nom_laboratorio" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nom_laboratorio"/>
+		<property name="com.jaspersoft.studio.field.label" value="nom_laboratorio"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="laboratorio"/>
+	</field>
+	<field name="id_person" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_person"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_person"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="persona"/>
+	</field>
+	<field name="nombre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="persona"/>
+	</field>
+	<field name="apellido" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="apellido"/>
+		<property name="com.jaspersoft.studio.field.label" value="apellido"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="persona"/>
+	</field>
+	<field name="id_facultad" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_facultad"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_facultad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="laboratorio"/>
+	</field>
+	<field name="facultad" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="facultad"/>
+		<property name="com.jaspersoft.studio.field.label" value="facultad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="facultad"/>
 	</field>
 	<background>
 		<band splitType="Stretch"/>
@@ -108,7 +225,7 @@ UNIDAD DE INVESTIGACIÓN CIENCIA Y TECNOLOGÍA]]></text>
 				<text><![CDATA[REPORTE Nº]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="329" y="99" width="64" height="16" uuid="017af938-2d36-4ec3-890b-b5aed30a7460"/>
+				<reportElement x="329" y="99" width="41" height="16" uuid="017af938-2d36-4ec3-890b-b5aed30a7460"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -122,20 +239,22 @@ UNIDAD DE INVESTIGACIÓN CIENCIA Y TECNOLOGÍA]]></text>
 				<text><![CDATA[PRIORIDAD:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="9" y="119" width="137" height="16" uuid="6055c90d-1305-4adc-beb8-6cf0501e4cb8"/>
+				<reportElement x="9" y="119" width="137" height="18" uuid="6055c90d-1305-4adc-beb8-6cf0501e4cb8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[NOMBRE DEL TÉCNICO:]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="2" y="154" width="282" height="22" uuid="eedf7011-9004-45ef-b1c3-2217d022f92a"/>
+				<reportElement x="2" y="154" width="300" height="22" uuid="eedf7011-9004-45ef-b1c3-2217d022f92a"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="284" y="154" width="268" height="22" uuid="1e1c712b-481f-467d-b4fe-73ab3c8726ab"/>
+				<reportElement x="302" y="154" width="250" height="22" uuid="1e1c712b-481f-467d-b4fe-73ab3c8726ab"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="290" y="158" width="35" height="16" uuid="a973de93-e320-4235-b755-ddd29a19d19e"/>
+				<reportElement x="306" y="158" width="35" height="16" uuid="a973de93-e320-4235-b755-ddd29a19d19e"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -265,35 +384,35 @@ UNIDAD DE INVESTIGACIÓN CIENCIA Y TECNOLOGÍA]]></text>
 				<text><![CDATA[CÓDIGO DEL BIEN]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="247" width="104" height="16" uuid="6c1c76f3-98e7-40f5-b94d-c3c792ca6a92"/>
+				<reportElement x="9" y="247" width="104" height="16" uuid="6c1c76f3-98e7-40f5-b94d-c3c792ca6a92"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[CATEGORÍA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="268" width="104" height="16" uuid="ed24d0fc-93c5-4d0c-acc3-0f6b8884e42b"/>
+				<reportElement x="8" y="334" width="129" height="16" uuid="ed24d0fc-93c5-4d0c-acc3-0f6b8884e42b"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[DESCRIPCIÓN]]></text>
+				<text><![CDATA[FECHA ADQUISICIÓN]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="290" width="104" height="16" uuid="88e7386d-f95e-4901-ac2c-7e961a3046b3"/>
+				<reportElement x="8" y="268" width="104" height="16" uuid="88e7386d-f95e-4901-ac2c-7e961a3046b3"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[MARCA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="312" width="104" height="16" uuid="e68115ae-7185-44f0-98e2-7224f0bc96c0"/>
+				<reportElement x="10" y="291" width="104" height="16" uuid="e68115ae-7185-44f0-98e2-7224f0bc96c0"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[MODELO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="333" width="104" height="16" uuid="21e142bf-bcee-4ca9-8cbe-778546dc7c1d"/>
+				<reportElement x="10" y="314" width="104" height="16" uuid="21e142bf-bcee-4ca9-8cbe-778546dc7c1d"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -306,14 +425,6 @@ UNIDAD DE INVESTIGACIÓN CIENCIA Y TECNOLOGÍA]]></text>
 				</textElement>
 				<text><![CDATA[ESTADO]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="8" y="400" width="100" height="30" uuid="ab57c854-0773-442f-8eed-325249ac207e"/>
-				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="135" y="269" width="100" height="30" uuid="5d0ff0e1-9244-429c-9b20-1f5f52900623"/>
-				<textFieldExpression><![CDATA[$F{descrip_equipo}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="10" y="159" width="80" height="16" uuid="23005c7c-e560-470d-9121-fda17372e177"/>
 				<textElement>
@@ -333,6 +444,85 @@ UNIDAD DE INVESTIGACIÓN CIENCIA Y TECNOLOGÍA]]></text>
 				</reportElement>
 				<imageExpression><![CDATA["https://www.uteq.edu.ec/assets/images/logos/jpg/img-ident-corp-jpg-00001.jpg"]]></imageExpression>
 			</image>
+			<textField>
+				<reportElement x="93" y="46" width="408" height="18" uuid="bc22ca18-e1ea-423b-bb61-dcd3ef6bf398"/>
+				<textElement markup="styled">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{facultad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="75" y="98" width="100" height="14" uuid="6f6708ee-1cf2-4b49-b473-94521f5bed0f"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["00" + " "+ $F{id_averia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="119" width="387" height="18" uuid="f1525cb4-4b6e-4b3b-ac3a-87d923b677d3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{nombre} + " " + $F{apellido}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="90" y="158" width="203" height="15" uuid="1e395591-e2c8-4883-82b4-3c1b8feae493"/>
+				<textFieldExpression><![CDATA[$F{nom_laboratorio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="340" y="158" width="100" height="15" uuid="668c8b2c-1003-4a07-9b08-755862f97e5f"/>
+				<textFieldExpression><![CDATA[$F{aula}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="133" y="203" width="127" height="16" uuid="7360d299-a509-46db-a8e7-34834a504633"/>
+				<textFieldExpression><![CDATA[$F{descrip_equipo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="133" y="226" width="247" height="13" uuid="d8360cbc-9bee-4f48-b631-23d1a861e4d6"/>
+				<textFieldExpression><![CDATA[$F{codigo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="133" y="247" width="237" height="18" uuid="a7c1bf82-6b9c-4ba0-a35e-2aed2b6bee86"/>
+				<textFieldExpression><![CDATA[$F{categoria}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="132" y="269" width="258" height="13" uuid="ff058d4e-215a-4084-bf1b-351962e4d969"/>
+				<textFieldExpression><![CDATA[$F{marca}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="133" y="291" width="207" height="16" uuid="895688e7-7a9c-4d93-b98b-7e977da0f5c9"/>
+				<textFieldExpression><![CDATA[$F{modelo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="133" y="313" width="237" height="16" uuid="e32708b1-57a9-461c-9315-2fbcf38cddb9"/>
+				<textFieldExpression><![CDATA[$F{num_serie}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="133" y="357" width="100" height="15" uuid="35da3eb6-adba-4ff9-bd77-8ee6cebb8552"/>
+				<textFieldExpression><![CDATA[($F{averia}.equals("f") ? "Dañado" : ($F{estado_averia}.equals("t") ? "Averiado" : "Reparado"))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="6" y="474" width="538" height="66" uuid="31285f35-aa2b-408e-801a-ecf52a6856b9"/>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="371" y="99" width="60" height="15" uuid="a0008d76-f4aa-4be2-8cae-4c7af77f7118">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{fecha_registro}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="133" y="334" width="67" height="16" uuid="bcfdcbb1-7e79-4b01-ac46-52cf254d6009"/>
+				<textFieldExpression><![CDATA[$F{fecha_adquisicion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="74" y="139" width="100" height="18" uuid="51b016c8-be86-4d75-89d0-e3bae5b6e933"/>
+				<textFieldExpression><![CDATA[($F{prioridad}.equals("A") ? "ALTA" : ($F{prioridad}.equals("M") ? "MEDIA" : ($F{prioridad}.equals("B") ? "BAJA" : "")))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="8" y="400" width="536" height="40" uuid="edd588b6-c753-4aed-acdd-31085e4da634"/>
+				<textFieldExpression><![CDATA[$F{problema}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 </jasperReport>
