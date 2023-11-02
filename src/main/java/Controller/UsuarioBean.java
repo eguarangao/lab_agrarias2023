@@ -51,6 +51,7 @@ public class UsuarioBean implements Serializable {
     private UsuarioDAO DAO = new UsuarioDAO();
     private boolean isCreateUser;
     private boolean deshabilitado;
+    private boolean campocontraseña = false;
 
     private String mostrarClave = "";
     private String compararClave;
@@ -374,6 +375,14 @@ public class UsuarioBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña debe contener al menos una letra minuscula", null));
             PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
         }
+        else if (campocontraseña == true) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña actual es incorrecta", null));
+            PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
+        }
+        else if (mostrarClave == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingresa la contraseña actual", null));
+            PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
+        }
 
         else {
             if (passwordHashing.verifyPassword(mostrarClave,idUsuarioClaveSession )) {
@@ -397,9 +406,11 @@ public class UsuarioBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña actual es correcta", null));
             PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
 
+
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña actual es incorrecta", null));
             PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
+            campocontraseña = true;
         }
     }
 }
