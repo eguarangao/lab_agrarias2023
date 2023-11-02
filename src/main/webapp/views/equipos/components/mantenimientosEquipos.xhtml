@@ -58,7 +58,7 @@
                                 <p:outputLabel  value="#{dtmante.tipoMantenimiento.tipo}"/>
                             </p:column>
 
-                            <p:column headerText="Descripción">
+                            <p:column headerText="Descripción" filterBy="#{dtmante.descripcion_mante}" filterMatchMode="contains">
                                 <p:outputLabel value="#{dtmante.descripcion_mante}" />
                             </p:column>
 
@@ -221,7 +221,7 @@
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          class="ui-button-success"
                                          actionListener="#{mantenimientoBean.updateManteninimiento()}"
-                                         update="manage-ManteRealiz-content, form-Mante:dt-Mante"
+                                         update="manage-ManteRealiz-content"
                                          process="manage-ManteRealiz-content @this"/>
                         <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageManteRealizDialog').hide()"
                                          class="ui-button-secondary" type="button"/>

@@ -10,6 +10,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import lombok.Data;
 import org.primefaces.PrimeFaces;
@@ -23,7 +24,7 @@ import java.util.List;
 
 @Data
 @Named
-@SessionScoped
+@ViewScoped
 public class MantenimientoBean implements Serializable {
 
     private EquipoDAO DaoEquipo = new EquipoDAO();
@@ -152,11 +153,13 @@ public class MantenimientoBean implements Serializable {
                 PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante", "form-Mante:messages");
             } else{
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("No se puede editar Mantenimiento !Equipo Activo¡"));
+                PrimeFaces.current().ajax().update("form-Mante:messages");
                 PrimeFaces.current().executeScript("PF('manageManteRealizDialog').hide()");
-                PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante", "form-Mante:messages");
             }
         } catch (Exception e){
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar el Mantenimiento"));
+            PrimeFaces.current().ajax().update("form-Mante:messages");
+            PrimeFaces.current().executeScript("PF('manageManteRealizDialog').hide()");
             e.printStackTrace();
         }
     }
