@@ -9,6 +9,7 @@ import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletOutputStream;
@@ -24,7 +25,7 @@ import java.sql.SQLException;
 import java.util.*;
 @Data
 @Named
-@SessionScoped
+@ViewScoped
 public class AveriaBean implements Serializable {
 
     private AveriaDAO DAOaveria = new AveriaDAO();
@@ -36,7 +37,6 @@ public class AveriaBean implements Serializable {
     private EquipoBean BeanEquipo = new EquipoBean();
     private Averia newAveria;
     private boolean botonAveriaDisabled = true;
-    private boolean botonReporteDisabled = true;
     private boolean mostrarTablaAveria = false;
     private int idUsuarioSession;
     private int idlaboratorioSession;
@@ -82,7 +82,6 @@ public class AveriaBean implements Serializable {
             ListAveria = DAOaveria.listarAveriasPorLaboratorio(idlaboratorioSession);
             mostrarTablaAveria = !ListAveria.isEmpty();
             botonAveriaDisabled = ListAveria.isEmpty();
-            botonReporteDisabled = ListAveria.isEmpty();
             PrimeFaces.current().ajax().update("form-Averia:tablaAveria", "form-Averia:dt-Averia","form-Averia:botonNewAveria", "form-Averia:btnReporteAveria");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -124,7 +123,6 @@ public class AveriaBean implements Serializable {
         try {
             boolean equipoEstadoAveria = DAOaveria.verificarEstadoAveriaEquipo(newAveria);
             if(newAveria.getEnabled()==true && equipoEstadoAveria==true) {
-                System.out.println("voy a editar averia");
                 DAOaveria.editarAveria(newAveria);
                 ListAveria = DAOaveria.listarAveriasPorLaboratorio(idlaboratorioSession);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Averia actualizada"));
@@ -133,18 +131,19 @@ public class AveriaBean implements Serializable {
             }
             else if (equipoEstadoAveria==false){
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("No se puede editar averia !Equipo Dañado¡ "));
+                PrimeFaces.current().ajax().update("form-Averia:messages");
                 PrimeFaces.current().executeScript("PF('manageAveriaeditDialog').hide()");
-                PrimeFaces.current().ajax().update("form-Averia:tablaAveria", "form-Averia:dt-Averia", "form-Averia:messages");
             }
 
             else{
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("No se puede editar averia !Equipo reparado¡ "));
+                PrimeFaces.current().ajax().update("form-Averia:messages");
                 PrimeFaces.current().executeScript("PF('manageAveriaeditDialog').hide()");
-                PrimeFaces.current().ajax().update("form-Averia:tablaAveria", "form-Averia:dt-Averia", "form-Averia:messages");
+
             }
         } catch (Exception e){
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar la averia"));
-            PrimeFaces.current().executeScript("PF('manageAveriaDialog').hide()");
+            PrimeFaces.current().executeScript("PF('manageAveriaeditDialog').hide()");
             PrimeFaces.current().ajax().update("form-Averia:messages");
             e.printStackTrace();
         }
@@ -163,14 +162,14 @@ public class AveriaBean implements Serializable {
 
             } else if (equipoEstadoAveria==false){
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipo dañado"));
-                PrimeFaces.current().executeScript("PF('ConfirmarAveriaDialog').hide()");
                 PrimeFaces.current().ajax().update("form-Averia:messages");
+                PrimeFaces.current().executeScript("PF('manageAveriaRealizadaDialog').hide()");
 
             }
                 else{
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipo reparado ya anteriormente"));
-                PrimeFaces.current().executeScript("PF('ConfirmarAveriaDialog').hide()");
                 PrimeFaces.current().ajax().update("form-Averia:messages");
+                PrimeFaces.current().executeScript("PF('manageAveriaRealizadaDialog').hide()");
             }
 
         } catch (Exception e) {
@@ -179,9 +178,9 @@ public class AveriaBean implements Serializable {
 
     }
 
-    public void ReportPDF() throws IOException, JRException, SQLException {
+    public void ReportPDF(int aveID) throws IOException, JRException, SQLException {
         this.ListReporteAveria = new ArrayList<>();
-        ListReporteAveria = DAOaveria.listarAveriasPorLaboratorioString(idlaboratorioSession);
+        ListReporteAveria = DAOaveria.listarAveriaparareporte(aveID, idUsuarioSession);
 
         // es una peticion para descargar
         FacesContext fc = FacesContext.getCurrentInstance();
@@ -193,7 +192,7 @@ public class AveriaBean implements Serializable {
         // formato PDF
         ec.setResponseContentType("application/pdf");
         // Nombre para descargar el Archivo
-        ec.setResponseHeader("Content-disposition", String.format("attachment; filename=Repor.pdf"));
+        ec.setResponseHeader("Content-disposition", String.format("attachment; filename=ReporteAveriaEquipo.pdf"));
 
 
         // tomamos el stream para llenarlo con el pdf.

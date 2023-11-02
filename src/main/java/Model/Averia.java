@@ -10,6 +10,8 @@ public class Averia {
     private Date fecha_registro;
     private String descripcion;
     private Boolean enabled;
+    private String prioridad;
+    private String problema;
 
     //Relaciones entidades
     private Equipo equipo;
