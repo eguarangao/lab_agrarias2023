@@ -59,7 +59,7 @@
                         <p:commandButton icon="pi pi-pencil"
                                          update=":dialogs:manage-user-content"
                                          oncomplete="PF('manageUserDialog').show()"
-                                         styleClass="edit-button rounded-button ui-button-warning"
+                                         styleClass="rounded-button ui-button-warning ui-button-outlined"
                                          process="@this">
                             <f:setPropertyActionListener value="#{user}"
                                                          target="#{usuarioBean.nuevoUsuario}"/>

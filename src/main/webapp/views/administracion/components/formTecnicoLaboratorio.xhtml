@@ -96,13 +96,13 @@
                                 <p:commandButton icon="pi pi-pencil"
                                                  update=":dialogs:manage-facd-content"
                                                  oncomplete="PF('manageFacdDialog').show()"
-                                                 styleClass="edit-button rounded-button ui-button-success"
+                                                 styleClass="rounded-button ui-button-warning ui-button-outlined"
                                                  process="@this">
                                     <f:setPropertyActionListener value="#{facd}"
                                                                  target="#{tecnicoLaboratorioBean.nuevaAula}"/>
                                     <p:resetInput target=":dialogs:manage-facd-content"/>
                                 </p:commandButton>
-                                <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                <p:commandButton styleClass="rounded-button ui-button-danger ui-button-outlined" icon="pi pi-trash"
                                                  process="@this"
                                                  oncomplete="PF('deleteFacdDialog').show()"
                                 > <f:setPropertyActionListener value="#{facd}"
@@ -275,7 +275,7 @@
                                         </p:cellEditor>
                                     </p:column>
                                     <p:column headerText="Acciones" exportable="false">
-                                        <p:rowEditor styleClass="edit-button rounded-button ui-button-success"
+                                        <p:rowEditor styleClass="rounded-button ui-button-warning ui-button-outlined"
                                                      editTitle="Edit Row" cancelTitle="Cancel Edit"
                                                      saveTitle="Save Row"/>
 
