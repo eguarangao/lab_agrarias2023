@@ -85,31 +85,38 @@
                         <div class="field">
                             <p:outputLabel for="name">Nombres</p:outputLabel>
                             <p:inputText id="name" value="#{usuarioBean.nuevoUsuario.nombrePersona}"
+                                         requiredMessage="Ingrese un nombre"
+                                         maxlength="50"
                                          required="true"/>
                         </div>
                         <div class="field">
                             <p:outputLabel for="last">Apellidos</p:outputLabel>
-                            <p:inputText id="last" value="#{usuarioBean.nuevoUsuario.apellido}"
+                            <p:inputText id="last" value="#{usuarioBean.nuevoUsuario.apellido}" inputmode=""
+                                         maxlength="50"
+                                         requiredMessage="Ingrese un Apellido"
                                          required="true"/>
                         </div>
                         <div class="field">
                             <p:outputLabel for="phone">Teléfono </p:outputLabel>
                             <p:inputText id="phone" value="#{usuarioBean.nuevoUsuario.telefono}"
-                                         required="true"/>
+                                         maxlength="10" />
                         </div>
                         <div class="field">
                             <p:outputLabel for="email">Email </p:outputLabel>
                             <p:inputText id="email" value="#{usuarioBean.nuevoUsuario.email}"
+                                         requiredMessage="Ingrese un email"
+                                         maxlength="30"
                                          required="true"/>
                         </div>
                         <div class="field">
                             <p:outputLabel for="dni">DNI </p:outputLabel>
                             <p:inputText id="dni" value="#{usuarioBean.nuevoUsuario.dni}"
-                                         required="true"/>
+                                         maxlength="10"
+                                         required="true" requiredMessage="Ingrese su DNI"/>
                         </div>
                         <div class="field">
                             <h:outputLabel for="option" value="Género:"/>
-                            <p:selectOneMenu id="option" value="#{usuarioBean.nuevoUsuario.genero}">
+                            <p:selectOneMenu required="true" requiredMessage="Seleccione un género" id="option" value="#{usuarioBean.nuevoUsuario.genero}">
                                 <f:selectItem itemLabel="Selecciona un género" itemValue=""/>
                                 <f:selectItem itemLabel="Hombre" itemValue="H"/>
                                 <f:selectItem itemLabel="Mujer" itemValue="M"/>
@@ -117,7 +124,7 @@
                         </div>
                         <div class="field">
                             <h:outputLabel for="rol" value="Rol:"/>
-                            <p:selectOneMenu id="rol" value="#{usuarioBean.nuevoUsuario.idRol}"
+                            <p:selectOneMenu id="rol"  required="true" requiredMessage="Seleccione un rol" value="#{usuarioBean.nuevoUsuario.idRol}"
                                              disabled="#{ usuarioBean.createUser}">
                                 <f:selectItem itemLabel="Selecciona un rol" itemValue=""/>
                                 <f:selectItem itemLabel="TECNICO DE LABORATORIO" itemValue="2"/>
@@ -127,12 +134,12 @@
                         </div>
                         <div class="field" style="display: #{usuarioBean.deshabilitado ? 'none' : 'block'}">
                             <p:outputLabel for="user">Nombre usuario </p:outputLabel>
-                            <p:inputText id="user" value="#{usuarioBean.nuevoUsuario.nombreUsuario}"
+                            <p:inputText id="user" maxlength="10" value="#{usuarioBean.nuevoUsuario.nombreUsuario}"
                                          />
                         </div>
-                        <div class="field" style="display: #{usuarioBean.deshabilitado ? 'none' : 'block'}">
+                        <div class="field" style="display: none">
                             <p:outputLabel for="passw">Contraseña </p:outputLabel>
-                            <p:inputText id="passw" value="#{usuarioBean.nuevoUsuario.clave}"/>
+                            <p:inputText id="passw"  value="#{usuarioBean.nuevoUsuario.clave}"/>
                         </div>
                         <div class="field" style="display: #{usuarioBean.deshabilitado ? 'none' : 'block'}">
                             <h:outputLabel for="estado" value="Habilitado:"/>
@@ -145,14 +152,14 @@
                     <p:commandButton value="Guardar" icon="pi pi-check"
                                      styleClass="ui-button-success"
                                      actionListener="#{usuarioBean.addUsuario()}"
-                                     update="manage-user-content, form:dt-user"
+                                     update="manage-user-content, form:dt-user,form:messages"
                                      process="manage-user-content @this"/>
                     <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageUserDialog').hide()"
                                      class="ui-button-secondary" type="button"/>
                 </f:facet>
             </p:dialog>
             <p:confirmDialog widgetVar="deleteUserDialog" showEffect="fade" width="300"
-                             message="Delete the usuario?" header="Confirm" severity="warn">
+                             message="Eliminar el usuario?" header="Confirmar" severity="warn">
                 <p:commandButton value="Si" icon="pi pi-check" actionListener="#{usuarioBean.delete()}"
                                  process="@this"
                                  oncomplete="PF('deleteUserDialog').hide()"/>

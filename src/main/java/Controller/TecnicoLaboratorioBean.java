@@ -91,7 +91,8 @@ public class TecnicoLaboratorioBean implements Serializable {
         PrimeFaces.current().ajax().update("form:messages", "dialogs2:dt-facd2:outputPanel");
         listLabByTecnico();
         PrimeFaces.current().executeScript("PF('manageFacd2Dialog').hide();");
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Mensaje de información", String.valueOf(event.getObject().getDni())));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Mensaje de información", String.valueOf(event.getObject().getDni()) +
+                "Agregado como tecnico activo"));
         PrimeFaces.current().ajax().update("form:messages", "dialogs2:dt-facd2");
 
     }

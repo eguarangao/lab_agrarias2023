@@ -69,6 +69,8 @@
                                 <div class="field">
                                     <p:outputLabel for="name">Nombre periodo: </p:outputLabel>
                                     <p:inputText id="name" value="#{periodoBean.nuevoPeriodo.namePeriodo}"
+                                                requiredMessage="Ingresar nombre de periodo"
+                                                 maxlength="30"
                                                  required="true"/>
                                 </div>
                                 <div class="field">
@@ -82,14 +84,14 @@
                             <p:commandButton value="Guardar" icon="pi pi-check"
                                              styleClass="ui-button-success"
                                              actionListener="#{periodoBean.addPeriodo()}"
-                                             update="manage-facd-content, form:dt-facd"
+                                             update="manage-facd-content, form:dt-facd, form:messages"
                                              process="manage-facd-content @this"/>
                             <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageFacdDialog').hide()"
                                              class="ui-button-secondary" type="button"/>
                         </f:facet>
                     </p:dialog>
                     <p:confirmDialog widgetVar="deleteFacdDialog" showEffect="fade" width="300"
-                                     message="Delete the periodo?" header="Confirm" severity="warn">
+                                     message="Eliminar el periodo?" header="Confirmar" severity="warn">
                         <p:commandButton value="Si" icon="pi pi-check" actionListener="#{periodoBean.delete()}"
                                          process="@this"
                                          oncomplete="PF('deleteFacdDialog').hide()"/>

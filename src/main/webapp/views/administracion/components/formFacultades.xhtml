@@ -43,7 +43,7 @@
                                 <p:commandButton icon="pi pi-pencil"
                                                  update=":dialogs:manage-facd-content"
                                                  oncomplete="PF('manageFacdDialog').show()"
-                                                 styleClass="edit-button rounded-button ui-button-warning"
+                                                 styleClass="edit-button rounded-button ui-button-outlined"
                                                  process="@this">
                                     <f:setPropertyActionListener value="#{facd}"
                                                                  target="#{facultadBean.nuevaFacultad}"/>
@@ -68,16 +68,19 @@
                                 <div class="field">
                                     <p:outputLabel for="name">Nombre facultad</p:outputLabel>
                                     <p:inputText id="name" value="#{facultadBean.nuevaFacultad.nombreFacd}"
+                                                 maxlength="30"
+                                                 requiredMessage="Ingresar nombre de facultad"
                                                  required="true"/>
                                 </div>
                                 <div class="field">
                                     <p:outputLabel for="description">Descripcion</p:outputLabel>
                                     <p:inputTextarea id="description"
+                                                     maxlength="200"
                                                      value="#{facultadBean.nuevaFacultad.descripcionFacd}"/>
                                 </div>
                                 <div class="field">
                                     <p:outputLabel for="email">Correo</p:outputLabel>
-                                    <p:inputTextarea id="email" value="#{facultadBean.nuevaFacultad.correoFacd}"/>
+                                    <p:inputText id="email" maxlength="30" value="#{facultadBean.nuevaFacultad.correoFacd}"/>
                                 </div>
                             </p:outputPanel>
                         </p:outputPanel>
@@ -85,14 +88,14 @@
                             <p:commandButton value="Guardar" icon="pi pi-check"
                                              styleClass="ui-button-success"
                                              actionListener="#{facultadBean.addFacultad()}"
-                                             update="manage-facd-content, form:dt-facd"
+                                             update="manage-facd-content, form:dt-facd, form:messages"
                                              process="manage-facd-content @this"/>
                             <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageFacdDialog').hide()"
                                              class="ui-button-secondary" type="button"/>
                         </f:facet>
                     </p:dialog>
                     <p:confirmDialog widgetVar="deleteFacdDialog" showEffect="fade" width="300"
-                                     message="Delete the facultad?" header="Confirm" severity="warn">
+                                     message="Eliminar la facultad?" header="Confirmar" severity="warn">
                         <p:commandButton value="Si" icon="pi pi-check" actionListener="#{facultadBean.delete()}"
                                          process="@this"
                                          oncomplete="PF('deleteFacdDialog').hide()"/>
