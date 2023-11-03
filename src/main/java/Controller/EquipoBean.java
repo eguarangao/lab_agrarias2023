@@ -59,8 +59,8 @@ public class EquipoBean implements Serializable {
         try {
             this.Listequipos = new ArrayList<>();
             Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
-            mostrarTablaEquipos = !Listequipos.isEmpty();
-            botonEquipoDisabled = Listequipos.isEmpty();
+            mostrarTablaEquipos = true;
+            botonEquipoDisabled = false;
             PrimeFaces.current().ajax().update("form-equipo:tablaEquipos", "form-equipo:dt-equipos","form-equipo:botonNewEquipo" );
         } catch (SQLException e) {
             e.printStackTrace();

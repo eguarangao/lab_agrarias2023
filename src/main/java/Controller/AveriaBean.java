@@ -80,8 +80,8 @@ public class AveriaBean implements Serializable {
         try {
             this.ListAveria = new ArrayList<>();
             ListAveria = DAOaveria.listarAveriasPorLaboratorio(idlaboratorioSession);
-            mostrarTablaAveria = !ListAveria.isEmpty();
-            botonAveriaDisabled = ListAveria.isEmpty();
+            mostrarTablaAveria  = true;
+            botonAveriaDisabled = false;
             PrimeFaces.current().ajax().update("form-Averia:tablaAveria", "form-Averia:dt-Averia","form-Averia:botonNewAveria", "form-Averia:btnReporteAveria");
         } catch (SQLException e) {
             e.printStackTrace();

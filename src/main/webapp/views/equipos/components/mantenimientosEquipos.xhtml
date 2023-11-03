@@ -37,7 +37,6 @@
                                         update="dt-Mante"/>
                             </p:selectOneMenu>
                         </p:toolbarGroup>
-
                     </p:toolbar>
                     <p:outputPanel id="tablaMante">
                         <p:dataTable id="dt-Mante" widgetVar="dtMante" var="dtmante"
@@ -145,18 +144,12 @@
                                                                          target="#{mantenimientoBean.newMantenimiento}"/>
                                         </p:commandButton>
                                     </p:column>
-
                                 </p:dataTable>
-
                             </p:rowExpansion>
-
-
-
                         </p:dataTable>
                     </p:outputPanel>
                 </div>
             </h:form>
-
 
             <h:form id="dialogMante">
                 <p:dialog header="Editar Mantenimiento" showEffect="fade" modal="true" widgetVar="manageManteRealizDialog"
@@ -165,7 +158,6 @@
                         <p:outputPanel rendered="#{not empty mantenimientoBean.newMantenimiento}">
 
                             <div class="p-formgrid p-grid">
-
                                 <div class="field p-col-12 p-md-4">
                                     <p:outputLabel for="fecharegistroManteRealiz" value="Fecha registro:" ></p:outputLabel>
                                     <p:inputText id="fecharegistroManteRealiz" value="#{mantenimientoBean.newMantenimiento.fechaRegistro}"
@@ -192,7 +184,6 @@
                                         <f:selectItems value="#{mantenimientoBean.listTipoMantenimiento}" var="tm"
                                                        itemLabel="#{tm.tipo}" itemValue="#{tm.id}"/>
                                     </p:selectOneMenu>
-
                                 </div>
 
                                 <div class="field p-col-12 p-md-4 " style="margin-top: 3px;">
@@ -209,11 +200,7 @@
                                                  required="true" maxlength="200">
                                     </p:inputText>
                                 </div>
-
-
-
                             </div>
-
                         </p:outputPanel>
                     </p:outputPanel>
 
@@ -225,21 +212,14 @@
                                          process="manage-ManteRealiz-content @this"/>
                         <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageManteRealizDialog').hide()"
                                          class="ui-button-secondary" type="button"/>
-
                     </f:facet>
-
-
-
                 </p:dialog>
 
                 <p:dialog header="Agregar nuevo Mantenimiento" showEffect="fade" modal="true" widgetVar="manageManteDialog"
                           responsive="true" style="max-width: 680px;">
                     <p:outputPanel id="manage-Mante-content" class="ui-fluid">
                         <p:outputPanel rendered="#{not empty mantenimientoBean.newMantenimiento}">
-
-
                             <div class="p-formgrid p-grid">
-
                                 <div class="field p-col-12 p-md-3">
                                     <p:outputLabel for="fecharegistroMante">Fecha registro:</p:outputLabel>
                                     <p:inputText id="fecharegistroMante" value="#{mantenimientoBean.fechaActual}"
@@ -260,7 +240,6 @@
                                     </p:selectOneMenu>
                                     <p:message for="SelecttipoMante"/>
                                 </div>
-
 
                                 <div class="field p-col-12 p-md-3 " style="margin-top: 3px;">
                                     <h:outputLabel for="estadoMante" value="Estado:" />
@@ -292,10 +271,7 @@
                                     </p:selectCheckboxMenu>
                                     <p:message for="comboEquiposMante"/>
                                 </div>
-
-
                             </div>
-
                         </p:outputPanel>
                     </p:outputPanel>
 
@@ -307,11 +283,7 @@
                                          process="manage-Mante-content @this"/>
                         <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageManteDialog').hide()"
                                          class="ui-button-secondary" type="button"/>
-
                     </f:facet>
-
-
-
                 </p:dialog>
                 <p:confirmDialog widgetVar="deleteManteDialog" showEffect="fade" width="300"
                                  message="Deseas eliminar mantenimiento?" header="Confirmar" severity="warn">
@@ -348,14 +320,7 @@
                     <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
                                      onclick="PF('ConfirmarManteEquipoDialog').hide()"/>
                 </p:confirmDialog>
-
-
-
-
             </h:form>
-
-
-
         </div>
     </div>
     </ui:define>

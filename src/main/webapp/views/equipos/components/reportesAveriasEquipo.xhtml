@@ -37,9 +37,7 @@
                                             update="dt-Averia"/>
                                 </p:selectOneMenu>
                             </p:toolbarGroup>
-
                         </p:toolbar>
-
                         <p:outputPanel id="tablaAveria">
                             <p:dataTable id="dt-Averia" widgetVar="dtAveria" var="dtaveria"
                                          value="#{averiaBean.listAveria}" reflow="true" styleClass="products-table"
@@ -183,22 +181,15 @@
                                              process="manage-Averia-content @this"/>
                             <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageAveriaDialog').hide()"
                                              class="ui-button-secondary" type="button"/>
-
                         </f:facet>
-
-
-
                     </p:dialog>
-
 
                     <p:dialog header="Editar averia equipo"  showEffect="fade" modal="true" widgetVar="manageAveriaeditDialog"
                               responsive="true" style="max-width: 720px;">
                         <p:outputPanel id="manage-Averiaedit-content" class="ui-fluid">
                             <p:outputPanel rendered="#{not empty averiaBean.newAveria}">
 
-
                                 <div class="p-formgrid p-grid">
-
                                     <div class="field p-col-12 p-md-3">
                                         <p:outputLabel >Fecha registro:</p:outputLabel>
                                         <p:inputText id="fecharegistroManteedit" value="#{averiaBean.newAveria.fecha_registro}"
@@ -254,11 +245,7 @@
                                              process="manage-Averiaedit-content @this"/>
                             <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageAveriaeditDialog').hide()"
                                              class="ui-button-secondary" type="button"/>
-
                         </f:facet>
-
-
-
                     </p:dialog>
 
                     <p:dialog header="Estado en el que se encuentra el equipo"  showEffect="fade" modal="true" widgetVar="manageAveriaRealizadaDialog"
@@ -296,18 +283,9 @@
                                              process="manage-AveriaRealizada-content @this"/>
                             <p:commandButton value="NO" icon="pi pi-times" onclick="PF('manageAveriaRealizadaDialog').hide()"
                                              class="ui-button-secondary" type="button"/>
-
                         </f:facet>
-
-
-
                     </p:dialog>
-
-
                 </h:form>
-
-
-
             </div>
         </div>
     </ui:define>

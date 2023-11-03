@@ -96,7 +96,7 @@ public class MantenimientoBean implements Serializable {
         try {
             this.ListMante = new ArrayList<>();
             ListMante = DAOmantenimiento.listarMantenimientoPorLaboratorio(idlaboratorioSession);
-            mostrarTablaMante = !ListMante.isEmpty();
+            mostrarTablaMante = true;
             botonManteDisabled = false;
             PrimeFaces.current().ajax().update("form-Mante:tablaMante", "form-Mante:dt-Mante","form-Mante:botonNewMante" );
         } catch (SQLException e) {

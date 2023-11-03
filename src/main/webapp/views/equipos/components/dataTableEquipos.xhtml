@@ -4,11 +4,10 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-   <div class="p-grid ui-fluid">
-      <div class="p-col-12">
+      <div class="card crud-demo">
          <h:form id="form-equipo">
             <p:growl id="messages" showDetail="true"/>
-            <div class="card crud-demo">
+            <div>
                <p:toolbar>
                   <p:toolbarGroup>
                      <p:commandButton id="botonNewEquipo" value="Nuevo equipo" icon="pi pi-plus"
@@ -210,5 +209,4 @@
             </p:confirmDialog>
          </h:form>
       </div>
-   </div>
 </ui:composition>
