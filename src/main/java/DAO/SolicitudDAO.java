@@ -495,6 +495,98 @@ public class SolicitudDAO extends Conexion {
     }
 
 
+    public List<Solicitud> findAllTecnico() throws SQLException {
+        List<Solicitud> listaSolicitudes = new ArrayList<>();
+        ResultSet rs = null;
+        PreparedStatement st = null;
+
+        try {
+            this.conectar();
+            String sql = "SELECT solicitud.id AS id,\n" +
+                    "       solicitud.tipo AS tipo_solicitud,\n" +
+                    "       solicitud.analisis AS analisis,\n" +
+                    "       solicitud.codigo AS codigo,\n" +
+                    "       solicitud.excel_estudiante AS lista_estudiantes,\n" +
+                    "       solicitud.pdf_resolucion AS pdf_resolucion,\n" +
+                    "       solicitud.fecha_registro AS fecha_registro,\n" +
+                    "       solicitud.tema AS tema,\n" +
+                    "       solicitud.enabled AS enabled,\n" +
+                    "       e.codigo AS codigo_equipo,\n" +
+                    "       e.id AS id_equipo,\n" +
+                    "       e.descripcion AS nombre_equipo,\n" +
+                    "       l.id AS id_laboratorio,\n" +
+                    "       l.nom_laboratorio AS nombre_laboratorio,\n" +
+                    "       ce.categoria AS categoria_equipo\n" +
+                    "FROM laboratorio.solicitud\n" +
+                    "INNER JOIN laboratorio.docente d ON d.id = solicitud.id_docente\n" +
+                    "INNER JOIN laboratorio.horario h ON h.id = solicitud.id_horarios\n" +
+                    "INNER JOIN laboratorio.equipo_solicitud es ON solicitud.id = es.id_solicitud\n" +
+                    "INNER JOIN laboratorio.equipo e ON e.id = es.id_equipo\n" +
+                    "INNER JOIN laboratorio.laboratorio l ON h.id_laboratorio = l.id\n" +
+                    "INNER JOIN laboratorio.persona p ON d.id_persona = p.id\n" +
+                    "INNER JOIN laboratorio.usuario u ON p.id = u.id_persona\n" +
+                    "INNER JOIN laboratorio.categoria_equipo ce ON ce.id_categoria = e.id_categoria_equipo\n" +
+                    "WHERE solicitud.enabled = true\n" +
+                    "ORDER BY solicitud.fecha_registro DESC;\n";
+            st = this.getConnection().prepareStatement(sql);
+            rs = st.executeQuery();
+
+            Map<Integer, Solicitud> solicitudMap = new HashMap<>();
+
+            while (rs.next()) {
+                int solicitudId = rs.getInt("id");
+
+                if (!solicitudMap.containsKey(solicitudId)) {
+                    Solicitud solicitud = new Solicitud();
+                    solicitud.setId(solicitudId);
+                    solicitud.setTipo(rs.getString("tipo_solicitud"));
+                    solicitud.setCodigo(rs.getString("codigo"));
+                    solicitud.setAnalisis(rs.getString("analisis"));
+                    solicitud.setTema(rs.getString("tema"));
+                    solicitud.setFechaReserva(rs.getDate("fecha_registro"));
+                    solicitud.setEquipos(new ArrayList<>());
+
+                    Laboratorio laboratorio = new Laboratorio();
+                    laboratorio.setId(rs.getInt("id_laboratorio"));
+                    laboratorio.setNombre(rs.getString("nombre_laboratorio"));
+                    solicitud.setLaboratorio(laboratorio);
+
+                    solicitudMap.put(solicitudId, solicitud);
+                    listaSolicitudes.add(solicitud);
+                }
+
+                Equipo equipo = new Equipo();
+                equipo.setId(rs.getInt("id_equipo"));
+                equipo.setDescripcion(rs.getString("nombre_equipo"));
+                equipo.setCodigo(rs.getString("codigo_equipo"));
+
+                CategoriaEquipo categoriaEquipo = new CategoriaEquipo();
+                categoriaEquipo.setNombre(rs.getString("categoria_equipo"));
+                equipo.setCategoriaEquipo(categoriaEquipo);
+
+                solicitudMap.get(solicitudId).getEquipos().add(equipo);
+            }
+        } catch (Exception e) {
+            System.out.println("Error:");
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+            this.desconectar();
+        }
+
+        System.out.println("LISTA$");
+        System.out.println(listaSolicitudes);
+
+        return listaSolicitudes;
+    }
+
+
     public List<Solicitud> findAll2(int idDocente) throws SQLException {
         List<Solicitud> listaSolicitudes = new ArrayList<>();
         ResultSet rs;

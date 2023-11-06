@@ -72,4 +72,37 @@ public class LaboratorioDAO extends Conexion {
             desconectar();
         }
     }
+
+
+    public List<Laboratorio> findByIdUsuario(int idUsuario) throws SQLException {
+        List<Laboratorio> listaLaboratorio = new ArrayList<>();
+        ResultSet rs;
+        try{
+            this.conectar();
+            PreparedStatement st = this.getConnection().prepareStatement("SELECT l.id as id, l.nom_laboratorio as nombre\n" +
+                    "FROM laboratorio.laboratorio l\n" +
+                    "         inner join laboratorio.tecnico_laboratorio tl on l.id = tl.id_laboratorio\n" +
+                    "         inner join laboratorio.tecnico t on l.id = t.id_laboratorio\n" +
+                    "         inner join laboratorio.usuario u on u.id = t.id_usuario\n" +
+                    "where u.id =?;");
+            st.setInt(1,idUsuario);
+            rs = st.executeQuery();
+            while (rs.next()) {
+                Laboratorio laboratorio = new Laboratorio();
+                laboratorio.setNombre(rs.getString("nombre"));
+                laboratorio.setId(rs.getInt("id"));
+
+                listaLaboratorio.add(laboratorio);
+            }
+            rs.close();
+        }catch (Exception e){
+            throw e;
+        }finally {
+            this.desconectar();
+        }
+        return listaLaboratorio;
+    }
+
+
+
 }

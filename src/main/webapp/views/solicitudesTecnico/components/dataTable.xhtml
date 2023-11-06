@@ -1,0 +1,150 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <div class="p-grid ui-fluid">
+        <p:confirmDialog global="true"
+                         showEffect="fade"
+                         hideEffect="fade"
+                         responsive="true"
+                         width="350" header="Confirmación"
+                         message="¿Está seguro de que desea eliminar la solicitud?"
+                         widgetVar="confirmation" appendTo="@(body)" icon="pi pi-exclamation-triangle">
+
+
+            <p:commandButton value="Sí"
+                             icon="pi pi-check"
+                             oncomplete="PF('confirmation').hide(); #{solicitudBean.confirmDelete()}"
+                             update=":msgs" />
+            <p:commandButton value="Cancelar"
+                             icon="pi pi-times"
+                             oncomplete="PF('confirmation').hide()"
+                             styleClass="ui-button-secondary" />
+        </p:confirmDialog>
+
+
+
+
+
+
+        <div class="p-col-12">
+            <div class="card" style="margin-top: 0px;">
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <p:commandButton
+                                value="Nueva Solicitud"
+                                styleClass=""
+                                icon="pi pi-plus-circle"
+                                process="@this"
+                                resetValues=""
+                                oncomplete="PF('modalNuevaSolicitud').show()">
+                            <p:resetInput target=":formRegistro :manage-user-content"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <div class="p-grid p-justify-around">
+                            <p:dataTable
+                                    id="dataSolicitudesTecnico"
+                                    emptyMessage="No se encontraron registros"
+                                    value="#{solicitudTecnicoBean.solicitudes}"
+                                    var="s"
+                                    paginator="true"
+                                    widgetVar="dataSolicitudesWV"
+                                    paginatorPosition="bottom"
+                                    rowHover="true"
+                                    rows="5"
+                                    rowKey="#{s.id}"
+                                    rowTogglerSelect="true"
+                                    stripedRows="true">
+
+                                <f:facet name="header">
+                                    <p:outputLabel value="Solicitudes Pendientes de Revisión"
+                                                   style="color: #007bff; font-weight: bold;"/>
+                                </f:facet>
+
+                                <!--HEADER - DATATABLE-->
+
+                                <p:column style="width:16px">
+                                    <p:rowToggler/>
+                                </p:column>
+
+
+
+                                <!--CODIGO-->
+                                <p:column headerText="Código">
+                                    <p:outputLabel value="#{s.codigo}"/>
+                                </p:column>
+
+                                <!--FECHA RESERVA-->
+                                <p:column headerText="Fecha de reserva">
+                                    <p:outputLabel value="#{s.fechaReserva}"/>
+                                </p:column>
+                                <!--TIPO SOLICITUD-->
+                                <p:column colspan="2" headerText="Tipo Solicitud">
+                                    <p:outputLabel value="#{s.tipo}"/>
+                                </p:column>
+                                <!--TEMA SOLICITUD-->
+                                <p:column colspan="2" headerText="Tema">
+                                    <p:outputLabel value="#{s.tema}"/>
+                                </p:column>
+                                <!--ANALISIS SOLICITUD-->
+                                <p:column colspan="2" headerText="Analisis">
+                                    <p:outputLabel value="#{s.analisis}"/>
+                                </p:column>
+                                <!--LABORATORIRO-->
+                                <p:column headerText="Laboratorio">
+                                    <p:outputLabel value="#{s.laboratorio.nombre}"/>
+                                </p:column>
+                                <!--ESTADO-->
+                                <p:column headerText="Estado">
+                                    <p:outputLabel value="#{s.enabled ? 'Confirmada' : 'Pendiente'}"
+                                                   style="color: #{s.enabled ? 'green' : 'orange'}; font-weight: bold;"/>
+                                </p:column>
+
+
+
+
+
+                                <!--ACCIONES-->
+                                <p:column headerText="Acciones">
+                                    <p:commandButton icon="pi pi-check-circle"
+                                                     styleClass="ui-button-success rounded-button ui-button-outlined p-mr-2 p-mb-2"
+                                                     process="@this"
+                                                     oncomplete="PF('confirmation').show()"
+                                                     actionListener="#{solicitudBean.prepareDelete(s.id)}" />
+                                </p:column>
+
+
+                                <p:rowExpansion>
+                                    <p:dataTable value="#{s.equipos}" var="equipo" rowHover="true"
+                                                 tableStyle="animation-direction: alternate ">
+                                        <f:facet name="header">
+                                            <h:outputText value="Equipos Solicitados"
+                                                          style="color: #007bff; font-weight: bold;"/>
+                                        </f:facet>
+
+                                        <p:column headerText="Código">
+                                            #{equipo.codigo}
+                                        </p:column>
+                                        <p:column headerText="Equipo">
+                                            #{equipo.descripcion}
+                                        </p:column>
+                                        <p:column headerText="Categoría">
+                                            #{equipo.categoriaEquipo.nombre}
+                                        </p:column>
+                                    </p:dataTable>
+
+                                </p:rowExpansion>
+                            </p:dataTable>
+
+                        </div>
+                    </p:toolbarGroup>
+                </p:toolbar>
+            </div>
+        </div>
+    </div>
+</ui:composition>
