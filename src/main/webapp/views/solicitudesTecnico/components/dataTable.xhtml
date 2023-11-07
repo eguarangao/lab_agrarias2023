@@ -17,31 +17,27 @@
             <p:commandButton value="Sí"
                              icon="pi pi-check"
                              oncomplete="PF('confirmation').hide(); #{solicitudBean.confirmDelete()}"
-                             update=":msgs" />
+                             update=":msgs"/>
             <p:commandButton value="Cancelar"
                              icon="pi pi-times"
                              oncomplete="PF('confirmation').hide()"
-                             styleClass="ui-button-secondary" />
+                             styleClass="ui-button-secondary"/>
         </p:confirmDialog>
-
-
-
-
 
 
         <div class="p-col-12">
             <div class="card" style="margin-top: 0px;">
                 <p:toolbar>
                     <p:toolbarGroup>
-                        <p:commandButton
-                                value="Nueva Solicitud"
-                                styleClass=""
-                                icon="pi pi-plus-circle"
-                                process="@this"
-                                resetValues=""
-                                oncomplete="PF('modalNuevaSolicitud').show()">
-                            <p:resetInput target=":formRegistro :manage-user-content"/>
-                        </p:commandButton>
+<!--                        <p:commandButton-->
+<!--                                value="Nueva Solicitud"-->
+<!--                                styleClass=""-->
+<!--                                icon="pi pi-plus-circle"-->
+<!--                                process="@this"-->
+<!--                                resetValues=""-->
+<!--                                oncomplete="PF('modalNuevaSolicitud').show()">-->
+<!--                            <p:resetInput target=":formRegistro :manage-user-content"/>-->
+<!--                        </p:commandButton>-->
                     </p:toolbarGroup>
                 </p:toolbar>
                 <p:toolbar>
@@ -72,8 +68,6 @@
                                     <p:rowToggler/>
                                 </p:column>
 
-
-
                                 <!--CODIGO-->
                                 <p:column headerText="Código">
                                     <p:outputLabel value="#{s.codigo}"/>
@@ -101,12 +95,10 @@
                                 </p:column>
                                 <!--ESTADO-->
                                 <p:column headerText="Estado">
-                                    <p:outputLabel value="#{s.enabled ? 'Confirmada' : 'Pendiente'}"
-                                                   style="color: #{s.enabled ? 'green' : 'orange'}; font-weight: bold;"/>
+                                    <p:tag severity="success" value="Confirmada" rendered="#{not s.enabled}"/>
+                                    <p:tag severity="warning" value="Pendiente" rendered="#{s.enabled}"/>
+
                                 </p:column>
-
-
-
 
 
                                 <!--ACCIONES-->
@@ -115,7 +107,7 @@
                                                      styleClass="ui-button-success rounded-button ui-button-outlined p-mr-2 p-mb-2"
                                                      process="@this"
                                                      oncomplete="PF('confirmation').show()"
-                                                     actionListener="#{solicitudBean.prepareDelete(s.id)}" />
+                                                     actionListener="#{solicitudBean.prepareDelete(s.id)}"/>
                                 </p:column>
 
 
@@ -138,7 +130,16 @@
                                         </p:column>
                                     </p:dataTable>
 
+                                    <p:panelGrid columns="2">
+                                        <p:commandButton value="PDF/Resolución" action="#{solicitudTecnicoBean.getPdfResolucion(s.id)}" ajax="false" icon="pi pi-file-pdf" styleClass="p-button-outline" />
+                                        <p:commandButton value="Lista de Estudiantes" action="#{solicitudTecnicoBean.getExcellEstudiantes(s.id)}" ajax="false" icon="pi pi-file-excel" styleClass="p-button-outline" />
+                                    </p:panelGrid>
+
+
                                 </p:rowExpansion>
+
+
+
                             </p:dataTable>
 
                         </div>

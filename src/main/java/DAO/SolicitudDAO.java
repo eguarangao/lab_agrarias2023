@@ -2,22 +2,27 @@ package DAO;
 
 import Model.*;
 import global.Conexion;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import org.apache.commons.io.IOUtils;
 import org.primefaces.model.file.UploadedFile;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.Date;
 
 public class SolicitudDAO extends Conexion {
     Horario tempHorario = new Horario();
 
     HorarioDAO horarioDAO = new HorarioDAO();
     List<Item> itemsSeleccionados = new ArrayList<>();
-
-
 
 
     public void save(Solicitud solicitud, UploadedFile pdfResolucion, UploadedFile listaEstudiantes) throws SQLException {
@@ -495,7 +500,7 @@ public class SolicitudDAO extends Conexion {
     }
 
 
-    public List<Solicitud> findAllTecnico() throws SQLException {
+    public List<Solicitud> findAllTecnico(int idUsuario) throws SQLException {
         List<Solicitud> listaSolicitudes = new ArrayList<>();
         ResultSet rs = null;
         PreparedStatement st = null;
@@ -526,9 +531,10 @@ public class SolicitudDAO extends Conexion {
                     "INNER JOIN laboratorio.persona p ON d.id_persona = p.id\n" +
                     "INNER JOIN laboratorio.usuario u ON p.id = u.id_persona\n" +
                     "INNER JOIN laboratorio.categoria_equipo ce ON ce.id_categoria = e.id_categoria_equipo\n" +
-                    "WHERE solicitud.enabled = true\n" +
-                    "ORDER BY solicitud.fecha_registro DESC;\n";
+                    "WHERE u.id=?\n" +
+                    "ORDER BY solicitud.fecha_registro DESC;";
             st = this.getConnection().prepareStatement(sql);
+            st.setInt(1,idUsuario);
             rs = st.executeQuery();
 
             Map<Integer, Solicitud> solicitudMap = new HashMap<>();
@@ -544,6 +550,8 @@ public class SolicitudDAO extends Conexion {
                     solicitud.setAnalisis(rs.getString("analisis"));
                     solicitud.setTema(rs.getString("tema"));
                     solicitud.setFechaReserva(rs.getDate("fecha_registro"));
+                    solicitud.setExcelEstudiantes(rs.getBytes("lista_estudiantes"));
+                    solicitud.setEnabled(rs.getBoolean("enabled"));
                     solicitud.setEquipos(new ArrayList<>());
 
                     Laboratorio laboratorio = new Laboratorio();
@@ -724,6 +732,160 @@ public class SolicitudDAO extends Conexion {
             }
         }
     }
+
+
+//    public byte[] getPdfResolucion() {
+//        // Recupera el archivo PDF en formato byte[] desde la base de datos
+//        // Reemplaza esto con la lógica para obtener el archivo desde tu base de datos
+//        byte[] pdfBytes = solicitudService.getPdfResolucionPorId(solicitudId);
+//
+//        return pdfBytes;
+//    }
+
+
+    public void getPdfResolucion(int idSolicitud) throws IOException {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        ExternalContext ec = fc.getExternalContext();
+        ResultSet rs = null;
+
+        try {
+            this.conectar();
+            String sql = "select s.pdf_resolucion as pdf_resolucion from laboratorio.solicitud s where s.id = ?;";
+            PreparedStatement st = this.getConnection().prepareStatement(sql);
+            st.setInt(1, idSolicitud);
+            rs = st.executeQuery();
+
+            if (rs.next()) {
+                String fileName = "mypdf" + ".pdf"; // o cualquier nombre base de archivo que prefiera
+                InputStream inputStream = rs.getBinaryStream("pdf_resolucion");
+
+                ec.responseReset();
+                ec.setResponseContentType("application/pdf");
+                ec.setResponseHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+                OutputStream outputStream = ec.getResponseOutputStream();
+                IOUtils.copy(inputStream, outputStream);
+                fc.responseComplete();
+            }
+        } catch (SQLException e) {
+            // Maneja las excepciones SQL adecuadamente
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    // Maneja la excepción
+                }
+            }
+            this.desconectar();
+        }
+    }
+
+
+//    public void getExcellEstudiantes(int idSolicitud) throws SQLException, IOException {
+//        byte[] pdfBytes;
+//        ResultSet rs;
+//
+//        try {
+//            this.conectar();
+//            String sql = "select s.excel_estudiante as estudiantes from laboratorio.solicitud s where s.id = ?;";
+//            PreparedStatement st = this.getConnection().prepareStatement(sql);
+//            st.setInt(1, idSolicitud);
+//            rs = st.executeQuery();
+//
+//            while (rs.next()) {
+//                // Lee los bytes del campo pdf_resolucion
+//
+//                String fileName = "myExcell" + ".xlsx"; // o cualquier nombre base de archivo que prefiera
+//                InputStream inputStream = rs.getBinaryStream("estudiantes");
+////
+////                FacesContext fc = FacesContext.getCurrentInstance();
+////                ExternalContext ec = fc.getExternalContext();
+////                ec.responseReset();
+////                ec.setResponseContentType("application/octet-stream");
+////                ec.setResponseHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+////                OutputStream outputStream = ec.getResponseOutputStream();
+////                IOUtils.copy(inputStream, outputStream);
+////                fc.responseComplete();
+//
+//                FacesContext fc = FacesContext.getCurrentInstance();
+//                ExternalContext ec = fc.getExternalContext();
+//                ec.responseReset();
+//                ec.setResponseContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); // Tipo de contenido para XLSX
+//                ec.setResponseHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+//                OutputStream outputStream = ec.getResponseOutputStream();
+//                IOUtils.copy(inputStream, outputStream);
+//                fc.responseComplete();
+//            }
+//        } catch (Exception e) {
+//            throw e;
+//        } finally {
+//            this.desconectar();
+//        }
+//
+//    }
+
+    public void getExcellEstudiantes(int idSolicitud) throws SQLException, IOException {
+        byte[] excelBytes;
+        ResultSet rs;
+
+        try {
+            this.conectar();
+            String sql = "SELECT s.excel_estudiante as estudiantes FROM laboratorio.solicitud s WHERE s.id = ?;";
+            PreparedStatement st = this.getConnection().prepareStatement(sql);
+            st.setInt(1, idSolicitud);
+            rs = st.executeQuery();
+
+            if (rs.next()) {
+                // Lee los bytes del campo excel_resolucion
+
+                String fileName = "myExcel.xlsx"; // Nombre del archivo Excel
+                InputStream inputStream = rs.getBinaryStream("estudiantes");
+
+                FacesContext fc = FacesContext.getCurrentInstance();
+                ExternalContext ec = fc.getExternalContext();
+                ec.responseReset();
+//                ec.setResponseContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); // Tipo MIME para XLSX
+                ec.setResponseContentType("application/xlsx");
+                ec.setResponseHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+                OutputStream outputStream = ec.getResponseOutputStream();
+                IOUtils.copy(inputStream, outputStream);
+                fc.responseComplete();
+            }
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            this.desconectar();
+        }
+    }
+
+
+
+//    public void downloadPdfResolucion() throws SQLException, IOException, ClassNotFoundException {
+//        try {
+//            this.conectar();{
+//        PreparedStatement st = cn.prepareStatement("select datos from laboratorio.archivos where id = (?)");
+//        st.setInt(1, codigo);
+//        ResultSet rs = st.executeQuery();
+//        if (rs.next()) {
+//            InputStream inputStream = rs.getBinaryStream("datos");
+//            String fileName = "archivo_" + codigo + ".jpg"; // o cualquier nombre base de archivo que prefiera
+//            FacesContext fc = FacesContext.getCurrentInstance();
+//            ExternalContext ec = fc.getExternalContext();
+//            ec.responseReset();
+//            ec.setResponseContentType("application/octet-stream");
+//            ec.setResponseHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+//            OutputStream outputStream = ec.getResponseOutputStream();
+//            IOUtils.copy(inputStream, outputStream);
+//            fc.responseComplete();
+//            cn.close();
+//        } else {
+//            cn.close();
+//            FacesMessage message = new FacesMessage("ERROR", "El archivo no existe.");
+//            FacesContext.getCurrentInstance().addMessage(null, message);
+//        }
+//    }
+
+
 
 
 }
