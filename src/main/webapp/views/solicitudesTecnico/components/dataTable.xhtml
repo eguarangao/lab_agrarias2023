@@ -5,39 +5,84 @@
         xmlns:p="http://primefaces.org/ui"
         xmlns:f="http://xmlns.jcp.org/jsf/core">
     <div class="p-grid ui-fluid">
-        <p:confirmDialog global="true"
-                         showEffect="fade"
-                         hideEffect="fade"
-                         responsive="true"
-                         width="350" header="Confirmación"
-                         message="¿Está seguro de que desea eliminar la solicitud?"
-                         widgetVar="confirmation" appendTo="@(body)" icon="pi pi-exclamation-triangle">
+
+<!--        <h:form>-->
+<!--            <p:dialog header="Confirmación"-->
+<!--                      widgetVar="confirmationEvidencia"-->
+<!--                      modal="true"-->
+<!--                      resizable="false"-->
+<!--                      appendTo="@(body)"-->
+<!--                      width="450"-->
+<!--                      dynamic="false">-->
+
+<!--                &lt;!&ndash; Agregar componente de carga de archivos PDF (evidencia) &ndash;&gt;-->
+<!--                <p:fieldset legend="PDF de Aprobacón" id="fieldsetDocumento">-->
+<!--                    <p:fileUpload mode="simple" skinSimple="true"-->
+<!--                                  value="#{solicitudTecnicoBean.filePDF}"-->
+<!--                                  label="Subir PDF"-->
+<!--                                  icon="pi pi-plus-circle"-->
+<!--                                  sizeLimit="10485760"-->
+<!--                                  allowTypes="/(\.|\/)(pdf)$/"-->
+<!--                                  required="true"-->
+<!--                                  invalidFileMessage="Solo se permiten archivos PDF"-->
+<!--                                  invalidSizeMessage="El archivo no puede tener un tamaño mayor a 10MB"-->
+<!--                    />-->
+<!--                </p:fieldset>-->
+
+<!--                &lt;!&ndash; Agregar cuadro de texto para comentario &ndash;&gt;-->
+<!--                <p:inputTextarea rows="3" cols="30" value="#{solicitudTecnicoBean.comentario}"-->
+<!--                                 placeholder="Agregar comentario" required="true"/>-->
+
+<!--                <p:commandButton-->
+<!--                        ajax="false"-->
+<!--                        value="Guardar"-->
+<!--                        actionListener="#{solicitudTecnicoBean.saveEvidencia()}"-->
+<!--                        icon="pi pi-save"-->
+<!--                        styleClass="ui-button-success"-->
+<!--                        update=":dataSolicitudesTecnico :msj"-->
+<!--                        oncomplete="PF('confirmationEvidencia').hide()">-->
+<!--                </p:commandButton>-->
+
+<!--                <f:facet name="footer">-->
+<!--                    <p:commandButton-->
+<!--                            ajax="false"-->
+<!--                            value="Guardar"-->
+<!--                            actionListener="#{solicitudTecnicoBean.saveEvidencia()}"-->
+<!--                            icon="pi pi-save"-->
+<!--                            styleClass="ui-button-success"-->
+<!--                            update=":formDataTecnico formDataTecnico:dataSolicitudesTecnico :msj"-->
+<!--                            oncomplete="PF('confirmationEvidencia').hide()">-->
+<!--                        <p:resetInput target=""/>-->
+<!--                    </p:commandButton>-->
+<!--                    <p:commandButton-->
+<!--                            value="Cancelar"-->
+<!--                            icon="pi pi-times"-->
+<!--                            immediate="true"-->
+<!--                            update="@form"-->
+<!--                            oncomplete="PF('confirmationEvidencia').hide()"-->
+<!--                            styleClass="ui-button-secondary">-->
+<!--                        <p:ajax update="" resetValues="true"/>-->
+<!--                    </p:commandButton>-->
+<!--                </f:facet>-->
+<!--            </p:dialog>-->
+<!--        </h:form>-->
 
 
-            <p:commandButton value="Sí"
-                             icon="pi pi-check"
-                             oncomplete="PF('confirmation').hide(); #{solicitudBean.confirmDelete()}"
-                             update=":msgs"/>
-            <p:commandButton value="Cancelar"
-                             icon="pi pi-times"
-                             oncomplete="PF('confirmation').hide()"
-                             styleClass="ui-button-secondary"/>
-        </p:confirmDialog>
 
 
         <div class="p-col-12">
             <div class="card" style="margin-top: 0px;">
                 <p:toolbar>
                     <p:toolbarGroup>
-<!--                        <p:commandButton-->
-<!--                                value="Nueva Solicitud"-->
-<!--                                styleClass=""-->
-<!--                                icon="pi pi-plus-circle"-->
-<!--                                process="@this"-->
-<!--                                resetValues=""-->
-<!--                                oncomplete="PF('modalNuevaSolicitud').show()">-->
-<!--                            <p:resetInput target=":formRegistro :manage-user-content"/>-->
-<!--                        </p:commandButton>-->
+                        <!--                        <p:commandButton-->
+                        <!--                                value="Nueva Solicitud"-->
+                        <!--                                styleClass=""-->
+                        <!--                                icon="pi pi-plus-circle"-->
+                        <!--                                process="@this"-->
+                        <!--                                resetValues=""-->
+                        <!--                                oncomplete="PF('modalNuevaSolicitud').show()">-->
+                        <!--                            <p:resetInput target=":formRegistro :manage-user-content"/>-->
+                        <!--                        </p:commandButton>-->
                     </p:toolbarGroup>
                 </p:toolbar>
                 <p:toolbar>
@@ -100,14 +145,35 @@
 
                                 </p:column>
 
+<!--                                <p:column headerText="Evidencia">-->
+<!--&lt;!&ndash;                                    <p:commandButton value="PDF"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                     action="#{solicitudTecnicoBean.getIdEvidencia(s.id)}"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                     ajax="false" icon="pi pi-file-pdf"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                     styleClass="rounded-button ui-button-info"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                     rendered="#{not empty s.pdfAprobacion}" />&ndash;&gt;-->
+<!--                                    <p:commandButton-->
+<!--                                                     action="#{solicitudTecnicoBean.getIdEvidencia(s.id)}"-->
+<!--                                                     ajax="false" icon="pi pi-file-pdf"-->
+<!--                                                     styleClass="rounded-button ui-button-primary"/>-->
+<!--                                </p:column>-->
+
+                                <p:column headerText="Evidencia">
+                                    <p:commandButton action="#{solicitudTecnicoBean.getPdfEvidencia(s.id)}"
+                                                     ajax="false" icon="pi pi-file-pdf"
+                                                     styleClass="rounded-button ui-button-primary"
+                                                     style="border-radius: 50%;"
+                                                     rendered="#{s.enabled eq false}" />
+                                </p:column>
+
+
 
                                 <!--ACCIONES-->
                                 <p:column headerText="Acciones">
                                     <p:commandButton icon="pi pi-check-circle"
-                                                     styleClass="ui-button-success rounded-button ui-button-outlined p-mr-2 p-mb-2"
+                                                     styleClass="ui-button-primary rounded-button ui-button-outlined p-mr-2 p-mb-2"
                                                      process="@this"
-                                                     oncomplete="PF('confirmation').show()"
-                                                     actionListener="#{solicitudBean.prepareDelete(s.id)}"/>
+                                                     oncomplete="PF('modalEvidencia').show()"
+                                                     actionListener="#{solicitudTecnicoBean.getIdEvidencia(s.id)}"/>
                                 </p:column>
 
 
@@ -131,13 +197,18 @@
                                     </p:dataTable>
 
                                     <p:panelGrid columns="2">
-                                        <p:commandButton value="PDF/Resolución" action="#{solicitudTecnicoBean.getPdfResolucion(s.id)}" ajax="false" icon="pi pi-file-pdf" styleClass="p-button-outline" />
-                                        <p:commandButton value="Lista de Estudiantes" action="#{solicitudTecnicoBean.getExcellEstudiantes(s.id)}" ajax="false" icon="pi pi-file-excel" styleClass="p-button-outline" />
+                                        <p:commandButton value="PDF/Resolución"
+                                                         action="#{solicitudTecnicoBean.getPdfResolucion(s.id)}"
+                                                         ajax="false" icon="pi pi-file-pdf"
+                                                         styleClass="p-button-outline"/>
+                                        <p:commandButton value="Lista de Estudiantes"
+                                                         action="#{solicitudTecnicoBean.getExcellEstudiantes(s.id)}"
+                                                         ajax="false" icon="pi pi-file-excel"
+                                                         styleClass="p-button-outline"/>
                                     </p:panelGrid>
 
 
                                 </p:rowExpansion>
-
 
 
                             </p:dataTable>

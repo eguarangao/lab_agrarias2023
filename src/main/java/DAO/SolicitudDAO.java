@@ -733,6 +733,28 @@ public class SolicitudDAO extends Conexion {
         }
     }
 
+    public void saveEvidencia(int idSolicitud, String comentario, UploadedFile pdfAprobacion) {
+        try {
+            this.conectar();
+            //ELIMINAR EQUIPO_SOLICITUD
+            String sql = "update laboratorio.solicitud set enabled = false, comentario = ?,pdf_aprobacion = ? where id=?;";
+            PreparedStatement st = this.getConnection().prepareStatement(sql);
+            st.setString(1, comentario);
+            st.setBinaryStream(2, pdfAprobacion.getInputStream());
+            st.setInt(3, idSolicitud);
+
+
+            st.executeUpdate();
+            st.close(); // Cierra la declaración
+        } catch (Exception e) {
+            System.out.println("ERROR:" + e.getMessage());
+            e.printStackTrace(); // Imprime la traza de la excepción para depurar
+        } finally {
+            this.desconectar();
+        }
+    }
+
+
 
 //    public byte[] getPdfResolucion() {
 //        // Recupera el archivo PDF en formato byte[] desde la base de datos
@@ -756,8 +778,45 @@ public class SolicitudDAO extends Conexion {
             rs = st.executeQuery();
 
             if (rs.next()) {
-                String fileName = "mypdf" + ".pdf"; // o cualquier nombre base de archivo que prefiera
+                String fileName = "R    esolución" + ".pdf"; // o cualquier nombre base de archivo que prefiera
                 InputStream inputStream = rs.getBinaryStream("pdf_resolucion");
+
+                ec.responseReset();
+                ec.setResponseContentType("application/pdf");
+                ec.setResponseHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+                OutputStream outputStream = ec.getResponseOutputStream();
+                IOUtils.copy(inputStream, outputStream);
+                fc.responseComplete();
+            }
+        } catch (SQLException e) {
+            // Maneja las excepciones SQL adecuadamente
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    // Maneja la excepción
+                }
+            }
+            this.desconectar();
+        }
+    }
+
+    public void getPdfEvidencia(int idSolicitud) throws IOException {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        ExternalContext ec = fc.getExternalContext();
+        ResultSet rs = null;
+
+        try {
+            this.conectar();
+            String sql = "select s.pdf_aprobacion as pdf_evidencia from laboratorio.solicitud s where s.id = ?;";
+            PreparedStatement st = this.getConnection().prepareStatement(sql);
+            st.setInt(1, idSolicitud);
+            rs = st.executeQuery();
+
+            if (rs.next()) {
+                String fileName = "Aprobación-solicitud" + ".pdf"; // o cualquier nombre base de archivo que prefiera
+                InputStream inputStream = rs.getBinaryStream("pdf_evidencia");
 
                 ec.responseReset();
                 ec.setResponseContentType("application/pdf");
@@ -838,7 +897,7 @@ public class SolicitudDAO extends Conexion {
             if (rs.next()) {
                 // Lee los bytes del campo excel_resolucion
 
-                String fileName = "myExcel.xlsx"; // Nombre del archivo Excel
+                String fileName = "lista-estudiantes.xlsx"; // Nombre del archivo Excel
                 InputStream inputStream = rs.getBinaryStream("estudiantes");
 
                 FacesContext fc = FacesContext.getCurrentInstance();

@@ -14,6 +14,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.primefaces.model.file.UploadedFile;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -25,10 +26,12 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Named
-@SessionScoped
+@ViewScoped
 public class SolicitudTecnicoBean implements Serializable {
     List<Laboratorio> laboratorios = new ArrayList<>();
     List<Solicitud> solicitudes = new ArrayList<>();
+
+    private UploadedFile filePDF = null;
 
     //DAO
     LaboratorioDAO laboratorioDAO = new LaboratorioDAO();
@@ -37,13 +40,49 @@ public class SolicitudTecnicoBean implements Serializable {
     //Variables
     int idUsuarioSession = 0;
 
+    int idSolicitud = 0;
+
+    String comentario = "";
+
 
     public void getPdfResolucion(int idSolicitud) throws SQLException, IOException {
         solicitudDAO.getPdfResolucion(idSolicitud);
     }
 
+    public void getPdfEvidencia(int idSolicitud) throws SQLException, IOException {
+        solicitudDAO.getPdfEvidencia(idSolicitud);
+    }
+
     public void getExcellEstudiantes(int idSolicitud) throws SQLException, IOException {
         solicitudDAO.getExcellEstudiantes(idSolicitud);
+    }
+
+    public void saveEvidencia() throws SQLException {
+        try {
+            System.out.println("sos");
+            solicitudDAO.saveEvidencia(idSolicitud, comentario, filePDF);
+            listarSolicitud();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso", "Se registró correctamente la evidencia"));
+        } catch (SQLException e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Ocurrió un error en el registro, vuelva a intentarlo"));
+            e.printStackTrace(); // Puedes imprimir el stack trace para depuración
+        }
+
+    }
+
+    public void getIdEvidencia(int idSoli) {
+        System.out.println("sos2");
+        idSolicitud = idSoli;
+    }
+
+    public void listarSolicitud() throws SQLException {
+        //Obtenemos el nombre del docente mediante el ID de usuario
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        Usuario usuarioLogueado = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
+        idUsuarioSession = usuarioLogueado.getId();
+        //Cargamos las solicitudes correspondientes a los tecncios con sus laboratorios
+
+        solicitudes = solicitudDAO.findAllTecnico(idUsuarioSession);
     }
 
 
