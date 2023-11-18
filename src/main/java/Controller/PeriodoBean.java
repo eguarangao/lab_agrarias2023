@@ -6,6 +6,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import lombok.Data;
 import org.primefaces.PrimeFaces;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Data
 @Named
-@SessionScoped
+@ViewScoped
 public class PeriodoBean implements Serializable {
     private PeriodoDAO periodoDAO = new PeriodoDAO();
     private Periodo nuevoPeriodo = new Periodo();
@@ -41,7 +42,7 @@ public class PeriodoBean implements Serializable {
         try{
             int deletedId = nuevoPeriodo.getId();
             periodoDAO.deletePeriodo(deletedId);
-            periodos = periodoDAO.listarPeriodos();
+            allPeriodos = periodoDAO.listarPeriodos();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Periodo Removed"));
             PrimeFaces.current().ajax().update("form:messages", "form:dt-facd");
         }catch (Exception e){
@@ -52,10 +53,12 @@ public class PeriodoBean implements Serializable {
         try {
             if (this.nuevoPeriodo.getFechaCreacion() ==null) {
                 periodoDAO.insertPeriodo(nuevoPeriodo);
-                periodos = periodoDAO.listarPeriodos();
+                allPeriodos = periodoDAO.listarPeriodos();
+                PrimeFaces.current().ajax().update("form:dt-facd");
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Periodo agregado"));
             } else {
                 periodoDAO.updatePeriodo(nuevoPeriodo);
+                PrimeFaces.current().ajax().update("form:dt-facd");
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Periodo actualizado"));
 
             }

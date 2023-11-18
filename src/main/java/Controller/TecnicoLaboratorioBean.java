@@ -9,6 +9,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import lombok.Data;
 import org.primefaces.PrimeFaces;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Named
-@SessionScoped
+@ViewScoped
 @Data
 public class TecnicoLaboratorioBean implements Serializable {
     private TecnicoLaboratorioDAO tecnicoDAO;

@@ -14,17 +14,17 @@
                 <p:outputPanel id="manage-perfilDatosPersonales-edit" class="ui-accordion-content">
                     <div class="p-formgrid p-grid">
 
-                        <div class="p-field p-col-12 p-md-2">
+                        <div class="p-field p-col-12 p-md-4">
                             <p:outputLabel value="Cedula" class="p-col-12"/>
-                            <p:inputText value="#{usuarioBean.ajustePerfil.dni}"/>
+                            <p:inputText maxlength="10" value="#{accesoBean.ajustePerfil.dni}"/>
                         </div>
-                        <div class="p-field p-col-12 p-md-5">
+                        <div class="p-field p-col-12 p-md-4">
                             <p:outputLabel value="Nombre" class="p-col-12"/>
-                            <p:inputText value="#{usuarioBean.ajustePerfil.nombre}"/>
+                            <p:inputText maxlength="30" value="#{accesoBean.ajustePerfil.nombre}"/>
                         </div>
-                        <div class="p-field p-col-12 p-md-5">
+                        <div class="p-field p-col-12 p-md-4">
                             <p:outputLabel value="Apellido" class="p-col-12"/>
-                            <p:inputText value="#{usuarioBean.ajustePerfil.apellido}"/>
+                            <p:inputText maxlength="30" value="#{accesoBean.ajustePerfil.apellido}"/>
                         </div>
                     </div>
                     <div class="p-formgrid p-grid">
@@ -32,7 +32,7 @@
 
                         <div class="p-field p-col-6 p-md-4">
                             <p:outputLabel value="Genero" class="p-col-12"/>
-                            <p:selectOneMenu id="option" value="#{usuarioBean.ajustePerfil.genero}">
+                            <p:selectOneMenu id="option" value="#{accesoBean.ajustePerfil.genero}">
                                 <f:selectItem itemLabel="Selecciona un género" itemValue=""/>
                                 <f:selectItem itemLabel="Hombre" itemValue="H"/>
                                 <f:selectItem itemLabel="Mujer" itemValue="M"/>
@@ -40,11 +40,11 @@
                         </div>
                         <div class="p-field p-col-6 p-md-4">
                             <p:outputLabel value="Celular" class="p-col-12"/>
-                            <p:inputText value="#{usuarioBean.ajustePerfil.telefono}"/>
+                            <p:inputText maxlength="10" value="#{accesoBean.ajustePerfil.telefono}"/>
                         </div>
                         <div class="p-field p-col-6 p-md-4">
                             <p:outputLabel value="Correo" class="p-col-12"/>
-                            <p:inputText value="#{usuarioBean.ajustePerfil.email}"/>
+                            <p:inputText  maxlength="30" value="#{accesoBean.ajustePerfil.email}"/>
 
                         </div>
 
@@ -56,7 +56,7 @@
 
             <f:facet name="footer">
                 <p:commandButton value="Guardar" icon="pi pi-check"
-                                 actionListener="#{usuarioBean.actualizarAjustePerfil(usuarioBean.ajustePerfil)}"
+                                 actionListener="#{accesoBean.actualizarAjustePerfil(usuarioBean.ajustePerfil)}"
                                  onclick="PF('dialogoEditarPerfil').hide()"/>
                 <p:commandButton value="Cancelar" icon="pi pi-times" class="ui-button-secondary"
                                  onclick="PF('dialogoEditarPerfil').hide()"/>

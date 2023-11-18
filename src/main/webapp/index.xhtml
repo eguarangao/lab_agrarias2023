@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head> <f:facet name="first">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -28,7 +27,7 @@
         window.history.forward();
     }
 
-    setTimeout("preventbackbutton()", 0);
+    setTimeout('preventbackbutton()', 0);
     window.onunload = function () {
         null;
     };
@@ -75,17 +74,17 @@
                             <div class="p-col-12">
                                 <div class="input-wrapper ui-input-icon-left">
                                     <i class="pi pi-user"/>
-                                    <p:inputText type="text" disabled="#{usuarioBean.btnLogin==true}"
+                                    <p:inputText type="text" disabled="#{accesoBean.btnLogin==true}"
                                                  placeholder="Username"
-                                    value="#{usuarioBean.username}"/>
+                                    value="#{accesoBean.username}"/>
                                 </div>
                             </div>
                             <div class="p-col-12">
                                 <div class="input-wrapper ui-input-icon-left">
                                     <i class="pi pi-lock"/>
-                                    <p:inputText type="password" disabled="#{usuarioBean.btnLogin==true}"
+                                    <p:inputText type="password" disabled="#{accesoBean.btnLogin==true}"
                                                  placeholder="Password"
-                                                 value="#{usuarioBean.password}"/>
+                                                 value="#{accesoBean.password}"/>
                                 </div>
                             </div>
                             <div class="p-col-12">
@@ -93,9 +92,9 @@
                                     <div class="field col-12 md:col-4">
 
 
-                                        <p:selectOneMenu id="selectRoles" value="#{usuarioBean.rolSesion}" rendered="#{usuarioBean.btnLogin==true}">
+                                        <p:selectOneMenu id="selectRoles" value="#{accesoBean.rolSesion}" rendered="#{accesoBean.btnLogin==true}">
 
-                                            <f:selectItems value="#{usuarioBean.listaRoles}" var="rol" itemLabel="#{rol.nombre}" itemValue="#{rol.nombre}"/>
+                                            <f:selectItems value="#{accesoBean.listaRoles}" var="rol" itemLabel="#{rol.nombre}" itemValue="#{rol.nombre}"/>
                                         </p:selectOneMenu>
 
                                     </div>
@@ -105,14 +104,14 @@
                             </div>
                             <div class="p-col-12 button-container">
                                 <p:commandButton style="background-color: #025a27;"
-                                        actionListener="#{usuarioBean.login()}"
+                                        actionListener="#{accesoBean.login()}"
                                         value="Entrar" update=":growl , form:panelRoles, form"
                                 />
                                 <p:commandButton
-                                        action="#{usuarioBean.cerrarSesion()}"
+                                        action="#{accesoBean.cerrarSesion()}"
                                         oncomplete="recargarPagina()"
                                         styleClass="ui-button-raised ui-button-secondary"
-                                         value="Cancelar" rendered="#{usuarioBean.btnLogin==true}"                             />
+                                         value="Cancelar" rendered="#{accesoBean.btnLogin==true}"                             />
                             </div>
                         </div>
                     </div>
@@ -123,11 +122,6 @@
 
         </div>
     </h:form>
-    <script type="text/javascript">
-        function recargarPagina() {
-            location.reload(); // Recarga la página actual
-        }
-    </script>
 
 </h:body>
 </html>

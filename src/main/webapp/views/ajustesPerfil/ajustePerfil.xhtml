@@ -20,52 +20,35 @@
                           <p:outputPanel id="manage-perfilDatosPersonales-form" class="ui-fluid">
                               <div class="p-formgrid p-grid">
 
-                                  <div class="p-field p-col-12 p-md-1">
+                                  <div class="p-field p-col-12 p-md-3">
                                       <p:outputLabel value="Cedula" class="p-col-12"/>
-                                      <p:inputText disabled="true" value="#{usuarioBean.ajustePerfil.dni}"/>
+                                      <p:inputText disabled="true" value="#{accesoBean.ajustePerfil.dni}"/>
                                   </div>
-                                  <div class="p-field p-col-12 p-md-2">
+                                  <div class="p-field p-col-12 p-md-3">
                                       <p:outputLabel value="Nombre" class="p-col-12"/>
-                                      <p:inputText disabled="true" value="#{usuarioBean.ajustePerfil.nombre}"/>
+                                      <p:inputText disabled="true" value="#{accesoBean.ajustePerfil.nombre}"/>
                                   </div>
-                                  <div class="p-field p-col-12 p-md-2">
+                                  <div class="p-field p-col-12 p-md-3">
                                       <p:outputLabel value="Apellido" class="p-col-12"/>
-                                      <p:inputText disabled="true" value="#{usuarioBean.ajustePerfil.apellido}"/>
+                                      <p:inputText disabled="true" value="#{accesoBean.ajustePerfil.apellido}"/>
                                   </div>
 
-                                  <div class="p-field p-col-12 p-md-2">
+                                  <div class="p-field p-col-12 p-md-3">
                                       <p:outputLabel value="Genero" class="p-col-12"/>
-                                      <p:inputText disabled="true" value="#{usuarioBean.ajustePerfil.genero}"/>
+                                      <p:inputText disabled="true" value="#{accesoBean.ajustePerfil.genero}"/>
                                   </div>
 
-                                  <div class="p-field p-col-12 p-md-2">
+                                  <div class="p-field p-col-12 p-md-3">
                                       <p:outputLabel value="Correo" class="p-col-12"/>
-                                      <p:inputText disabled="true" value="#{usuarioBean.ajustePerfil.email}"/>
+                                      <p:inputText disabled="true" value="#{accesoBean.ajustePerfil.email}"/>
 
                                   </div>
-                                  <div class="p-field p-col-12 p-md-1">
+                                  <div class="p-field p-col-12 p-md-3">
                                       <p:outputLabel value="Celular" class="p-col-12"/>
-                                      <p:inputText disabled="true" value="#{usuarioBean.ajustePerfil.telefono}"/>
+                                      <p:inputText disabled="true" value="#{accesoBean.ajustePerfil.telefono}"/>
                                   </div>
                               </div>
 
-                          </p:outputPanel>
-                      </p:fieldset>
-
-                      <p:fieldset legend="SISTEMA" style="margin-top: 12px;">
-                          <p:outputPanel id="manage-perfilSistema-form" class="ui-fluid" >
-                              <div class="p-formgrid p-grid">
-
-                                  <div class="p-field p-col-12 p-md-3">
-                                      <p:outputLabel value="USUARIO:" class="p-col-12"/>
-                                      <p:inputText disabled="true" value="#{usuarioBean.ajustePerfil.usuario}"/>
-
-                                  </div>
-                                  <div class="p-field p-col-12 p-md-3">
-                                      <p:outputLabel value="CONTRASEÑA:" class="p-col-12"/>
-                                      <p:inputText type="password" disabled="true" value="#{usuarioBean.ajustePerfil.clave}"/>
-                                  </div>
-                              </div>
                           </p:outputPanel>
                       </p:fieldset>
 
@@ -74,12 +57,12 @@
                               <div class="p-formgrid p-grid">
                                   <div class="p-field p-col-12 p-md-4">
                                       <p:outputLabel value="ROL" class="p-col-12"/>
-                                      <p:inputText disabled="true" value="#{usuarioBean.ajustePerfil.rolNombre}"/>
+                                      <p:inputText disabled="true" value="#{accesoBean.ajustePerfil.rolNombre}"/>
 
                                   </div>
                                   <div class="p-field p-col-12 p-md-4">
                                       <p:outputLabel value="DESCRIPCIÓN" class="p-col-12"/>
-                                      <p:inputText disabled="true" value="#{usuarioBean.ajustePerfil.rolDescripcion}"/>
+                                      <p:inputText disabled="true" value="#{accesoBean.ajustePerfil.rolDescripcion}"/>
                                   </div>
                               </div>
                           </p:outputPanel>
