@@ -10,9 +10,9 @@ public class Conexion {
     public boolean estado;
 
     //Credenciales para la conexion
-    private String url = "jdbc:postgresql://lab-agrarias2023.postgres.database.azure.com:5432/laboratorios2023";
-    private String usuario = "ebert";
-    private String clave = "Uteq123456";
+    private String url = "jdbc:postgresql://10.1.1.204:7878/laboratorios2023uteq";
+    private String usuario = "postgres";
+    private String clave = "postgres";
     private String classForName = "org.postgresql.Driver";
 
     public Conexion() {
