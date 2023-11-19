@@ -2,7 +2,10 @@ package DAO;
 
 import Model.*;
 import global.Conexion;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import org.mindrot.jbcrypt.BCrypt;
+import org.primefaces.PrimeFaces;
 import utils.PasswordHashing;
 
 import java.sql.*;
@@ -99,6 +102,7 @@ public class UsuarioDAO extends Conexion {
         }
         return ajustePerfil;
     }
+
     public void updateAjustePerfil(AjustePerfil ajustePerfil) {
         try {
             this.conectar();
@@ -107,7 +111,7 @@ public class UsuarioDAO extends Conexion {
                     "\tWHERE id = ?;");
             PreparedStatement ps2 = connection.prepareStatement("UPDATE laboratorio.usuario SET nombre_usuario=?, clave=? WHERE id_persona = ?;");
 
-          //
+            //
             ps.setString(1, ajustePerfil.getNombre());
             ps.setString(2, ajustePerfil.getApellido());
             ps.setString(3, ajustePerfil.getTelefono());
@@ -115,10 +119,10 @@ public class UsuarioDAO extends Conexion {
             ps.setString(5, ajustePerfil.getDni());
             ps.setString(6, ajustePerfil.getGenero());
             ps.setInt(7, ajustePerfil.getIdPersona());
-         //   ps.setString(8, ajustePerfil.getRolNombre());
-          //  ps.setString(9, ajustePerfil.getRolDescripcion());
-          //  ps.setString(10, ajustePerfil.getUsuario());
-         //   ps.setString(11, ajustePerfil.getRolNombre());
+            //   ps.setString(8, ajustePerfil.getRolNombre());
+            //  ps.setString(9, ajustePerfil.getRolDescripcion());
+            //  ps.setString(10, ajustePerfil.getUsuario());
+            //   ps.setString(11, ajustePerfil.getRolNombre());
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("La actualización fue exitosa.");
@@ -139,7 +143,7 @@ public class UsuarioDAO extends Conexion {
             ps.close();
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             desconectar();
         }
     }
@@ -200,11 +204,6 @@ public class UsuarioDAO extends Conexion {
                 usuarioPersona.setFechaCreacion(resultSet.getTimestamp("fecha_creacion"));
 
 
-
-
-
-
-
                 usuarioPersona.setGenero(resultSet.getString("genero"));
                 //tabla rol_usuario
                 usuarioPersona.setIdRol(resultSet.getInt("id_rol"));
@@ -217,6 +216,7 @@ public class UsuarioDAO extends Conexion {
 
         return usuariosPersonas;
     }
+
     public List<ListFullUser> listarUsuariosDocentes() throws SQLException {
         List<ListFullUser> usuariosPersonas = new ArrayList<>();
         this.conectar();
@@ -254,6 +254,7 @@ public class UsuarioDAO extends Conexion {
 
         return usuariosPersonas;
     }
+
     public void update(ListFullUser usuarioPersona) throws SQLException {
         this.conectar();
         String updatePersonaQuery = "UPDATE laboratorio.persona SET nombre = ?, apellido = ?, telefono = ?, email = ?, dni = ?, genero = ? WHERE id = ?";
@@ -386,6 +387,7 @@ public class UsuarioDAO extends Conexion {
             this.desconectar();
         }
     }
+
     public void delete(int personaId) throws SQLException {
         this.conectar();
 
@@ -480,7 +482,7 @@ public class UsuarioDAO extends Conexion {
             try (PreparedStatement preparedStatementUsuario = connection.prepareStatement(insertUsuarioQuery, Statement.RETURN_GENERATED_KEYS)) {
                 preparedStatementUsuario.setInt(1, usuarioPersona.getPersonaId());
                 preparedStatementUsuario.setString(2, usuarioPersona.getNombreUsuario());
-                preparedStatementUsuario.setString(3, passwordHashing.hashPassword(usuarioPersona.getDni()) );
+                preparedStatementUsuario.setString(3, passwordHashing.hashPassword(usuarioPersona.getDni()));
                 preparedStatementUsuario.setBoolean(4, true);
 
                 int affectedRowsUsuario = preparedStatementUsuario.executeUpdate();
@@ -573,17 +575,18 @@ public class UsuarioDAO extends Conexion {
         }
     }
 
-    public boolean verificarCredenciales(String username, String password) throws SQLException{
+    public boolean verificarCredenciales(String username, String password) throws SQLException {
         // Recupera la contraseña hash almacenada en la base de datos para el usuario 'username'
         String hashedPasswordFromDB = getHashedPasswordFromDatabase(username);
 
         // Compara la contraseña ingresada con la contraseña almacenada
         return BCrypt.checkpw(password, hashedPasswordFromDB);
     }
-    public String getHashedPasswordFromDatabase(String username)throws SQLException{
-       ResultSet rs;
+
+    public String getHashedPasswordFromDatabase(String username) throws SQLException {
+        ResultSet rs;
         String sql = "SELECT  us.clave as clave FROM laboratorio.usuario us where us.nombre_usuario = ?";
-        String passwordBD="";
+        String passwordBD = "";
         try {
             this.conectar();
             PreparedStatement st = this.getConnection().prepareStatement(sql);
@@ -600,6 +603,7 @@ public class UsuarioDAO extends Conexion {
         }
 
     }
+
     public Usuario getUsuario2(String username, String password) {
         Usuario usuario = null;
         try {
@@ -615,8 +619,8 @@ public class UsuarioDAO extends Conexion {
                 // Verifica si la contraseña ingresada coincide con la almacenada en la base de datos
 //                if (BCrypt.checkpw(password, hashedPasswordFromDB)) {
                 System.out.println("VALOR DE VALIDACION");
-                System.out.println(passwordHashing.verifyPassword(password,hashedPasswordFromDB));
-                if (passwordHashing.verifyPassword(password,hashedPasswordFromDB)) {
+                System.out.println(passwordHashing.verifyPassword(password, hashedPasswordFromDB));
+                if (passwordHashing.verifyPassword(password, hashedPasswordFromDB)) {
                     usuario = new Usuario();
                     usuario.setNombre(rs.getString("nombre_usuario"));
                     usuario.setClave(rs.getString("clave"));
@@ -634,8 +638,8 @@ public class UsuarioDAO extends Conexion {
         return usuario;
     }
 
-    public void actualizarUsuario(String nuevaclave, int idUsuario){
-        try  {
+    public void actualizarUsuario(String nuevaclave, int idUsuario) {
+        try {
             this.conectar();
             String query = "SELECT laboratorio.cambiarclaveusuario(?, ?)";
 
@@ -648,10 +652,50 @@ public class UsuarioDAO extends Conexion {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             this.desconectar();
         }
     }
 
+    public void resetPassword(String correo, String nuevaContrasena) {
+        this.conectar();
+        String hashedPassword = BCrypt.hashpw(nuevaContrasena.trim(), BCrypt.gensalt());
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+
+            // Consulta SQL para actualizar la contraseña
+            String consultaSQL = "UPDATE laboratorio.usuario SET clave = ? WHERE id_persona IN (SELECT id FROM laboratorio.persona WHERE email = ?)";
+
+            // Preparar la consulta
+            preparedStatement = connection.prepareStatement(consultaSQL);
+            preparedStatement.setString(1, passwordHashing.hashPassword(nuevaContrasena));
+            preparedStatement.setString(2, correo);
+
+            // Ejecutar la actualización
+            int filasActualizadas = preparedStatement.executeUpdate();
+
+            // Verificar si se ha actualizado la contraseña correctamente
+            if (filasActualizadas > 0) {
+                System.out.println("Contraseña actualizada con éxito para el correo: " + correo);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Éxito al recuperar contraseña","Se ha enviado un correo con las instrucciones para recuperar tu contraseña."));
+                PrimeFaces.current().ajax().update("form:growl");
+            } else {
+                System.out.println("No se pudo actualizar la contraseña para el correo: " + correo);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"Error al recuperar contraseña","No se pudo actualizar la contraseña para el correo: " + correo));
+                PrimeFaces.current().ajax().update("form:growl");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Cerrar recursos
+            try {
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null) preparedStatement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

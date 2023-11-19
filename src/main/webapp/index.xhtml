@@ -113,7 +113,9 @@
                                         action="#{accesoBean.cerrarSesion()}"
                                         oncomplete="recargarPagina()"
                                         styleClass="ui-button-raised ui-button-secondary"
-                                         value="Cancelar" rendered="#{accesoBean.btnLogin==true}"                             />
+                                         value="Cancelar" rendered="#{accesoBean.btnLogin==true}"
+                                />
+                                <p:commandLink value="Recuperar contraseña" onclick="PF('manageUserDialog').show()"></p:commandLink>
                             </div>
                         </div>
                     </div>
@@ -121,6 +123,34 @@
             </div>
 
 
+
+        </div>
+        <div>
+            <p:dialog header="Recuperar contraseña" showEffect="fade" modal="true" widgetVar="manageUserDialog"
+                      responsive="true">
+                <p:outputPanel id="manage-user-content" class="ui-fluid">
+                    <p:outputPanel>
+
+                        <div class="field">
+                            <p:outputLabel for="email">Email </p:outputLabel>
+                            <p:inputText id="email" value="#{mailBean.email}"
+                                         requiredMessage="Ingrese un email"
+                                         maxlength="30"
+                                        />
+                        </div>
+
+                    </p:outputPanel>
+                </p:outputPanel>
+                <f:facet name="footer">
+                    <p:commandButton value="Aceptar" icon="pi pi-check"
+                                     styleClass="ui-button-success"
+                                     update=":growl"
+                                     actionListener="#{mailBean.recoverPassword()}"
+                                    />
+                    <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageUserDialog').hide()"
+                                     class="ui-button-secondary" type="button"/>
+                </f:facet>
+            </p:dialog>
 
         </div>
     </h:form>
