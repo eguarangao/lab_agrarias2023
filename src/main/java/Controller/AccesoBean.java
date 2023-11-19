@@ -67,7 +67,8 @@ public class AccesoBean implements Serializable {
         }
 
     }
-    public void rediLogin(){
+
+    public void rediLogin() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
         String contextPath = facesContext.getExternalContext().getRequestContextPath();
@@ -79,6 +80,7 @@ public class AccesoBean implements Serializable {
             e.getLocalizedMessage();
         }
     }
+
     public void verificarSessionAdministrador() throws IOException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         Usuario usuario = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
@@ -110,60 +112,55 @@ public class AccesoBean implements Serializable {
     }
 
     public void login() throws IOException, SQLException {
+        try {
+            while (btnLogin) {
+                FacesContext context = FacesContext.getCurrentInstance();
+                String contextPath = context.getExternalContext().getRequestContextPath();
 
-        while (btnLogin) {
-            FacesContext context = FacesContext.getCurrentInstance();
-            String contextPath = context.getExternalContext().getRequestContextPath();
+                switch (rolSesion) {
+                    case "ADMINISTRADOR" -> {
+                         context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardAdministrador.xhtml");
+                        isAdministrador = true;
+                    }
+                    case "TECNICO DE LABORATORIO" -> {
+                        context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardTecnico.xhtml");
+                        isTecnico = true;
+                    }
+                    case "DOCENTE" -> {
+                        context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardDocente.xhtml");
+                        isADocente = true;
+                    }
+                    default -> {
+                        System.out.println("Solo números entre 1 y 4");
+                        System.out.println(rolSesion);
+                    }
+                }
+                ajustePerfil();
 
-            switch (rolSesion) {
-                case "ADMINISTRADOR" -> {
-                    contextPath = context.getExternalContext().getRequestContextPath();
-                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardAdministrador.xhtml");
-                    isAdministrador = true;
-                }
-                case "TECNICO DE LABORATORIO" -> {
-                    contextPath = context.getExternalContext().getRequestContextPath();
-                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardTecnico.xhtml");
-                    isTecnico = true;
-                }
-                case "DOCENTE" -> {
-                    contextPath = context.getExternalContext().getRequestContextPath();
-                    context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardDocente.xhtml");
-                    isADocente = true;
-                }
-                default -> {
-                    System.out.println("Solo números entre 1 y 4");
-                    System.out.println(rolSesion);
-                }
             }
-            ajustePerfil();
 
-        }
-//            FacesContext context = FacesContext.getCurrentInstance();
-//            String contextPath = context.getExternalContext().getRequestContextPath();
-//            context.getExternalContext().redirect(contextPath+ "/views/dashboard/dashboardAdministrador.xhtml");
-        // return "/newPersona.xhtml?faces-redirect=true";
+            Usuario usuario = null;
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
 
+            usuario = usuarioDAO.getUsuario2(username, password);
 
-        Usuario usuario = null;
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
-
-        usuario = usuarioDAO.getUsuario2(username, password);
-
-        if (usuario != null) {
-            btnLogin = true;
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", usuario);
-            // Las credenciales son válidas, redirigir al usuario a la página principal
-            System.out.println(usuario);
-            RolDAO rolDAO = new RolDAO();
-            listaRoles = rolDAO.findAllRolesUsuarioByUsername(username);
+            if (usuario != null) {
+                btnLogin = true;
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", usuario);
+                // Las credenciales son válidas, redirigir al usuario a la página principal
+                System.out.println(usuario);
+                RolDAO rolDAO = new RolDAO();
+                listaRoles = rolDAO.findAllRolesUsuarioByUsername(username);
 
 
-        } else {
-            // Las credenciales son inválidas, mostrar un mensaje de error
-            System.out.println(usuario + "Ebert");
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Credenciales inválidas", null));
-            //return null;
+            } else {
+                // Las credenciales son inválidas, mostrar un mensaje de error
+                System.out.println(usuario + "Ebert");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Credenciales inválidas", null));
+                //return null;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
