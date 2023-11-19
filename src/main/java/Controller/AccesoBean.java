@@ -8,6 +8,7 @@ import Model.Usuario;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import lombok.Data;
@@ -44,33 +45,39 @@ public class AccesoBean implements Serializable {
     private boolean campocontraseña = false;
     private PasswordHashing passwordHashing = new PasswordHashing();
 
-    public void verificarSession() throws IOException
-    {
+    public void verificarSession() throws IOException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         Usuario usuario = (Usuario) facesContext.getExternalContext().getSessionMap().get("usuario");
-        idUsuarioSession = usuario.getId();
-        idUsuarioClaveSession = usuario.getClave();
-        System.out.println("USAURIO LOGUEADO");
-        System.out.println(usuario);
 
-        System.out.println("ID USAURIO SESSION");
-        System.out.println(idUsuarioSession);
 
         if (usuario == null) {
-            facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath());
-//        } else {
-//            if (Objects.equals(rolSesion, "DOCENTE")) {
-//
-//                FacesContext context = FacesContext.getCurrentInstance();
-//                String contextPath = context.getExternalContext().getRequestContextPath();
-//                contextPath = context.getExternalContext().getRequestContextPath();
-//                context.getExternalContext().redirect(contextPath + "/views/dashboard/dashboardDocente.xhtml");
-//            } else {
-//                facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath());
-//            }
+            String contextPath = facesContext.getExternalContext().getRequestContextPath();
+
+            try {
+                facesContext.getExternalContext().redirect(contextPath + "/notpagefound.xhtml");
+
+                System.out.println(contextPath);
+            } catch (IOException e) {
+                // Handle the IOException if necessary
+                e.getLocalizedMessage();
+            }
+        } else {
+            idUsuarioSession = usuario.getId();
+            idUsuarioClaveSession = usuario.getClave();
         }
 
+    }
+    public void rediLogin(){
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = facesContext.getExternalContext();
+        String contextPath = facesContext.getExternalContext().getRequestContextPath();
 
+        try {
+            facesContext.getExternalContext().redirect(contextPath);
+        } catch (IOException e) {
+            // Manejo de la excepción (puedes imprimir el stack trace, redirigir a una página de error, etc.)
+            e.getLocalizedMessage();
+        }
     }
     public void verificarSessionAdministrador() throws IOException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -209,6 +216,7 @@ public class AccesoBean implements Serializable {
 
 
     }
+
     public void actualizarAjustePerfil(AjustePerfil ajustePerfil) {
         DAO.updateAjustePerfil(ajustePerfil);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario actualizado"));
@@ -222,6 +230,7 @@ public class AccesoBean implements Serializable {
     public void setCompararClave(String compararClave) {
         this.compararClave = compararClave;
     }
+
     public void cambiarClave() throws IOException {
         String mayuscula = ".*[A-Z].*";
         String minuscula = ".*[a-z].*";
@@ -230,31 +239,23 @@ public class AccesoBean implements Serializable {
         if (compararClave.length() < 8) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña debe tener al menos 8 caracteres", null));
             PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
-        }
-        else if (!compararClave.matches(mayuscula)) {
+        } else if (!compararClave.matches(mayuscula)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña debe contener al menos una letra mayúscula", null));
             PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
-        }
-        else if (!compararClave.matches(minuscula)) {
+        } else if (!compararClave.matches(minuscula)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña debe contener al menos una letra minuscula", null));
             PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
-        }
-
-        else if (!compararClave.matches(numero)) {
+        } else if (!compararClave.matches(numero)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña debe contener al menos una letra minuscula", null));
             PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
-        }
-        else if (campocontraseña == true) {
+        } else if (campocontraseña == true) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La contraseña actual es incorrecta", null));
             PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
-        }
-        else if (mostrarClave == null) {
+        } else if (mostrarClave == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingresa la contraseña actual", null));
             PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
-        }
-
-        else {
-            if (passwordHashing.verifyPassword(mostrarClave,idUsuarioClaveSession )) {
+        } else {
+            if (passwordHashing.verifyPassword(mostrarClave, idUsuarioClaveSession)) {
 
                 String hashedNuevaContrasena = passwordHashing.hashPassword(compararClave);
 
@@ -269,8 +270,9 @@ public class AccesoBean implements Serializable {
             }
         }
     }
+
     public void verificarclaveactual() {
-        if (passwordHashing.verifyPassword(mostrarClave,idUsuarioClaveSession )) {
+        if (passwordHashing.verifyPassword(mostrarClave, idUsuarioClaveSession)) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La contraseña actual es correcta", null));
             PrimeFaces.current().ajax().update("form-cambiarClave:msgs");
 
@@ -281,6 +283,7 @@ public class AccesoBean implements Serializable {
             campocontraseña = true;
         }
     }
+
     public void ajustePerfil() {
 
         UsuarioDAO usuarioDAO;

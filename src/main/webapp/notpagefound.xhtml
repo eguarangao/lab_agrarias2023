@@ -23,23 +23,37 @@
    <title>Inicio de sessión</title>
 
 </h:head>
-<h:body>
-   <h1>Not Found</h1>
-   <h:form enctype="multipart/form-data">
-      <p:growl showDetail="true"/>
-      <p:fileUpload mode="simple" skinSimple="true" value="#{archivoBean.file}"
-                     sizeLimit="10485760" allowTypes="/(\.|\/)(pdf)$/"/>
-      <p:commandButton value="Guardar archivo" action="#{archivoBean.save()}" ajax="false"/>
-      <p:messages id="messages" />
+<h:body styleClass="exception-body access">
+   <div class="particle elem1 anim-delay1"></div>
+   <div class="particle elem2 anim-delay5"></div>
+   <div class="particle elem3 anim-delay3"></div>
+   <div class="particle elem4 anim-delay8"></div>
+   <div class="particle elem5 anim-delay9"></div>
+   <div class="particle elem6 anim-delay2"></div>
+   <div class="particle elem7 anim-delay4"></div>
 
-      <br/>
+   <div class="p-grid">
+      <div class="p-col-12 logo-container">
+         <p:graphicImage name="logoUTEQ.png" library="Images" style="width: 80px; height: 100px;"/>
+      </div>
+   </div>
+   <div class="exception-panel">
+      <div class="exception-panel-content">
+         <h1>Acceso</h1>
+         <span class="secondary">Denegado</span>
+         <div>
+            <span><strong>Lo sentimos, no tienes los permisos necesarios para acceder a esta página.</strong></span>
+            <p>Vuelve a iniciar sesión porfavor</p>
+         </div>
+      </div>
 
-      <p:inputText value="#{downloadBean.codigo}"/>
+      <div class="exception-panel-footer">
+         <h:form>
+            <p:commandButton action="#{accesoBean.rediLogin()}" value="Iniciar sesión"/>
 
-      <p:commandButton value="Descargar" action="#{downloadBean.download()}" ajax="false"/>
-
-   </h:form>
-
+         </h:form>
+        </div>
+   </div>
 
 
 </h:body>
