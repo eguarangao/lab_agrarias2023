@@ -109,13 +109,13 @@
                                     <f:facet name="header">
                                         <h:outputText value="Lista de equipos en mantenimiento" style=" font-weight: bold;" />
                                     </f:facet>
-                                    <p:column headerText="Equipo" filterBy="#{equipos.equipo.descripcion}" filterMatchMode="contains" >
+                                    <p:column headerText="Equipo">
                                         #{equipos.equipo.descripcion}
                                     </p:column>
-                                    <p:column headerText="Área" filterBy="#{equipos.aula.nombre}" filterMatchMode="contains"  >
+                                    <p:column headerText="Área">
                                         #{equipos.aula.nombre}
                                     </p:column>
-                                    <p:column headerText="Fecha de retorno equipo" filterBy="#{equipos.fecha_retorno_equipo}" filterMatchMode="contains" >
+                                    <p:column headerText="Fecha de retorno equipo">
                                         <p:outputLabel  value="#{equipos.fecha_retorno_equipo}">
                                             <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
                                         </p:outputLabel >
