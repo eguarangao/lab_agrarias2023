@@ -507,32 +507,32 @@ public class SolicitudDAO extends Conexion {
 
         try {
             this.conectar();
-            String sql = "SELECT solicitud.id AS id,\n" +
-                    "       solicitud.tipo AS tipo_solicitud,\n" +
-                    "       solicitud.analisis AS analisis,\n" +
-                    "       solicitud.codigo AS codigo,\n" +
+            String sql = "SELECT solicitud.id               AS id,\n" +
+                    "       solicitud.tipo             AS tipo_solicitud,\n" +
+                    "       solicitud.analisis         AS analisis,\n" +
+                    "       solicitud.codigo           AS codigo,\n" +
                     "       solicitud.excel_estudiante AS lista_estudiantes,\n" +
-                    "       solicitud.pdf_resolucion AS pdf_resolucion,\n" +
-                    "       solicitud.fecha_registro AS fecha_registro,\n" +
-                    "       solicitud.tema AS tema,\n" +
-                    "       solicitud.enabled AS enabled,\n" +
-                    "       e.codigo AS codigo_equipo,\n" +
-                    "       e.id AS id_equipo,\n" +
-                    "       e.descripcion AS nombre_equipo,\n" +
-                    "       l.id AS id_laboratorio,\n" +
-                    "       l.nom_laboratorio AS nombre_laboratorio,\n" +
-                    "       ce.categoria AS categoria_equipo\n" +
-                    "FROM laboratorio.solicitud\n" +
-                    "INNER JOIN laboratorio.docente d ON d.id = solicitud.id_docente\n" +
-                    "INNER JOIN laboratorio.horario h ON h.id = solicitud.id_horarios\n" +
-                    "INNER JOIN laboratorio.equipo_solicitud es ON solicitud.id = es.id_solicitud\n" +
-                    "INNER JOIN laboratorio.equipo e ON e.id = es.id_equipo\n" +
-                    "INNER JOIN laboratorio.laboratorio l ON h.id_laboratorio = l.id\n" +
-                    "INNER JOIN laboratorio.persona p ON d.id_persona = p.id\n" +
-                    "INNER JOIN laboratorio.usuario u ON p.id = u.id_persona\n" +
-                    "INNER JOIN laboratorio.categoria_equipo ce ON ce.id_categoria = e.id_categoria_equipo\n" +
-                    "WHERE u.id=?\n" +
-                    "ORDER BY solicitud.fecha_registro DESC;";
+                    "       solicitud.pdf_resolucion   AS pdf_resolucion,\n" +
+                    "       solicitud.fecha_registro   AS fecha_registro,\n" +
+                    "       solicitud.tema             AS tema,\n" +
+                    "       solicitud.enabled          AS enabled,\n" +
+                    "       e.codigo                   AS codigo_equipo,\n" +
+                    "       e.id                       AS id_equipo,\n" +
+                    "       e.descripcion              AS nombre_equipo,\n" +
+                    "       l.id                       AS id_laboratorio,\n" +
+                    "       l.nom_laboratorio          AS nombre_laboratorio,\n" +
+                    "       ce.categoria               AS categoria_equipo\n" +
+                    "FROM\n" +
+                    "    laboratorio.solicitud\n" +
+                    "    JOIN laboratorio.equipo_solicitud es ON solicitud.id = es.id_solicitud\n" +
+                    "    JOIN laboratorio.equipo e ON es.id_equipo = e.id\n" +
+                    "    JOIN laboratorio.laboratorio l ON solicitud.id_laboratorio = l.id\n" +
+                    "    JOIN laboratorio.categoria_equipo ce ON e.id_categoria_equipo = ce.id_categoria\n" +
+                    "    JOIN laboratorio.tecnico_laboratorio tl ON l.id = tl.id_laboratorio\n" +
+                    "    JOIN laboratorio.tecnico t ON tl.id_tecnico = t.id\n" +
+                    "    JOIN laboratorio.usuario u ON t.id_usuario = u.id\n" +
+                    "WHERE\n" +
+                    "    u.id = ?;";
             st = this.getConnection().prepareStatement(sql);
             st.setInt(1,idUsuario);
             rs = st.executeQuery();
