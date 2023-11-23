@@ -778,7 +778,7 @@ public class SolicitudDAO extends Conexion {
             rs = st.executeQuery();
 
             if (rs.next()) {
-                String fileName = "R    esolución" + ".pdf"; // o cualquier nombre base de archivo que prefiera
+                String fileName = "Resolución" + ".pdf"; // o cualquier nombre base de archivo que prefiera
                 InputStream inputStream = rs.getBinaryStream("pdf_resolucion");
 
                 ec.responseReset();
