@@ -7,8 +7,13 @@
       <div class="card crud-demo">
          <h:form id="form-equipo">
             <p:growl id="messages" showDetail="true"/>
+            <p:toolbar style="margin-bottom: 6px;">
+               <p:toolbarGroup style="width: 100%; text-align: center; display: flex; justify-content: center;">
+                  <p:outputLabel value="EQUIPOS" style="font-weight: bold; font-size: 18px;" />
+               </p:toolbarGroup>
+            </p:toolbar>
             <div>
-               <p:toolbar>
+               <p:toolbar >
                   <p:toolbarGroup>
                      <p:commandButton id="botonNewEquipo" value="Nuevo equipo" icon="pi pi-plus"
                                       actionListener="#{equipoBean.nuevoEquipo()}"
@@ -17,6 +22,16 @@
                                       disabled="#{equipoBean.botonEquipoDisabled}">
                         <p:resetInput target=":dialogEquipo:manage-equipo-content"/>
                      </p:commandButton>
+
+                     <p:selectBooleanCheckbox style="margin-left: 10px" id= "checkequiposdañados"
+                                              value="#{equipoBean.mostrarTablaEquiposdañados}"
+                                              itemLabel="Mostrar tabla de equipos dañados"
+                                              disabled="#{equipoBean.checkequiposdañados}">
+                        <p:ajax event="change"
+                                listener="#{equipoBean.ActivarDesactivarCheckEquiposDañados()}"
+                                update="dt-equipos"/>
+
+                     </p:selectBooleanCheckbox>
                   </p:toolbarGroup>
 
                   <p:toolbarGroup style="float: right;">
@@ -75,20 +90,25 @@
                      <h:outputText value="#{dtequipos.aula.nombre}"/>
                   </p:column>
 
-                  <p:column headerText="Estado">
+                  <p:column id= "columnaestadoesquipo" headerText="Estado" rendered="#{equipoBean.mostrarcolumnaestadoequipo}">
                      <p:tag severity="success" value="Activado" rendered="#{dtequipos.estado}"/>
                      <p:tag severity="warning" value="Desactivado" rendered="#{not dtequipos.estado}"/>
                   </p:column>
 
-                  <p:column headerText="Acciones" exportable="false">
+                  <p:column id="columnaEquipoDañado" headerText="Estado"  rendered="#{equipoBean.mostrarcolumnaequipodañado}">
+                     <p:tag severity="success" value="Activado" rendered="#{dtequipos.estadoAveriaEquipo}"/>
+                     <p:tag severity="danger" value="Dañado" rendered="#{not dtequipos.estadoAveriaEquipo}"/>
+                  </p:column>
+
+                  <p:column id="accionesequipo" headerText="Acciones" exportable="false" rendered="#{equipoBean.mostraraccionesequipo}">
                      <p:commandButton icon="pi pi-pencil"
-                                      update=":dialogEquipo:manage-equipo-content"
-                                      oncomplete="PF('manageEquipoDialog').show()"
+                                      update=":dialogEquipo:manage-equipomodi-content"
+                                      oncomplete="PF('manageEquipomodiDialog').show()"
                                       styleClass="edit-button rounded-button ui-button-warning ui-button-outlined"
                                       process="@this">
                         <f:setPropertyActionListener value="#{dtequipos}"
                                                      target="#{equipoBean.newEquipo}"/>
-                        <p:resetInput target=":dialogEquipo:manage-equipo-content"/>
+                        <p:resetInput target=":dialogEquipo:manage-equipomodi-content"/>
 
                      </p:commandButton>
                      <p:commandButton class="ui-button-danger rounded-button ui-button-outlined"
@@ -106,7 +126,7 @@
          </h:form>
 
          <h:form id="dialogEquipo">
-            <p:dialog header="Agregar nuevo Equipo" showEffect="fade" modal="true" widgetVar="manageEquipoDialog"
+            <p:dialog header="Agregar nuevo equipo" showEffect="fade" modal="true" widgetVar="manageEquipoDialog"
                       responsive="true" style="max-width: 980px;">
                <p:outputPanel id="manage-equipo-content" class="ui-fluid">
                <p:outputPanel rendered="#{not empty equipoBean.newEquipo}">
@@ -115,68 +135,59 @@
                            <p:outputLabel for="selectArea">Área:</p:outputLabel>
                            <p:selectOneMenu id="selectArea"
                                             value="#{equipoBean.newEquipo.aula.id}"
-                                            required="true"
                                             requiredMessage="Por favor, Seleccione una area.">
                               <f:selectItem itemLabel="Seleccione aula" noSelectionOption="true"
                                             itemValue="0"/>
                               <f:selectItems value="#{equipoBean.listaula}" var="au"
                                              itemLabel="#{au.nombre}" itemValue="#{au.id}"/>
                            </p:selectOneMenu>
-                           <p:message for="selectArea"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="SelecCategory">Categoria:</p:outputLabel>
                            <p:selectOneMenu id="SelecCategory"
                                             value="#{equipoBean.newEquipo.categoriaEquipo.id}"
-                                            required="true"
                                             requiredMessage="Por favor, Seleccione una categoria">
                               <f:selectItem itemLabel="Seleccione Categoria" noSelectionOption="true"
                                             itemValue="0"/>
                               <f:selectItems value="#{equipoBean.listCatergoria}" var="cate"
                                              itemLabel="#{cate.nombre}" itemValue="#{cate.id}"/>
                            </p:selectOneMenu>
-                           <p:message for="SelecCategory"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="codeequipo">Código:</p:outputLabel>
                            <p:inputText id="codeequipo" value="#{equipoBean.newEquipo.codigo}"
-                                        required="true" requiredMessage="Por favor, ingrese codigo del equipo"
+                                         requiredMessage="Por favor, ingrese codigo del equipo"
                                         maxlength="8"/>
-                           <p:message for="serialNumber"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="descriptionequipo">Descripción:</p:outputLabel>
                            <p:inputText id="descriptionequipo" value="#{equipoBean.newEquipo.descripcion}"
-                                        required="true" requiredMessage="Por favor, ingrese descripción del equipo"
+                                         requiredMessage="Por favor, ingrese descripción del equipo"
                                         maxlength="50"/>
-                           <p:message for="descriptionequipo"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="brand">Marca: </p:outputLabel>
                            <p:inputText id="brand" value="#{equipoBean.newEquipo.marca}"
-                                        required="true" requiredMessage="Por favor, ingrese marca del equipo"
+                                         requiredMessage="Por favor, ingrese marca del equipo"
                                         maxlength="10"/>
-                           <p:message for="brand"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="model">Modelo: </p:outputLabel>
                            <p:inputText id="model" value="#{equipoBean.newEquipo.modelo}"
-                                        required="true" requiredMessage="Por favor, ingrese modelo del equipo"
+                                        requiredMessage="Por favor, ingrese modelo del equipo"
                                         maxlength="20"/>
-                           <p:message for="model"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3">
                            <p:outputLabel for="serialNumber" value="Nº Serie:" ></p:outputLabel>
                            <p:inputText id="serialNumber" value="#{equipoBean.newEquipo.numeroSerie}"
-                                        required="true" requiredMessage="Por favor, ingrese Nº Serie del equipo"
+                                       requiredMessage="Por favor, ingrese Nº Serie del equipo"
                                         maxlength="15"/>
-                           <p:message for="serialNumber"/>
                         </div>
 
                         <div class="field p-col-12 p-md-3 " style="margin-top: 3px;">
@@ -199,6 +210,95 @@
                                    class="ui-button-secondary" type="button"/>
                </f:facet>
             </p:dialog>
+
+            <p:dialog header="Modificar equipo" showEffect="fade" modal="true" widgetVar="manageEquipomodiDialog"
+                      responsive="true" style="max-width: 980px;">
+               <p:outputPanel id="manage-equipomodi-content" class="ui-fluid">
+                  <p:outputPanel rendered="#{not empty equipoBean.newEquipo}">
+                     <div class="p-formgrid p-grid">
+                        <div class="field p-col-12 p-md-3">
+                           <p:outputLabel for="selectArea">Área:</p:outputLabel>
+                           <p:selectOneMenu id="selectAreamodi"
+                                            value="#{equipoBean.newEquipo.aula.id}"
+                                            requiredMessage="Por favor, Seleccione una area.">
+                              <f:selectItem itemLabel="Seleccione aula" noSelectionOption="true"
+                                            itemValue="0"/>
+                              <f:selectItems value="#{equipoBean.listaula}" var="au"
+                                             itemLabel="#{au.nombre}" itemValue="#{au.id}"/>
+                           </p:selectOneMenu>
+                        </div>
+
+                        <div class="field p-col-12 p-md-3">
+                           <p:outputLabel for="SelecCategorymodi">Categoria:</p:outputLabel>
+                           <p:selectOneMenu id="SelecCategorymodi"
+                                            value="#{equipoBean.newEquipo.categoriaEquipo.id}"
+                                            requiredMessage="Por favor, Seleccione una categoria">
+                              <f:selectItem itemLabel="Seleccione Categoria" noSelectionOption="true"
+                                            itemValue="0"/>
+                              <f:selectItems value="#{equipoBean.listCatergoria}" var="cate"
+                                             itemLabel="#{cate.nombre}" itemValue="#{cate.id}"/>
+                           </p:selectOneMenu>
+                        </div>
+
+                        <div class="field p-col-12 p-md-3">
+                           <p:outputLabel for="codeequipomodi">Código:</p:outputLabel>
+                           <p:inputText id="codeequipomodi" value="#{equipoBean.newEquipo.codigo}"
+                                        requiredMessage="Por favor, ingrese codigo del equipo"
+                                        maxlength="8"/>
+                        </div>
+
+                        <div class="field p-col-12 p-md-3">
+                           <p:outputLabel for="descriptionequipomodi">Descripción:</p:outputLabel>
+                           <p:inputText id="descriptionequipomodi" value="#{equipoBean.newEquipo.descripcion}"
+                                        requiredMessage="Por favor, ingrese descripción del equipo"
+                                        maxlength="50"/>
+                        </div>
+
+                        <div class="field p-col-12 p-md-3">
+                           <p:outputLabel for="brandmodi">Marca: </p:outputLabel>
+                           <p:inputText id="brandmodi" value="#{equipoBean.newEquipo.marca}"
+                                        requiredMessage="Por favor, ingrese marca del equipo"
+                                        maxlength="10"/>
+                        </div>
+
+                        <div class="field p-col-12 p-md-3">
+                           <p:outputLabel for="modelmodi">Modelo: </p:outputLabel>
+                           <p:inputText id="modelmodi" value="#{equipoBean.newEquipo.modelo}"
+                                        requiredMessage="Por favor, ingrese modelo del equipo"
+                                        maxlength="20"/>
+                        </div>
+
+                        <div class="field p-col-12 p-md-3">
+                           <p:outputLabel for="serialNumbermodi" value="Nº Serie:" ></p:outputLabel>
+                           <p:inputText id="serialNumbermodi" value="#{equipoBean.newEquipo.numeroSerie}"
+                                        requiredMessage="Por favor, ingrese Nº Serie del equipo"
+                                        maxlength="15"/>
+                        </div>
+
+                        <div class="field p-col-12 p-md-3 " style="margin-top: 3px;">
+                           <h:outputLabel for="estado" value="Estado:" />
+                           <div style="display: block">
+                              <p:selectBooleanButton id="estadomodi" onLabel="Activado" offLabel="Desactivado"
+                                                     disabled="true" value="#{equipoBean.newEquipo.estado}"/>
+                           </div>
+                        </div>
+                     </div>
+                  </p:outputPanel>
+               </p:outputPanel>
+               <f:facet name="footer">
+                  <p:commandButton value="Modificar" icon="pi pi-check"
+                                   class="ui-button-success"
+                                   actionListener="#{equipoBean.modificarEquipo()}"
+                                   update="manage-equipomodi-content, form-equipo:dt-equipos"
+                                   process="manage-equipomodi-content @this"/>
+                  <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageEquipomodiDialog').hide()"
+                                   class="ui-button-secondary" type="button"/>
+               </f:facet>
+            </p:dialog>
+
+
+
+
             <p:confirmDialog widgetVar="deleteEquipoDialog" showEffect="fade" width="300"
                              message="Deseas eliminar el Equipo?" header="Confirmar" severity="warn">
                <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{equipoBean.eliminarEquipo()}"

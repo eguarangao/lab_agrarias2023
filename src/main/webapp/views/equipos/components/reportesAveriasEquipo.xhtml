@@ -12,15 +12,32 @@
                 <h:form id="form-Averia">
                     <p:growl id="messages" showDetail="true"/>
                     <div class="card crud-demo">
+                        <p:toolbar style="margin-bottom: 6px;">
+                            <p:toolbarGroup style="width: 100%; text-align: center; display: flex; justify-content: center;">
+                                <p:outputLabel value="AVERIAS" style="font-weight: bold; font-size: 18px;" />
+                            </p:toolbarGroup>
+                        </p:toolbar>
+
                         <p:toolbar>
                             <p:toolbarGroup>
+                                <div style="display: flex; align-items: center;">
                                 <p:commandButton id="botonNewAveria" value="Nueva Averia" icon="pi pi-plus"
                                                  actionListener="#{averiaBean.nuevaAveria()}"
                                                  update=":dialogAveria:manage-Averia-content"
-                                                 oncomplete="PF('manageAveriaDialog').show()" style="margin-right: .5rem"
+                                                 oncomplete="PF('manageAveriaDialog').show()" style="margin-right: .5rem; width: 130px;"
                                                  disabled="#{averiaBean.botonAveriaDisabled}">
                                     <p:resetInput target=":dialogAveria:manage-Averia-content"/>
                                 </p:commandButton>
+
+                                <p:selectBooleanCheckbox style="margin-left: 10px; width: auto;" id= "checkequiposdañadosaveria"
+                                                             value="#{averiaBean.mostrarTablaEquiposdañadosaveria}"
+                                                             itemLabel="Mostrar tabla de equipos de averia dañados"
+                                                             disabled="#{averiaBean.checkequiposdañadosaveria}">
+                                        <p:ajax event="change"
+                                                listener="#{averiaBean.ActivarDesactivarCheckEquiposDañadosaveria()}"
+                                                update="dt-Averia"/>
+                                </p:selectBooleanCheckbox>
+                                </div>
                             </p:toolbarGroup>
 
                             <p:toolbarGroup style="float: right;">
@@ -72,11 +89,14 @@
                                     <h:outputText value="#{dtaveria.aula.nombre}"/>
                                 </p:column>
 
-                                <p:column headerText="Estado">
+                                <p:column id= "columnaestadoesquipoaveria" headerText="Estado" rendered="#{averiaBean.mostrarcolumnaestadoequipoaveria}">
                                     <p:tag severity="success" value="Averiado" rendered="#{dtaveria.enabled}"/>
                                     <p:tag severity="warning" value="reparado" rendered="#{not dtaveria.enabled}"/>
                                 </p:column>
-                                <p:column headerText="Acciones" exportable="false">
+                                <p:column id="columnaEquipoDañadoaveria" headerText="Estado" rendered="#{averiaBean.mostrarcolumnaequipodañadoaveria}">
+                                    <p:tag severity="danger" value="Dañado" rendered="#{not dtaveria.equipo.estadoAveriaEquipo}"/>
+                                </p:column>
+                                <p:column headerText="Acciones" exportable="false" rendered="#{averiaBean.mostraraccionesequipoaveria}">
                                     <p:commandButton icon="pi pi-pencil"
                                                      update=":dialogAveria:manage-Averiaedit-content"
                                                      oncomplete="PF('manageAveriaeditDialog').show()"
@@ -137,7 +157,7 @@
                                     <div class="field p-col-12 p-md-4" style="margin-top: 3px;">
                                         <h:outputLabel for="prioridadaveria" value="Prioridad:"/>
                                         <p:selectOneMenu id="prioridadaveria" value="#{averiaBean.newAveria.prioridad}"
-                                                         required="true" requiredMessage="Por favor, Seleccione la prioridad">
+                                                         requiredMessage="Por favor, Seleccione la prioridad">
                                             <f:selectItem itemLabel="Seleccione la prioridad" itemValue=""/>
                                             <f:selectItem itemLabel="Alta" itemValue="A"/>
                                             <f:selectItem itemLabel="Media" itemValue="M"/>
@@ -148,15 +168,14 @@
                                     <div class="field p-col-12 p-md-12">
                                         <p:outputLabel for="descriptionAveria">Descripción averia:</p:outputLabel>
                                         <p:inputText id="descriptionAveria"
-                                                     value="#{averiaBean.newAveria.descripcion}" required="true"
+                                                     value="#{averiaBean.newAveria.descripcion}"
                                                      requiredMessage="Por favor, Ingrese la descripción de averia del equipo"
                                                      maxlength="200"/>
-                                        <p:message for="descriptionAveria"/>
                                     </div>
 
                                     <div class="field p-col-12 p-md-12">
                                         <p:outputLabel >Equipo averiado:</p:outputLabel>
-                                        <p:selectOneMenu id="EquipoAveriado" filter="true" required="true"
+                                        <p:selectOneMenu id="EquipoAveriado" filter="true"
                                                          requiredMessage="Por favor, Seleccione el equipo averiado"
                                                          value="#{averiaBean.newAveria.equipo.id}">
                                             <f:selectItem itemLabel="Seleccione equipo" noSelectionOption="true"
@@ -166,7 +185,6 @@
                                                           itemLabel="#{eaveriado.descripcion}"
                                                           itemValue="#{eaveriado.id}"/>
                                         </p:selectOneMenu>
-                                        <p:message for="EquipoAveriado"/>
                                     </div>
                                 </div>
 
@@ -224,7 +242,7 @@
                                     <div class="field p-col-12 p-md-12">
                                         <p:outputLabel>Descripción averia:</p:outputLabel>
                                         <p:inputText id="descriptionAveriaedit"
-                                                     value="#{averiaBean.newAveria.descripcion}" required="true" maxlength="200"/>
+                                                     value="#{averiaBean.newAveria.descripcion}" maxlength="200"/>
                                     </div>
 
                                     <div class="p-field p-col-12 p-md-12">

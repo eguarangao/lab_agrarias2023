@@ -137,6 +137,55 @@ public class EquipoDAO extends Conexion {
         return Listequipos;
     }
 
+    public List<Equipo> listarEquiposDañadosPorLaboratorio(int LaboID) throws SQLException {
+        List<Equipo> Listequipos = new ArrayList<>();
+        this.conectar();
+        String query = "select * from laboratorio.listarequiposdañadosporlaboratorio(?)";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            preparedStatement.setInt(1, LaboID);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    Equipo equipo = new Equipo();
+                    Aula aula = new Aula();
+                    CategoriaEquipo categoriaEquipo = new CategoriaEquipo();
+                    Laboratorio laboratorio = new Laboratorio();
+
+                    equipo.setId(resultSet.getInt("id"));
+
+                    laboratorio.setId(resultSet.getInt("id"));
+                    laboratorio.setNombre(resultSet.getString("nom_laboratorio"));
+
+                    aula.setId(resultSet.getInt("id_aula_equipo"));
+                    aula.setNombre(resultSet.getString("aula"));
+
+                    categoriaEquipo.setId(resultSet.getInt("id_categoria_equipo"));
+                    categoriaEquipo.setNombre(resultSet.getString("categoria"));
+
+                    equipo.setCodigo(resultSet.getString("codigo"));
+                    equipo.setDescripcion(resultSet.getString("descripcion"));
+                    equipo.setMarca(resultSet.getString("marca"));
+                    equipo.setModelo(resultSet.getString("modelo"));
+                    equipo.setNumeroSerie(resultSet.getString("num_serie"));
+                    equipo.setFechaAdquisicion(resultSet.getDate("fecha_adquisicion"));
+                    equipo.setEstado(resultSet.getBoolean("estado"));
+                    equipo.setEstadoAveriaEquipo(resultSet.getBoolean("averia"));
+
+                    equipo.setAula(aula);
+                    equipo.setCategoriaEquipo(categoriaEquipo);
+                    equipo.setLaboratorio(laboratorio);
+
+                    Listequipos.add(equipo);
+                }
+                System.out.println("Ya liste equipos");
+            }
+        } finally {
+            this.desconectar();
+        }
+        return Listequipos;
+    }
+
     public void agregarEquipo(Equipo equipo) {
 
         this.conectar();
@@ -322,7 +371,7 @@ public class EquipoDAO extends Conexion {
                 preparedStatement.setTimestamp(9, Timestamp.valueOf(LocalDateTime.now()));
                 preparedStatement.setBoolean(10, equipo.getEstado());
 
-                preparedStatement.executeUpdate();
+                preparedStatement.execute();
             }
         } catch (SQLException e) {
             e.printStackTrace();

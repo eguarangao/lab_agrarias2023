@@ -34,9 +34,14 @@ public class EquipoBean implements Serializable {
     private Equipo newEquipo;
     private boolean mostrarTablaEquipos = false;
     private boolean botonEquipoDisabled = true;
+    private boolean mostrarcolumnaequipodañado = false;
+    private boolean mostrarcolumnaestadoequipo = true;
+    private boolean mostraraccionesequipo = true;
     private int idUsuarioSession;
     private int idlaboratorioSession;
 
+    private boolean mostrarTablaEquiposdañados = false;
+    private boolean checkequiposdañados = true;
     @PostConstruct
     public void main() {
         try {
@@ -58,10 +63,27 @@ public class EquipoBean implements Serializable {
     public void TablaEquiposPorLaboratorio() throws SQLException {
         try {
             this.Listequipos = new ArrayList<>();
-            Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
-            mostrarTablaEquipos = true;
             botonEquipoDisabled = false;
-            PrimeFaces.current().ajax().update("form-equipo:tablaEquipos", "form-equipo:dt-equipos","form-equipo:botonNewEquipo" );
+            checkequiposdañados = false;
+            mostrarTablaEquipos = true;
+
+            if(mostrarTablaEquiposdañados==false){
+                Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
+                mostrarcolumnaequipodañado = false;
+                mostrarcolumnaestadoequipo = true;
+                mostraraccionesequipo = true;
+                PrimeFaces.current().ajax().update("form-equipo:tablaEquipos", "form-equipo:dt-equipos","form-equipo:botonNewEquipo",
+                        "form-equipo:checkequiposdañados","form-equipo:columnaEquipoDañado","form-equipo:columnaestadoesquipo"  );
+            }
+            else {
+                Listequipos = DaoEquipo.listarEquiposDañadosPorLaboratorio(idlaboratorioSession);
+               mostrarcolumnaequipodañado = true;
+               mostrarcolumnaestadoequipo = false;
+               mostraraccionesequipo = false;
+               PrimeFaces.current().ajax().update("form-equipo:tablaEquipos", "form-equipo:dt-equipos","form-equipo:botonNewEquipo",
+                       "form-equipo:checkequiposdañados","form-equipo:columnaEquipoDañado","form-equipo:columnaestadoesquipo"  );
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -102,6 +124,14 @@ public class EquipoBean implements Serializable {
         }
     }
 
+    public void ActivarDesactivarCheckEquiposDañados() throws SQLException {
+        try {
+            TablaEquiposPorLaboratorio();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void nuevoEquipo() throws SQLException {
         this.newEquipo = new Equipo();
         this.newEquipo.setCategoriaEquipo(new CategoriaEquipo());
@@ -113,16 +143,76 @@ public class EquipoBean implements Serializable {
 
     public void addEquipo() {
         try {
-            if (this.newEquipo.getFechaAdquisicion() == null) {
-                DaoEquipo.agregarEquipo(newEquipo);
-                Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Equipo agregado",null));
-            } else {
+            if (newEquipo.getAula().getId() == 0) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"!Por favor!, Seleccione aula",null));
+                PrimeFaces.current().ajax().update("form-equipo:messages");
+            } else if (newEquipo.getCategoriaEquipo().getId() == 0) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"!Por favor!, Seleccione Categoria",null));
+                PrimeFaces.current().ajax().update("form-equipo:messages");
+            } else if ("".equals(newEquipo.getCodigo().trim())) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"!Por favor!, Ingrese codigo",null));
+                PrimeFaces.current().ajax().update("form-equipo:messages");
+            } else if ("".equals(newEquipo.getDescripcion().trim())) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"!Por favor!, Ingrese descripción",null));
+                PrimeFaces.current().ajax().update("form-equipo:messages");
+            } else if ("".equals(newEquipo.getMarca().trim())) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"!Por favor!, Ingrese marca",null));
+                PrimeFaces.current().ajax().update("form-equipo:messages");
+            } else if ("".equals(newEquipo.getModelo().trim())) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"!Por favor!, Ingrese modelo",null));
+                PrimeFaces.current().ajax().update("form-equipo:messages");
+            } else if ("".equals(newEquipo.getNumeroSerie().trim())) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"!Por favor!, Ingrese numero de serie",null));
+                PrimeFaces.current().ajax().update("form-equipo:messages");
+            }  else {
+                if (this.newEquipo.getFechaAdquisicion() == null) {
+                    DaoEquipo.agregarEquipo(newEquipo);
+                    Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Equipo agregado",null));
+                    PrimeFaces.current().executeScript("PF('manageEquipoDialog').hide()");
+                    PrimeFaces.current().ajax().update("form-equipo:messages");
+                }
+            }
+
+
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error al agregar el Equipo",null));
+            PrimeFaces.current().ajax().update("form-equipo:messages");
+            e.printStackTrace();
+        }
+    }
+
+    public void modificarEquipo() {
+        try {
+            if (newEquipo.getAula().getId() == 0) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"!Por favor!, Seleccione aula para modificar",null));
+                PrimeFaces.current().ajax().update("form-equipo:messages");
+            } else if (newEquipo.getCategoriaEquipo().getId() == 0) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"!Por favor!, Seleccione Categoria para modificar",null));
+                PrimeFaces.current().ajax().update("form-equipo:messages");
+            } else if ("".equals(newEquipo.getCodigo().trim())) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"!Por favor!, Ingrese codigo para modificar",null));
+                PrimeFaces.current().ajax().update("form-equipo:messages");
+            } else if ("".equals(newEquipo.getDescripcion().trim())) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"!Por favor!, Ingrese descripción para modificar",null));
+                PrimeFaces.current().ajax().update("form-equipo:messages");
+            } else if ("".equals(newEquipo.getMarca().trim())) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"!Por favor!, Ingrese marca para modificar",null));
+                PrimeFaces.current().ajax().update("form-equipo:messages");
+            } else if ("".equals(newEquipo.getModelo().trim())) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"!Por favor!, Ingrese modelo para modificar",null));
+                PrimeFaces.current().ajax().update("form-equipo:messages");
+            } else if ("".equals(newEquipo.getNumeroSerie().trim())) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"!Por favor!, Ingrese numero de serie para modificar",null));
+                PrimeFaces.current().ajax().update("form-equipo:messages");
+            }  else {
                 DaoEquipo.editarEquipo(newEquipo);
                 Listequipos = DaoEquipo.listarEquiposPorLaboratorio(idlaboratorioSession);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Equipo actualizado",null));}
-            PrimeFaces.current().executeScript("PF('manageEquipoDialog').hide()");
-            PrimeFaces.current().ajax().update("form-equipo:messages");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Equipo actualizado", null));
+                PrimeFaces.current().executeScript("PF('manageEquipomodiDialog').hide()");
+                PrimeFaces.current().ajax().update("form-equipo:messages");
+            }
+
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error al agregar el Equipo",null));
             PrimeFaces.current().ajax().update("form-equipo:messages");
