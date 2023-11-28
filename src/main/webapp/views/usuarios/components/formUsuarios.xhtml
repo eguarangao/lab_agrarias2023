@@ -52,7 +52,7 @@
                     <p:column headerText="Cuenta Usuario">
                         <h:outputText value="#{user.nombreUsuario}"/>
                     </p:column>
-                    <p:column headerText="Cuenta Contraseña">
+                    <p:column headerText="Cuenta Contraseña" style="display: none">
                         <h:outputText value="#{user.clave}"/>
 
                     </p:column>
@@ -129,16 +129,16 @@
                                 <f:selectItem itemLabel="DOCENTE" itemValue="3"/>
                             </p:selectOneMenu>
                         </div>
-                        <div class="field">
+                        <div class="field" style="display: #{usuarioBean.deshabilitado ? 'none' : 'block'}">
                             <p:outputLabel for="user">Nombre usuario </p:outputLabel>
-                            <p:inputText id="user" value="#{usuarioBean.nuevoUsuario.nombreUsuario}"
+                            <p:inputText id="user" maxlength="10" value="#{usuarioBean.nuevoUsuario.nombreUsuario}"
                                          required="true"/>
                         </div>
-                        <div class="field">
+                        <div class="field" style="display: none">
                             <p:outputLabel for="passw">Contraseña </p:outputLabel>
                             <p:inputText id="passw" value="#{usuarioBean.nuevoUsuario.clave}" required="true"/>
                         </div>
-                        <div class="field m-4">
+                        <div class="field m-4" style="display: #{usuarioBean.deshabilitado ? 'none' : 'block'}">
                             <h:outputLabel for="estado" value="Habilitado:" />
                             <p:selectBooleanButton id="estado" onLabel="Si" offLabel="No" style="width:3rem"
                                                    value="#{usuarioBean.nuevoUsuario.enabled}"/>

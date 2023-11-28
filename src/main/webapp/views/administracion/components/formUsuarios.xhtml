@@ -21,24 +21,33 @@
                         </p:commandButton>
                     </p:toolbarGroup>
                 </p:toolbar>
-                <p:dataTable id="dt-user" widgetVar="dtUser" var="user" value="#{usuarioBean.listFullUsers}"
-
-                             reflow="true" styleClass="products-table" lazy="true"
-                             rowKey="#{user.personaId}" paginator="true" rows="10" rowSelectMode="add"
+                <p:dataTable id="dt-user"
+                             widgetVar="dtUser"
+                             var="user"
+                             value="#{usuarioBean.listFullUsers}"
+                             stripedRows="true"
+                             emptyMessage="No se encontraron usuarios"
+                             reflow="true"
+                             styleClass="products-table"
+                             lazy="true"
+                             rowKey="#{user.personaId}"
+                             paginator="true"
+                             rows="10"
+                             rowSelectMode="add"
                              paginatorPosition="bottom">
-                    <p:column headerText="Código" style="width: 30px;">
+                    <p:column responsivePriority="1" headerText="Código">
                         <h:outputText value="#{user.personaId}"/>
                     </p:column>
-                    <p:column headerText="Nombres">
+                    <p:column headerText="Nombres" >
                         <h:outputText value="#{user.nombrePersona}"/>
                     </p:column>
-                    <p:column headerText="Apellidos">
+                    <p:column headerText="Apellidos" >
                         <h:outputText value="#{user.apellido}"/>
                     </p:column>
-                    <p:column headerText="DNI">
+                    <p:column headerText="DNI" >
                         <h:outputText value="#{user.dni}"/>
                     </p:column>
-                    <p:column headerText="Email">
+                    <p:column responsivePriority="2" headerText="Email">
                         <h:outputText value="#{user.email}"/>
                     </p:column>
                     <p:column headerText="Teléfono">
@@ -55,8 +64,9 @@
                         <p:tag severity="warning" value="Desactivado" rendered="#{not user.enabled}"/>
                     </p:column>
 
-                    <p:column headerText="Acciones" exportable="false">
+                    <p:column responsivePriority="3" headerText="Acciones" exportable="false">
                         <p:commandButton icon="pi pi-pencil"
+                                         action="#{usuarioBean.nameHeader()}"
                                          update=":dialogs:manage-user-content"
                                          oncomplete="PF('manageUserDialog').show()"
                                          styleClass="rounded-button ui-button-warning ui-button-outlined"
@@ -66,7 +76,8 @@
                             <p:ajax listener="#{usuarioBean.EditCreateUser(true)}"/>
                             <p:resetInput target=":dialogs:manage-user-content"/>
                         </p:commandButton>
-                        <p:commandButton styleClass="rounded-button ui-button-danger ui-button-outlined" icon="pi pi-trash"
+                        <p:commandButton styleClass="rounded-button ui-button-danger ui-button-outlined"
+                                         icon="pi pi-trash"
                                          process="@this"
                                          oncomplete="PF('deleteUserDialog').show()"
                         >
@@ -78,73 +89,97 @@
             </div>
         </h:form>
         <h:form id="dialogs">
-            <p:dialog header="Usuario" showEffect="fade" modal="true" widgetVar="manageUserDialog"
+            <p:dialog header="#{usuarioBean.header} Usuario"
+                      resizable="true"
+                      showEffect="fade"
+                      modal="true"
+                      widgetVar="manageUserDialog"
+                      draggable="false"
                       responsive="true">
                 <p:outputPanel id="manage-user-content" class="ui-fluid">
                     <p:outputPanel rendered="#{not empty usuarioBean.nuevoUsuario}">
-                        <div class="field">
-                            <p:outputLabel for="name">Nombres</p:outputLabel>
-                            <p:inputText id="name" value="#{usuarioBean.nuevoUsuario.nombrePersona}"
-                                         requiredMessage="Ingrese un nombre"
-                                         maxlength="50"
-                                         required="true"/>
-                        </div>
-                        <div class="field">
-                            <p:outputLabel for="last">Apellidos</p:outputLabel>
-                            <p:inputText id="last" value="#{usuarioBean.nuevoUsuario.apellido}" inputmode=""
-                                         maxlength="50"
-                                         requiredMessage="Ingrese un Apellido"
-                                         required="true"/>
-                        </div>
-                        <div class="field">
-                            <p:outputLabel for="phone">Teléfono </p:outputLabel>
-                            <p:inputText id="phone" value="#{usuarioBean.nuevoUsuario.telefono}"
-                                         maxlength="10" />
-                        </div>
-                        <div class="field">
-                            <p:outputLabel for="email">Email </p:outputLabel>
-                            <p:inputText id="email" value="#{usuarioBean.nuevoUsuario.email}"
-                                         requiredMessage="Ingrese un email"
-                                         maxlength="30"
-                                         required="true"/>
-                        </div>
-                        <div class="field">
-                            <p:outputLabel for="dni">DNI </p:outputLabel>
-                            <p:inputText id="dni" value="#{usuarioBean.nuevoUsuario.dni}"
-                                         maxlength="10"
-                                         required="true" requiredMessage="Ingrese su DNI"/>
-                        </div>
-                        <div class="field">
-                            <h:outputLabel for="option" value="Género:"/>
-                            <p:selectOneMenu required="true" requiredMessage="Seleccione un género" id="option" value="#{usuarioBean.nuevoUsuario.genero}">
-                                <f:selectItem itemLabel="Selecciona un género" itemValue=""/>
-                                <f:selectItem itemLabel="Hombre" itemValue="H"/>
-                                <f:selectItem itemLabel="Mujer" itemValue="M"/>
-                            </p:selectOneMenu>
-                        </div>
-                        <div class="field">
-                            <h:outputLabel for="rol" value="Rol:"/>
-                            <p:selectOneMenu id="rol"  required="true" requiredMessage="Seleccione un rol" value="#{usuarioBean.nuevoUsuario.idRol}"
-                                             disabled="#{ usuarioBean.createUser}">
-                                <f:selectItem itemLabel="Selecciona un rol" itemValue=""/>
-                                <f:selectItem itemLabel="TECNICO DE LABORATORIO" itemValue="2"/>
-                                <f:selectItem itemLabel="DOCENTE" itemValue="3"/>
-                                <f:selectItem itemLabel="ADMINISTRADOR" itemValue="1"/>
-                            </p:selectOneMenu>
-                        </div>
-                        <div class="field" style="display: #{usuarioBean.deshabilitado ? 'none' : 'block'}">
-                            <p:outputLabel for="user">Nombre usuario </p:outputLabel>
-                            <p:inputText id="user" maxlength="10" value="#{usuarioBean.nuevoUsuario.nombreUsuario}"
-                                         />
-                        </div>
-                        <div class="field" style="display: none">
-                            <p:outputLabel for="passw">Contraseña </p:outputLabel>
-                            <p:inputText id="passw"  value="#{usuarioBean.nuevoUsuario.clave}"/>
-                        </div>
-                        <div class="field" style="display: #{usuarioBean.deshabilitado ? 'none' : 'block'}">
-                            <h:outputLabel for="estado" value="Habilitado:"/>
-                            <p:selectBooleanButton id="estado" onLabel="Si" offLabel="No" style="width:3rem"
-                                                   value="#{usuarioBean.nuevoUsuario.enabled}"/>
+                        <div class="p-formgrid p-grid">
+                            <div class="field col-12 p-md-4">
+                                <p:outputLabel for="dni" value="DNI/Cédula"/>
+                                <div class="ui-inputgroup">
+                                    <p:inputText id="dni" value="#{usuarioBean.nuevoUsuario.dni}"
+                                                 maxlength="10"
+                                                 required="true" requiredMessage="Ingrese su DNI"/>
+                                    <p:commandButton icon="pi pi-search"
+                                                     process="dni @this"
+                                                     action="#{usuarioBean.searchForDni()}"
+                                                     update="dialogs:manage-user-content"
+                                                     styleClass="ui-button-warning" style="margin-right: .5rem">
+                                        <p:resetInput target="dialogs:manage-user-content"/>
+                                    </p:commandButton>
+                                </div>
+
+                                <p:outputLabel for="name" value="Nombres"/>
+                                <p:inputText id="name" value="#{usuarioBean.nuevoUsuario.nombrePersona}"
+                                             requiredMessage="Ingrese un nombre"
+                                             disabled="#{usuarioBean.noExiste}"
+                                             maxlength="50"
+                                             required="true"/>
+
+                                <p:outputLabel for="last" value="Apellidos"/>
+                                <p:inputText id="last" value="#{usuarioBean.nuevoUsuario.apellido}" inputmode=""
+                                             maxlength="50"
+                                             disabled="#{usuarioBean.noExiste}"
+                                             requiredMessage="Ingrese un Apellido"
+                                             required="true"/>
+
+
+                            </div>
+
+                            <div class="field col-12 p-md-4">
+
+                                <p:outputLabel for="email" value="Email"/>
+                                <p:inputText id="email" disabled="#{usuarioBean.noExiste}" value="#{usuarioBean.nuevoUsuario.email}"
+                                             requiredMessage="Ingrese un email"
+                                             maxlength="30"
+                                             required="true"/>
+                                <p:outputLabel for="phone" value="Teléfono"/>
+                                <p:inputText id="phone" disabled="#{usuarioBean.noExiste}"  value="#{usuarioBean.nuevoUsuario.telefono}"
+                                             maxlength="10"/>
+                                <h:outputLabel for="option" value="Género:"/>
+                                <p:selectOneMenu required="true" disabled="#{usuarioBean.noExiste}" requiredMessage="Seleccione un género" id="option"
+                                                 value="#{usuarioBean.nuevoUsuario.genero}">
+                                    <f:selectItem itemLabel="Selecciona un género" itemValue=""/>
+                                    <f:selectItem itemLabel="Hombre" itemValue="H"/>
+                                    <f:selectItem itemLabel="Mujer" itemValue="M"/>
+                                </p:selectOneMenu>
+
+
+                            </div>
+
+                            <div class="field col-12 p-md-4">
+                                <h:outputLabel for="rol" value="Rol:"/>
+                                <p:selectOneMenu  id="rol" required="true" requiredMessage="Seleccione un rol"
+                                                 value="#{usuarioBean.nuevoUsuario.idRol}"
+                                                 disabled="#{ usuarioBean.createUser}">
+                                    <f:selectItem itemLabel="Selecciona un rol" itemValue=""/>
+                                    <f:selectItem itemLabel="TECNICO DE LABORATORIO" itemValue="2"/>
+                                    <f:selectItem itemLabel="DOCENTE" itemValue="3"/>
+                                    <f:selectItem itemLabel="ADMINISTRADOR" itemValue="1"/>
+                                </p:selectOneMenu>
+
+                                <div style="display: #{usuarioBean.deshabilitado ? 'none' : 'block'}">
+                                    <p:outputLabel for="user">Nombre usuario </p:outputLabel>
+                                    <p:inputText id="user" maxlength="10"
+                                                 value="#{usuarioBean.nuevoUsuario.nombreUsuario}"
+                                    />
+                                </div>
+                                <div style="display: none">
+                                    <p:outputLabel for="passw">Contraseña </p:outputLabel>
+                                    <p:inputText id="passw" value="#{usuarioBean.nuevoUsuario.clave}"  disabled="#{usuarioBean.noExiste}"/>
+                                </div>
+                                <div style="display: #{usuarioBean.deshabilitado ? 'none' : 'block'}">
+                                    <br/>
+                                    <h:outputLabel for="estado" value="Habilitado:"/>
+                                    <p:selectBooleanButton  disabled="#{usuarioBean.deshabilitado}" id="estado" onLabel="Si" offLabel="No" style="width:3rem"
+                                                           value="#{usuarioBean.nuevoUsuario.enabled}"/>
+                                </div>
+                            </div>
                         </div>
                     </p:outputPanel>
                 </p:outputPanel>

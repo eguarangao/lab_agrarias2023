@@ -13,6 +13,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.mail.Message;
 import jakarta.servlet.http.HttpSession;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -45,6 +46,8 @@ public class UsuarioBean implements Serializable {
     private UsuarioDAO DAO = new UsuarioDAO();
     private boolean isCreateUser;
     private boolean deshabilitado;
+    private boolean noExiste;
+    String header = "";
 
 
     @PostConstruct
@@ -58,7 +61,7 @@ public class UsuarioBean implements Serializable {
             listFullDocente = DAO.listarUsuariosDocentes();
             isCreateUser = false;
             deshabilitado = true;
-
+            noExiste = true;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,30 +97,52 @@ public class UsuarioBean implements Serializable {
 //
 //    }
     public void openNew() {
+
+        header = "Crear";
+        PrimeFaces.current().ajax().update(":dialogs");
         this.nuevoUsuario = new ListFullUser();
 
+    }
+    public void nameHeader(){
+
+         header = "Editar";
+         noExiste = false;
+        PrimeFaces.current().ajax().update(":dialogs");
     }
 
     public void addUsuario() {
         try {
             if (this.nuevoUsuario.getFechaCreacion() == null) {
+
+                    DAO.insert(nuevoUsuario);
+                    listFullUsers = DAO.listarUsuariosPersonas();
+                    listFullDocente = DAO.listarUsuariosDocentes();
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario agregado"));
+                    PrimeFaces.current().executeScript("PF('manageUserDialog').hide()");
+
+            } else if (DAO.existeRolPorDNI(nuevoUsuario)&& header.equals("Crear")) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Rol existe", "El rol del usuario ya esta registrado, cambiar rol"));
+            } else if (!DAO.existeRolPorDNI(nuevoUsuario)&&header.equals("Crear")) {
                 DAO.insert(nuevoUsuario);
                 listFullUsers = DAO.listarUsuariosPersonas();
                 listFullDocente = DAO.listarUsuariosDocentes();
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario agregado"));
-            } else {
+                PrimeFaces.current().executeScript("PF('manageUserDialog').hide()");
+            }else if (header.equals("Editar")){
                 DAO.update(nuevoUsuario);
                 listFullUsers = DAO.listarUsuariosPersonas();
                 listFullDocente = DAO.listarUsuariosDocentes();
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario actualizado"));
-
+                PrimeFaces.current().executeScript("PF('manageUserDialog').hide()");
             }
-            PrimeFaces.current().executeScript("PF('manageUserDialog').hide()");
+
+
             PrimeFaces.current().ajax().update("form:messages");
             PrimeFaces.current().ajax().update("formUser:messages");
 
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Error al agregar la facultad"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: ", "Error al agregar el usuario"));
+
             e.printStackTrace();
         }
     }
@@ -134,6 +159,26 @@ public class UsuarioBean implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+    public void searchForDni(){
+        DAO = new UsuarioDAO();
+        boolean existe = DAO.existePersonaPorDNI(nuevoUsuario.getDni());
+        System.out.println(existe);
+        if(existe){
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Usuario existente", "El usuario se encuentra registrado"));
+
+            nuevoUsuario = DAO.listarUsuarioExistente(nuevoUsuario);
+            noExiste = true;
+            System.out.println(nuevoUsuario);
+        }else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuario no existente", "Rellene los campos para crear su usuario"));
+
+            noExiste = false;
+        }
+        PrimeFaces.current().ajax().update("form:messages");
+        PrimeFaces.current().ajax().update("form:manage-user-content");
+
 
     }
 

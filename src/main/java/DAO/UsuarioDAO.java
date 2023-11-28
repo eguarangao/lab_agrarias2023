@@ -298,7 +298,9 @@ public class UsuarioDAO extends Conexion {
 
             connection.commit();  // Confirma la transacción
         } catch (SQLException e) {
-            connection.rollback();  // Si ocurre un error, deshace la transacción
+            connection.rollback();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error en la base de datos", "No se actualizo el campo, contacte con el administrador del sistema"));
+// Si ocurre un error, deshace la transacción
             throw e;
         } finally {
             this.desconectar();
@@ -308,7 +310,7 @@ public class UsuarioDAO extends Conexion {
     public void update2(ListFullUser usuarioPersona) throws SQLException {
         this.conectar();
 
-        String updatePersonaQuery = "UPDATE laboratorio.persona SET nombre=?, apellido=?, telefono=?, email=?, dni=?, genero=? WHERE id=?";
+        String updatePersonaQuery = "UPDATE laboratorio.persona SET nombre=?, apellido=?, telefono=?, email=?, genero=? WHERE dni=?";
         String updateUsuarioQuery = "UPDATE laboratorio.usuario SET id_persona=?, nombre=?, clave=?, enabled=? WHERE id=?";
         String updateRolUsuarioQuery = "UPDATE laboratorio.rol_usuario SET id_rol=? WHERE id_usuario=?";
         String updateTecnicoQuery = "UPDATE laboratorio.tecnico SET id_usuario=? WHERE id=?";
@@ -322,9 +324,8 @@ public class UsuarioDAO extends Conexion {
                 preparedStatementPersona.setString(2, usuarioPersona.getApellido());
                 preparedStatementPersona.setString(3, usuarioPersona.getTelefono());
                 preparedStatementPersona.setString(4, usuarioPersona.getEmail());
-                preparedStatementPersona.setString(5, usuarioPersona.getDni());
-                preparedStatementPersona.setString(6, usuarioPersona.getGenero());
-                preparedStatementPersona.setInt(7, usuarioPersona.getPersonaId());
+                preparedStatementPersona.setString(5, usuarioPersona.getGenero());
+                preparedStatementPersona.setString(6, usuarioPersona.getDni());
 
                 int affectedRowsPersona = preparedStatementPersona.executeUpdate();
                 if (affectedRowsPersona == 0) {
@@ -437,6 +438,8 @@ public class UsuarioDAO extends Conexion {
             connection.commit();
         } catch (SQLException e) {
             connection.rollback();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error en la base de datos", "No se elimino el campo, contacte con el administrador del sistema"));
+
             throw e;
         } finally {
             this.desconectar();
@@ -698,4 +701,75 @@ public class UsuarioDAO extends Conexion {
             }
         }
     }
+    public boolean existePersonaPorDNI(String dni) {
+        String query = "SELECT * FROM laboratorio.persona WHERE dni = ?";
+        this.conectar();
+        try (
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, dni);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean existeRolPorDNI(ListFullUser usuarios) {
+        String query = "select * from laboratorio.persona p inner join laboratorio.usuario u on p.id = u.id_persona\n" +
+                "inner join laboratorio.rol_usuario ru on u.id = ru.id_usuario\n" +
+                "where ru.id_rol = ? and p.dni =?";
+        this.conectar();
+        try (
+                PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, usuarios.getIdRol());
+            preparedStatement.setString(2, usuarios.getDni());
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public ListFullUser listarUsuarioExistente(ListFullUser usuarioPersona){
+
+        this.conectar();
+        String sql ="select * from laboratorio.persona p inner join laboratorio.usuario u on p.id = u.id_persona\n" +
+                "inner join laboratorio.rol_usuario ru on u.id = ru.id_usuario\n" +
+                "where dni = ? ";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, usuarioPersona.getDni());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+
+                    usuarioPersona = new ListFullUser();
+                    usuarioPersona.setUsuarioId(resultSet.getInt("id"));
+                    usuarioPersona.setNombrePersona(resultSet.getString("nombre"));
+                    usuarioPersona.setApellido(resultSet.getString("apellido"));
+                    usuarioPersona.setTelefono(resultSet.getString("telefono"));
+                    usuarioPersona.setEmail(resultSet.getString("email"));
+                    usuarioPersona.setDni(resultSet.getString("dni"));
+                    usuarioPersona.setGenero(resultSet.getString("genero"));
+                    usuarioPersona.setFechaCreacion(resultSet.getTimestamp("fecha_creacion"));
+                    usuarioPersona.setPersonaId(resultSet.getInt("id"));
+
+                    usuarioPersona.setNombreUsuario(resultSet.getString("nombre_usuario"));
+                    usuarioPersona.setClave(resultSet.getString("clave"));
+                    usuarioPersona.setEnabled(resultSet.getBoolean("enabled"));
+                    usuarioPersona.setFechaCreacion(resultSet.getTimestamp("fecha_creacion"));
+
+
+                    usuarioPersona.setGenero(resultSet.getString("genero"));
+                    //tabla rol_usuario
+                    usuarioPersona.setIdRol(resultSet.getInt("id_rol"));
+
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejo adecuado de excepciones en una aplicación real
+        }
+        return usuarioPersona;
+    }
+
 }
