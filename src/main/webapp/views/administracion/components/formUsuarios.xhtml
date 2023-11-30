@@ -105,7 +105,7 @@
                                     <p:inputText id="dni" value="#{usuarioBean.nuevoUsuario.dni}"
                                                  maxlength="10"
                                                  required="true" requiredMessage="Ingrese su DNI"/>
-                                    <p:commandButton icon="pi pi-search"
+                                    <p:commandButton icon="pi pi-search" disabled="#{usuarioBean.btnBooleanEditar}"
                                                      process="dni @this"
                                                      action="#{usuarioBean.searchForDni()}"
                                                      update="dialogs:manage-user-content"
@@ -189,7 +189,7 @@
                                      actionListener="#{usuarioBean.addUsuario()}"
                                      update="manage-user-content, form:dt-user,form:messages"
                                      process="manage-user-content @this"/>
-                    <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageUserDialog').hide()"
+                    <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageUserDialog').hide()"
                                      class="ui-button-secondary" type="button"/>
                 </f:facet>
             </p:dialog>
