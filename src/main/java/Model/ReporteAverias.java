@@ -12,6 +12,7 @@ public class ReporteAverias {
     private String estado_averia;
     private String prioridad;
     private String problema;
+    private String tipoDano;
 
     private int id_equipo;
     private String codigo;

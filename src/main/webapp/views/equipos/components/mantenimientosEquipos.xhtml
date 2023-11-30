@@ -21,7 +21,7 @@
                         <p:toolbarGroup>
                             <p:commandButton id="botonNewMante" value="Nuevo mantenimiento" icon="pi pi-plus"
                                              actionListener="#{mantenimientoBean.nuevoMantenimiento()}"
-                                             update=":dialogMante:manage-Mante-content"
+                                             update=":dialogMante:manage-Mante-content, form-Mante:dt-Mante"
                                              oncomplete="PF('manageManteDialog').show()" style="margin-right: .5rem"
                                              disabled="#{mantenimientoBean.botonManteDisabled}">
                                 <p:resetInput target=":dialogMante:manage-Mante-content"/>

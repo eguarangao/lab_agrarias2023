@@ -28,7 +28,7 @@ public class AveriaDAO extends Conexion {
                     averia.setEnabled(resultSet.getBoolean("estado_averia"));
                     averia.setPrioridad(resultSet.getString("prioridad"));
                     averia.setProblema(resultSet.getString("problema"));
-
+                    averia.setTipoDano(resultSet.getString("tipo_dano"));
                     equipo.setId(resultSet.getInt("id_equipo"));
                     equipo.setDescripcion(resultSet.getString("descrip_equipo"));
 
@@ -117,7 +117,7 @@ public class AveriaDAO extends Conexion {
 
     public void agregarAveria(Averia averia){
         this.conectar();
-        String query = "select * from laboratorio.agregaraveria(?, ?, ?, ?)";
+        String query = "select * from laboratorio.agregaraveria(?, ?, ?, ?,?)";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
@@ -125,6 +125,7 @@ public class AveriaDAO extends Conexion {
             preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
             preparedStatement.setString(3, averia.getDescripcion());
             preparedStatement.setString(4,averia.getPrioridad());
+            preparedStatement.setString(5,averia.getTipoDano());
 
             preparedStatement.executeQuery();
 
@@ -138,13 +139,14 @@ public class AveriaDAO extends Conexion {
     public void editarAveria(Averia averia){
         try  {
             this.conectar();
-            String query = "SELECT laboratorio.editaraveria(?, ?, ?)";
+            String query = "SELECT laboratorio.editaraveria(?, ?, ?,?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
                 preparedStatement.setInt(1, averia.getId_averia());
                 preparedStatement.setString(2, averia.getDescripcion());
                 preparedStatement.setString(3, averia.getPrioridad());
+                preparedStatement.setString(4, averia.getTipoDano());
 
                 preparedStatement.execute();
             }
@@ -210,6 +212,7 @@ public class AveriaDAO extends Conexion {
                     reporteAverias.setEstado_averia(resultSet.getString("estado_averia"));
                     reporteAverias.setPrioridad(resultSet.getString("prioridad"));
                     reporteAverias.setProblema(resultSet.getString("problema"));
+                    reporteAverias.setTipoDano(resultSet.getString("tipo_dano"));
 
                     reporteAverias.setId_equipo(resultSet.getInt("id_equipo"));
                     reporteAverias.setCodigo(resultSet.getString("codigo"));

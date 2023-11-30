@@ -1,6 +1,7 @@
 package Model;
 
 import lombok.Data;
+import org.primefaces.PrimeFaces;
 
 import java.util.Date;
 
@@ -12,7 +13,7 @@ public class Averia {
     private Boolean enabled;
     private String prioridad;
     private String problema;
-
+    private String tipoDano;
     //Relaciones entidades
     private Equipo equipo;
     private Aula aula;

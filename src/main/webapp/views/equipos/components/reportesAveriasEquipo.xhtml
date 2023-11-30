@@ -81,8 +81,8 @@
                                     </h:outputText>
                                 </p:column>
 
-                                <p:column headerText="Tipo de Daño" filterBy="#{dtaveria.problema}" filterMatchMode="contains" >
-                                    <h:outputText value="#{dtaveria.problema}"/>
+                                <p:column headerText="Tipo de Daño" filterBy="#{dtaveria.tipoDano}" filterMatchMode="contains" >
+                                    <h:outputText value="#{dtaveria.tipoDano}"/>
                                 </p:column>
 
                                 <p:column headerText="Área" filterBy="#{dtaveria.aula.nombre}" filterMatchMode="contains">
@@ -172,6 +172,13 @@
                                                      requiredMessage="Por favor, Ingrese la descripción de averia del equipo"
                                                      maxlength="200"/>
                                     </div>
+                                    <div class="field p-col-12 p-md-12">
+                                        <p:outputLabel for="tipoDano">Tipo de daño:</p:outputLabel>
+                                        <p:inputText id="tipoDano"
+                                                     value="#{averiaBean.newAveria.tipoDano}"
+                                                     requiredMessage="Por favor, Ingrese el tipo de averia del equipo"
+                                                     maxlength="200"/>
+                                    </div>
 
                                     <div class="field p-col-12 p-md-12">
                                         <p:outputLabel >Equipo averiado:</p:outputLabel>
@@ -244,6 +251,11 @@
                                         <p:inputText id="descriptionAveriaedit"
                                                      value="#{averiaBean.newAveria.descripcion}" maxlength="200"/>
                                     </div>
+                                    <div class="field p-col-12 p-md-12">
+                                        <p:outputLabel>Tipo daño:</p:outputLabel>
+                                        <p:inputText id="edtipodano"
+                                                     value="#{averiaBean.newAveria.tipoDano}" maxlength="200"/>
+                                    </div>
 
                                     <div class="p-field p-col-12 p-md-12">
                                         <p:outputLabel >Equipo averiado:</p:outputLabel>
@@ -297,7 +309,7 @@
                             <p:commandButton value="SI" icon="pi pi-check"
                                              class="ui-button-success"
                                              actionListener="#{averiaBean.confirmaraveria()}"
-                                             update="manage-AveriaRealizada-content"
+                                             update="manage-AveriaRealizada-content, form-Averia:dt-Averia"
                                              process="manage-AveriaRealizada-content @this"/>
                             <p:commandButton value="NO" icon="pi pi-times" onclick="PF('manageAveriaRealizadaDialog').hide()"
                                              class="ui-button-secondary" type="button"/>
